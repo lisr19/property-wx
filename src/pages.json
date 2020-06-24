@@ -11,6 +11,14 @@
 		},
 		{
 			"path": "pages/home/list"
+		},
+		{
+			"path": "pages/house/index",
+			"style": {
+				"app-plus": {
+					"titleNView":false
+				}
+			}
 		}
 	],
 	"globalStyle": {

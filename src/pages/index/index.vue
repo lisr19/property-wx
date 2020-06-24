@@ -5,7 +5,7 @@
 			<p class="title"><image class="menu" src="/static/logo.png" @click="openBox"></image>物业管理系统</p>
 			<div class="tab-bar">
 				<ul class="nav">
-					<li :class="{active:currIndex===index}" v-for="(item,index) in typeList" @click="tagType(index)">
+					<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
 						<p>{{item.name}}</p>
 						<uni-badge class="tip" text="5" type="error" size="small"></uni-badge>
 					</li>
@@ -17,69 +17,46 @@
 			</div>
 		</div>
 		<div class="card2">
-			<div class="item" @click="openDetail">
-				<p class="name"><em></em>任务</p>
-				<div class="desc">
-					<span class="time">上午 9:10</span>
-					<div class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</div>
-				</div>
-				<uni-icons type="arrowright" size="18" color="#999"></uni-icons>
+		<div class="item" @click="openDetail">
+			<p class="name"><em></em>任务</p>
+			<div class="desc">
+				<span class="time">上午 9:10</span>
+				<div class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</div>
 			</div>
-			<div class="item">
-				<p class="name"><em style="background: #426FE4"></em>日程安排</p>
-				<div class="desc">
-					<span class="time">上午 9:10</span>
-					<div class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</div>
-				</div>
-				<uni-icons type="arrowright" size="18" color="#999"></uni-icons>
-			</div>
+			<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
 		</div>
-		<view style="margin-top: 20px">
+		<div class="item">
+			<p class="name"><em style="background: #426FE4"></em>日程安排</p>
+			<div class="desc">
+				<span class="time">上午 9:10</span>
+				<div class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</div>
+			</div>
+			<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
+		</div>
+	</div>
+
+		<div  class="data-box">
 			<uni-calendar
 					:insert="true"
 					:lunar="false"
 					:start-date="'2019-3-2'"
 					@change="change"
 			/>
-		</view>
+		</div>
 		<uni-drawer :visible="false" ref="leftBox">
-			<div class="nav-box">
-				<div class="head-box">
-					<image class="head-img" src="/static/logo.png"></image>
-					<p >管理员：孙天生</p>
-				</div>
-				<uni-list>
-					<uni-list-item title="日常工作" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="房产管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="租户管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="财务管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="巡检预警" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="设备管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="仓库管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="档案管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="人事管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="外派管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-					<uni-list-item title="系统管理" thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png"></uni-list-item>
-				</uni-list>
-				<div style="display: flex;justify-content: center;margin-top: 20px">
-					<span class="btn">
-						退出登录
-					</span>
-				</div>
-			</div>
+			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
 	</div>
 </template>
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniList from "@/components/uni-list/uni-list.vue"
-	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
+	import leftMenu from "@/components/left-menu/left-menu.vue"
 	export default {
-		components: {uniDrawer,uniList,uniListItem,uniIcons,uniCalendar,uniBadge},
+		components: {uniDrawer,uniIcons,uniCalendar,uniBadge,leftMenu},
 		data() {
 			return {
 				title: 'Hello',
@@ -112,6 +89,9 @@
 			},
 			openBox(){
 				this.$refs.leftBox.open()
+			},
+			closeMenu(){
+				this.$refs.leftBox.close()
 			},
 		}
 	}
@@ -162,6 +142,7 @@
 					width: 30px;
 					height: 30px;
 					margin-right: 10px;
+					z-index: 102;
 				}
 			}
 			.tab-bar{
@@ -197,7 +178,7 @@
 			.card{
 				width:90%;
 				position: absolute;
-				top: 110px;
+				top: 105px;
 				left:5%;
 				z-index: 10;
 				font-size:32px;
@@ -265,8 +246,9 @@
 			height:160px;
 			background:rgba(255,255,255,1);
 			border-radius:5px;
-			padding: 255px 30px 0;
-			z-index: 100;
+			padding: 235px 30px 0;
+			z-index: 1;
+			position: fixed;
 			.item{
 				position: relative;
 				margin-bottom: 20px;
@@ -298,12 +280,15 @@
 						flex: 1;
 					}
 				}
-				.uni-icons{
+				.icon{
 					position: absolute;
 					right: 0px;
 					top: 2px;
 				}
 			}
+		}
+		.data-box{
+			padding-top: 400px;
 		}
 	}
 	.nav-box{

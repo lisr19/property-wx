@@ -10,5 +10,9 @@ const home = [
 		path: '/pages/home/list',
 		name: '列表',
 	},
+	{
+		path: '/pages/house/index',
+		name: '房产管理'
+	},
 ]
 export default home
