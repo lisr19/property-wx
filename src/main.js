@@ -3,7 +3,12 @@ import App from './App'
 import './common/less/reset.less'
 import router from './router'
 import { RouterMount } from 'uni-simple-router'
-
+import fly from './utils/request'
+import uView from "uview-ui";
+Vue.use(uView);
+// 使用 Mock
+import Mock from './mock/mock' // 刚刚手写的mock.js文件
+Vue.prototype.$fly = fly
 App.mpType = 'app'
 
 const app = new Vue({

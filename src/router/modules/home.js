@@ -11,8 +11,21 @@ const home = [
 		name: '列表',
 	},
 	{
-		path: '/pages/house/index',
-		name: '房产管理'
+		path: '/pages/menu/menu',
+		name: '分类',
 	},
+	{
+		path: '/pages/house/water-price',
+		name: '水电价格',
+	},
+	{
+		path: '/pages/house/building',
+		name: '楼宇设置',
+	},
+	{
+		path: '/pages/house/add-build',
+		name: '添加楼宇',
+	},
+
 ]
 export default home

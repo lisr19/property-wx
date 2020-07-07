@@ -1,23 +1,55 @@
 <template>
-	<div class="content">
-		<div class="head-bar">
-			<div class="bg"></div>
+	<view  class="content">
+		<view  class="head-bar">
+			<view  class="bg"></view >
 			<p class="title"><image class="menu" src="/static/logo.png" @click="openBox"></image>物业管理系统</p>
-			<div class="card">
+			<view  class="card">
 				<p class="name"><em></em>房产管理</p>
-				<div class="tab-bar">
+				<view  class="tab-bar">
 					<ul class="nav">
 						<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
 							<p>{{item.name}}</p>
 						</li>
 					</ul>
-				</div>
-			</div>
-		</div>
+					<u-radio-group v-model="value" @change="radioGroupChange" size="45" active-color="#000">
+						<u-radio
+								@change="radioChange"
+								v-for="(item, index) in list" :key="index"
+								shape="circle"
+								:name="item.name"
+								label-size="30"
+						>
+							{{item.name}}
+						</u-radio>
+					</u-radio-group>
+				</view >
+			</view >
+		</view >
+		<view class="wrap">
+			<view class="uni-row title"  v-if="currIndex==0" >
+					<view class="flex-item ">状态</view>
+					<view class="flex-item">所属楼宇</view>
+					<view class="flex-item">水表编号</view>
+					<view class="flex-item">水费价单</view>
+			</view>
+			<view class="uni-row title"  v-else >
+				<view class="flex-item">状态</view>
+				<view class="flex-item">所属楼宇</view>
+				<view class="flex-item">电表编号</view>
+				<view class="flex-item">电表价单</view>
+			</view>
+			<view class="uni-row"  v-for="(item,index) in dataList" :key="index">
+				<view class="flex-item">{{item.state}}</view>
+				<view class="flex-item">{{item.name}}</view>
+				<view class="flex-item">{{item.sb}}</view>
+				<view class="flex-item">{{item.price}}</view>
+			</view>
+		</view>
+		<uni-pagination title="标题文字" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-	</div>
+	</view >
 </template>
 
 <script>
@@ -25,10 +57,32 @@
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
+	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
+	import {getWater,electList} from "@/utils/api/comment"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu},
+		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				dataList:[
+					{
+						state:'0',
+						name:'智慧园区',
+						sb:'F141',
+						price:'3'
+					},
+					{
+						state:'0',
+						name:'智慧园区',
+						sb:'F14199789',
+						price:'3'
+					},
+					{
+						state:'1',
+						name:'智慧园区',
+						sb:'F142',
+						price:'3.5'
+					}
+				],
 				title: 'Hello',
 				currIndex:0,
 				typeList:[
@@ -39,26 +93,65 @@
 						name:'电表收费设置',
 					}
 				],
-				items: [
+				list: [
 					{
-					value: 'USA',
-					name: '已设置',
-					checked: 'true'
-					},
-					{
-						value: '未设置',
 						name: '已设置',
 					},
+					{
+						name: '未设置',
+					},
 				],
-				current: 0
+				value: '已设置',
+				current: 0,
+				total:0
 			}
 		},
 		onLoad() {
-
+			this.getWater()
 		},
 		methods: {
+			chagePage(e){
+				console.log(e);
+			},
+			async getWater(params){
+				let res = await getWater(params)
+				if(res.code === 200){
+					this.dataList = res.data.rows
+					this.total = res.data.total
+					console.log(res);
+				}else {
+
+				}
+			},
+			async electList(params){
+				let res = await electList(params)
+				if(res.code === 200){
+					this.dataList = res.data.rows
+					this.total = res.data.total
+					console.log(res);
+				}else {
+
+				}
+			},
+			// 选中某个单选框时，由radio时触发
+			radioChange(e) {
+				// console.log(e);
+			},
+			// 选中任一radio时，由radio-group触发
+			radioGroupChange(e) {
+				console.log(e);
+				if(e==='已设置'){
+
+				}
+			},
 			tagType(index){
 				this.currIndex =index
+				if(index===0){
+					this.getWater()
+				}else {
+					this.dataList = []
+					this.electList()
+				}
 			},
 			openBox(){
 				this.$refs.leftBox.open()
@@ -161,9 +254,8 @@
 				margin-top: 5px;
 				ul{
 					display: flex;
+					margin: 10px 0 25px;
 					li{
-						font-family:PingFangSC-Regular,PingFang SC;
-						font-weight:400;
 						margin-right:20px;
 						display: flex;
 						align-items: center;
@@ -175,6 +267,8 @@
 						color: #111548;
 						border:1px solid rgba(17,21,72,1);
 						border-radius:8px;
+						font-family:PingFangSC-Medium,PingFang SC;
+						font-weight:500;
 					}
 					li.active{
 						background:rgba(52,142,255,1);
@@ -183,6 +277,27 @@
 						color:rgba(255,255,255,1);
 						border:none;
 					}
+				}
+			}
+		}
+		.wrap{
+			font-size:14px;
+			font-family:PingFangSC-Regular,PingFang SC;
+			font-weight:400;
+			color:#333333;
+			line-height:20px;
+			text-align: center;
+			padding:240px 0 0;
+			.title{
+				color: #999999;
+			}
+			.uni-row{
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.flex-item{
+					flex: auto;
+					margin: 8px 0;
 				}
 			}
 		}

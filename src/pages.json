@@ -1,5 +1,8 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -10,15 +13,32 @@
 			}
 		},
 		{
-			"path": "pages/home/list"
+			"path": "pages/menu/menu",
+			"style": {
+				"navigationBarTitleText": "房产管理",
+				"app-plus": {
+					"titleNView":false
+				}
+			}
 		},
 		{
-			"path": "pages/house/index",
+			"path": "pages/house/water-price",
 			"style": {
 				"app-plus": {
 					"titleNView":false
 				}
 			}
+		},
+		{
+			"path": "pages/house/building",
+			"style": {
+				"app-plus": {
+					"titleNView":false
+				}
+			}
+		},
+		{
+			"path": "pages/house/add-build"
 		}
 	],
 	"globalStyle": {

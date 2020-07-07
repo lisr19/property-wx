@@ -6,19 +6,8 @@
 		</div>
 		<uni-list>
 			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" :thumb="item.url" @click="openMenu(item,index)"></uni-list-item>
-<!--			<uni-list-item title="日常工作" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="房产管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="租户管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="财务管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="巡检预警" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="设备管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="仓库管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="档案管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="人事管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="外派管理" thumb="/static/logo.png"></uni-list-item>-->
-<!--			<uni-list-item title="系统管理" thumb="/static/logo.png"></uni-list-item>-->
 		</uni-list>
-		<div style="display: flex;justify-content: center;margin: 20px 0">
+		<div style="display: flex;justify-content: center;margin: 25rpx 0">
 			<span class="btn">
 				退出登录
 			</span>
@@ -97,8 +86,11 @@
 			openMenu(item,index){
 				console.log(item.name);
 				if(item.name==='房产管理'){
-					this.$Router.push({name: '房产管理'})
-				}else{
+					// this.$Router.push({name: '房产管理'})
+					this.$Router.push({name: '分类', params:{type:'房产管理'}})
+				}else if(item.name==='租户管理'){
+					this.$Router.push({name: '分类', params:{type:'租户管理'}})
+				}else {
 					this.$Router.push({name: '首页'})
 				}
 				this.closeMenu()
@@ -109,46 +101,56 @@
 		}
 	};
 </script>
-
+<style scoped>
+	/deep/ .uni-list-item__container{
+		padding: 18rpx 28rpx 6rpx;
+	}
+	/deep/ .uni-list-item__content-title{
+		font-size:32rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(51,51,51,1);
+	}
+</style>
 <style lang="less" scoped>
 	.nav-box{
 		/deep/.uni-icons{
-			font-size: 15px!important;
+			font-size: 30rpx!important;
 			color: #DCDCDC!important;
 		}
 		height: 100%;
 		overflow: auto;
 		.head-box{
-			padding: 13px 0;
+			padding: 26rpx 0;
 			display: flex;
 			align-items: center;
 			flex-direction: column;
 			justify-content: center;
-			border-bottom: 0.5px solid #D9D9D9;
+			border-bottom: 1rrpx solid #D9D9D9;
 			.head-img{
-				width:78px;
-				height:78px;
+				width:156rpx;
+				height:156rpx;
 				border-radius: 50%;
 			}
 		}
 		p{
-			font-size:12px;
+			font-size:24rpx;
 			font-family:PingFangSC-Semibold,PingFang SC;
 			font-weight:600;
 			color:rgba(153,153,153,1);
-			line-height:17px;
-			margin-top: 8px;
+			line-height:34rpx;
+			margin-top: 16rpx;
 		}
 		.btn{
-			width:155px;
-			height:33px;
-			line-height: 33px;
-			border-radius:5px;
-			border:1px solid rgba(0,0,0,1);
+			width:310rpx;
+			height:66rpx;
+			line-height: 66rpx;
+			border-radius:10rpx;
+			border:1rpx solid rgba(0,0,0,1);
 			font-family:PingFangSC-Semibold,PingFang SC;
 			font-weight:500;
 			color:rgba(51,51,51,1);
-			font-size: 15px;
+			font-size: 30rpx;
 			text-align: center;
 		}
 	}
