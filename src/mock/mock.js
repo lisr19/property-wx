@@ -29,8 +29,8 @@ let waterList = {
   code: 200,
   message: 'success',
   data: {
-    total: 10,
-    'rows|10': [{
+    total: 20,
+    'rows|20': [{
       'id|+1': 1,
       name: '@cname',
       'job|1': ['前端工程师', '后端工程师', 'UI工程师', '需求工程师'],
@@ -38,14 +38,33 @@ let waterList = {
       'sb|20006-99990': 20046,
       'price|1-10.1': 0.6,
       'state|0-1': 0,
+      'time': Random.date('yyyy-MM-dd'),
+      'address': Random.county(true),
+      'phone': /^1[3456789][1-9]\d{8}/,
+      'parking|1': ['已租', '未租'],
+      "licenseNumbers": /[粤][A-Z]\d{5,7}/,
     }]
+  }
+};
+//详情
+let detail = {
+  code: 200,
+  message: 'success',
+  data: {
+    name: '@cname',
+    'price|100-300': 100,
+    'state|0-1': 0,
+    'time': Random.date('yyyy-MM-dd'),
+    'address': Random.county(true),
+    'phone': /^1[3456789][1-9]\d{8}/,
+    'activeType|1':  ['装修', '其他', '清洁', '收楼','退楼'],
   }
 };
 let electList = {
   code: 200,
   message: 'success',
   data: {
-    total: 100,
+    total: 50,
     'rows|50': [{
       'id|+1': 1,
       name: '@cname',
@@ -61,3 +80,4 @@ let electList = {
 Mock.mock(`${domain}/list`, 'get', listData);
 Mock.mock(`${domain}/waterList`, 'get', waterList);
 Mock.mock(`${domain}/electList`, 'get', electList);
+Mock.mock(`${domain}/detail`, 'get', detail);

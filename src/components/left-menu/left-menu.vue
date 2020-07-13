@@ -7,7 +7,7 @@
 		<uni-list>
 			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" :thumb="item.url" @click="openMenu(item,index)"></uni-list-item>
 		</uni-list>
-		<div style="display: flex;justify-content: center;margin: 25rpx 0">
+		<div style="display: flex;justify-content: center;margin: 40rpx 0">
 			<span class="btn">
 				退出登录
 			</span>
@@ -66,30 +66,40 @@
 						name:'档案管理',
 						url:'/static/logo.png'
 					},
-					{
-						name:'人事管理',
-						url:'/static/logo.png'
-					},
+					// {
+					// 	name:'人事管理',
+					// 	url:'/static/logo.png'
+					// },
 					{
 						name:'外派管理',
 						url:'/static/logo.png'
 					},
-					{
-						name:'系统管理',
-						url:'/static/logo.png'
-					}
+					// {
+					// 	name:'系统管理',
+					// 	url:'/static/logo.png'
+					// }
 
 				]
 			}
 		},
 		methods: {
 			openMenu(item,index){
-				console.log(item.name);
+				// console.log(item.name);
 				if(item.name==='房产管理'){
 					// this.$Router.push({name: '房产管理'})
 					this.$Router.push({name: '分类', params:{type:'房产管理'}})
 				}else if(item.name==='租户管理'){
 					this.$Router.push({name: '分类', params:{type:'租户管理'}})
+				}else if(item.name==='财务管理'){
+					this.$Router.push({name: '分类', params:{type:'财务管理'}})
+				}else if(item.name==='设备管理'){
+					this.$Router.push({name: '分类', params:{type:'设备管理'}})
+				}else if(item.name==='仓库管理'){
+					this.$Router.push({name: '分类', params:{type:'仓库管理'}})
+				}else if(item.name==='档案管理'){
+					this.$Router.push({name: '分类', params:{type:'档案管理'}})
+				}else if(item.name==='外派管理'){
+					this.$Router.push({name: '分类', params:{type:'外派管理'}})
 				}else {
 					this.$Router.push({name: '首页'})
 				}
@@ -103,7 +113,7 @@
 </script>
 <style scoped>
 	/deep/ .uni-list-item__container{
-		padding: 18rpx 28rpx 6rpx;
+		padding: 24rpx 28rpx 10rpx;
 	}
 	/deep/ .uni-list-item__content-title{
 		font-size:32rpx;
@@ -139,7 +149,7 @@
 			font-weight:600;
 			color:rgba(153,153,153,1);
 			line-height:34rpx;
-			margin-top: 16rpx;
+			margin-top: 18rpx;
 		}
 		.btn{
 			width:310rpx;

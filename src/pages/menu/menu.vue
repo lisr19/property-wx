@@ -31,7 +31,7 @@
 				listHeight:500,
 			}
 		},
-		onLoad() {
+		onShow() {
 			uni.getSystemInfo({
 				success: (res)=> {
 					console.log(res.windowHeight);
@@ -42,11 +42,23 @@
 		},
 		methods: {
 			initData(){
-				console.log(this.$Route.query.type);
-				let type = this.$Route.query.type
-				this.typeName = type
-				switch(type)
-				{
+				let type = this.$Route.query.type?this.$Route.query.type:null
+				if(type===null){
+					uni.getStorage({
+						key: 'typeName',
+						success:  (res) =>{
+							this.typeName=res.data
+							type=res.data
+						}
+					})
+				}else {
+					uni.setStorage({
+						key:'typeName',
+						data:type
+					})
+					this.typeName = type
+				}
+				switch(type) {
 					case '房产管理':
 						this.typeList = [
 							{name:'楼宇设置'},
@@ -61,9 +73,46 @@
 						this.typeList = [
 							{name:'租户信息'},
 							{name:'车位信息'},
-							{name:'租户活动管理'},
-							{name:'非租户活动管理'},
+							{name:'活动管理'},
+							// {name:'非租户活动管理'},
+							{name:'活动审核'},
+							{name:'收费审核'},
+							{name:'活动回访'},
+							{name:'归档记录'},
 							{name:'租户留言'},
+						]
+						break;
+					case '财务管理':
+						this.typeList = [
+							{name:'计费管理'},
+							{name:'计费审批'},
+							{name:'杂费管理'},
+							{name:'保证金管理'},
+							{name:'违约金管理'},
+							{name:'缴费汇总'},
+						]
+						break;
+					case '设备管理':
+						this.typeList = [
+							{name:'保养计划'},
+							{name:'保养验收'},
+						]
+						break;
+					case '仓库管理':
+						this.typeList = [
+							{name:'物品管理'},
+							{name:'库存查询'},
+						]
+						break;
+					case '档案管理':
+						this.typeList = [
+							{name:'档案查询'},
+							{name:'到期提醒'},
+						]
+						break;
+					case '外派管理':
+						this.typeList = [
+							{name:'服务记录'},
 						]
 						break;
 				}
@@ -73,10 +122,16 @@
 				console.log(item.name);
 				if(item.name==='楼宇设置'){
 					this.$Router.push({name: '楼宇设置'})
-				}else if(item.name==='水/电表价格设置'){
-					this.$Router.push({name: '水电价格'})
-				} else if(item.name==='单元设置'){
-					this.$Router.push({name: '单元设置'})
+				}else if(item.name==='租户信息'){
+					this.$Router.push({name: '租户信息'})
+				} else if(item.name==='车位信息'){
+					this.$Router.push({name: '车位信息'})
+				} else if(item.name==='活动管理'){
+					this.$Router.push({name: '活动管理'})
+				} else if(item.name==='活动审核'){
+					this.$Router.push({name: '活动审核'})
+				}else if(item.name==='收费审核'){
+					this.$Router.push({name: '收费审核'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}
@@ -94,39 +149,39 @@
 
 <style lang="less" scoped>
 	.content {
-		font-size: 12px;
+		font-size: 24rpx;
 		color: #666666;
-		line-height: 18px;
+		line-height: 36rpx;
 		.head-bar {
 			font-family: PingFangSC-Medium, PingFang SC;
 			font-weight: 500;
 			color: rgba(255, 255, 255, 1);
-			height: 192px;
+			height: 384rpx;
 			background: rgba(6, 25, 104, 1);
 			position: fixed;
 			top: 0;
 			width: 100%;
 			z-index: 9;
 			.bg {
-				top: -90px;
+				top: -180rpx;
 				border-radius: 50%;
-				width: 380px;
+				width: 750rpx;
 				background: -webkit-linear-gradient(327deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.2) 100%);
 				background: linear-gradient(123deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.15) 100%);
 				position: absolute;
-				left: -85px;
-				height: 340px;
+				left: -170rpx;
+				height: 680rpx;
 			}
 			.title {
 				text-align: left;
 				display: flex;
 				align-items: center;
-				padding: 13px 20px 14px;
-				font-size: 18px;
+				padding: 26rpx 40rpx 28rpx;
+				font-size: 36rpx;
 				.menu {
-					width: 30px;
-					height: 30px;
-					margin-right: 10px;
+					width: 60rpx;
+					height: 60rpx;
+					margin-right: 20rpx;
 					z-index: 102;
 				}
 			}
@@ -135,46 +190,46 @@
 			background:rgba(248,248,248,1);
 			position: absolute;
 			width:90.5%;
-			top: 62px;
+			top: 124rpx;
 			left: 5%;
 			z-index: 10;
-			font-size: 32px;
+			font-size: 64rpx;
 			font-family: PingFangSC-Medium, PingFang SC;
 			font-weight: 500;
 			color: rgba(51, 51, 51, 1);
-			box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.06);
-			border-radius: 5px;
-			padding: 16px 12px;
+			box-shadow: 0 4rpx 16rpx 0 rgba(0, 0, 0, 0.06);
+			border-radius: 10rpx;
+			padding: 32rpx 24rpx;
 			box-sizing: border-box;
 			.name{
-				font-size:18px;
+				font-size:36rpx;
 				font-family:PingFangSC-Semibold,PingFang SC;
 				font-weight:600;
 				color:rgba(51,51,51,1);
-				margin-bottom: 20px;
+				margin-bottom: 40rpx;
 				em{
-					width:7px;
-					height:7px;
+					width:14rpx;
+					height:14rpx;
 					background:#00D29C;
 					display: inline-block;
-					margin-right: 6px;
+					margin-right: 12rpx;
 					border-radius: 50%;
 				}
 			}
 			.type-items{
-				font-size:16px;
+				font-size:32rpx;
 				font-family:PingFangSC-Regular,PingFang SC;
 				font-weight:400;
 				color:rgba(51,51,51,1);
-				line-height:22px;
+				line-height:22rpx;
 				.item{
 					text-align: center;
-					height:37px;
-					line-height: 37px;
+					height:74rpx;
+					line-height: 74rpx;
 					background:rgba(255,255,255,1);
-					box-shadow:0px 2px 4px 0px rgba(40,40,40,0.08);
-					border-radius:19px;
-					margin-bottom: 10px;
+					box-shadow:0 4rpx 8rpx 0 rgba(40,40,40,0.08);
+					border-radius:38rpx;
+					margin-bottom: 20rpx;
 				}
 			}
 		}

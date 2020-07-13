@@ -1,50 +1,205 @@
 <template>
 	<view  class="content">
 		<h2>添加楼宇</h2>
+<!--		<view class="form">-->
+<!--			<form @submit="formSubmit" @reset="formReset">-->
+<!--				<div class="input-box"><span>楼宇编号：</span><input  class="uni-input" name="num"></div>-->
+<!--				<div class="input-box"><span>楼宇名称：</span><input class="uni-input" name="name"></div>-->
+<!--				<div class="input-box"><span>地址：</span><input class="uni-input" name="name"></div>-->
+<!--				<div class="input-box"><span>占地面积：</span><input class="uni-input" name="name"></div>-->
+<!--				<div class="input-box"><span>总单元数：</span><input class="uni-input" name="name"></div>-->
+<!--				<div class="input-box"><span>开放商：</span><input class="uni-input" name="name"></div>-->
+<!--				<div class="input-box"><span>产权人：</span><input class="uni-input" name="name"></div>-->
+<!--				<div class="input-box"><span>略缩图：</span>-->
+<!--					<u-upload :action="action" :file-list="fileList" :max-size="5 * 1024 * 1024" max-count="3"-->
+<!--							  ref="uUpload" name="imgFile" @on-uploaded="onUploaded"-->
+<!--					></u-upload>-->
+<!--				</div>-->
+<!--				<button form-type="submit" class="btn">提交保存</button>-->
+<!--			</form>-->
+<!--		</view>-->
 		<view class="form">
-			<form @submit="formSubmit" @reset="formReset">
-				<div class="input-box"><span>楼宇编号：</span><input class="uni-input" name="num"></div>
-				<div class="input-box"><span>楼宇名称：</span><input class="uni-input" name="name"></div>
-				<div class="input-box"><span>地址：</span><input class="uni-input" name="name"></div>
-				<div class="input-box"><span>占地面积：</span><input class="uni-input" name="name"></div>
-				<div class="input-box"><span>总单元数：</span><input class="uni-input" name="name"></div>
-				<div class="input-box"><span>开放商：</span><input class="uni-input" name="name"></div>
-				<div class="input-box"><span>产权人：</span><input class="uni-input" name="name"></div>
-				<div class="input-box"><span>略缩图：</span>
-<!--					<view class="img-up" >-->
-<!--						<block v-if="imageSrc">-->
-<!--							<image :src="imageSrc" class="image" mode="widthFix"></image>-->
-<!--						</block>-->
-<!--						<block v-else>-->
-<!--							<view class="add-box" @click="chooseImage">选择图片</view>-->
-<!--						</block>-->
-<!--					</view>-->
-					<u-upload :action="action" :file-list="fileList" max-count="1"
+			<u-form :model="form" ref="uForm">
+				<u-form-item label="楼宇编号：" prop="name" required label-width="auto">
+					<u-input v-model="form.name" />
+				</u-form-item>
+				<u-form-item label="楼宇名称：" prop="mobile" label-width="auto">
+					<u-input v-model="form.mobile"  />
+				</u-form-item>
+				<u-form-item label="地址：" prop="mobile" label-width="auto">
+					<u-input v-model="form.mobile"  />
+				</u-form-item>
+				<u-form-item label="占地面积：" prop="mobile" label-width="auto">
+					<u-input v-model="form.mobile"  />
+				</u-form-item>
+				<u-form-item label="总单元数：" prop="mobile" label-width="auto">
+					<u-input v-model="form.mobile"  />
+				</u-form-item>
+				<u-form-item label="开放商：" prop="mobile" label-width="auto">
+					<u-input v-model="form.mobile"  />
+				</u-form-item>
+				<u-form-item label="产权人：" prop="mobile" label-width="auto">
+					<u-input v-model="form.mobile"  />
+				</u-form-item>
+				<u-form-item label="略缩图：" label-width="auto">
+					<u-upload :action="action" :file-list="fileList" :max-size="5 * 1024 * 1024" max-count="3"
 							  ref="uUpload" name="imgFile" @on-uploaded="onUploaded"
 					></u-upload>
-				</div>
-				<button form-type="submit" class="btn">提交保存</button>
-			</form>
+				</u-form-item>
+				<view class="btn" @click="submit">提交</view>
+			</u-form>
+		</view>
+		<view class="uni-list">
+			<view class="uni-list-cell">
+				<view class="uni-list-cell-left">
+					当前选择
+				</view>
+				<view class="uni-list-cell-db">
+					<picker mode="date" :value="date" :start="startDate" @change="bindDateChange">
+						<view class="uni-input">{{date}}</view>
+					</picker>
+				</view>
+			</view>
+		</view>
+		<view class="">
+			<view class="text-area">
+				<text class="label">当前选中项目：</text>
+				<text class="value" @tap="show = true">{{info || "请选择"}}</text>
+			</view>
+			<multiple-select
+					v-model="show"
+					:data="list"
+					:default-selected="defaultSelected"
+					@confirm="confirm"
+			></multiple-select>
 		</view>
 	</view >
 </template>
 
 <script>
 	import {} from "@/utils/api/comment"
+	import multipleSelect from "@/components/multipleSelect/multipleSelect";
 	export default {
-		components: {},
+		components: {multipleSelect},
 		data() {
+			const currentDate = this.getDate({
+				format: true
+			})
 			return {
+				show: false, //是否显示 - 双向绑定
+				info: "",
+				defaultSelected: ["3", "5"], //默认选中项
+				list:[
+					{
+						label: "皮皮虾",
+						value: "1",
+					},
+					{
+						label: "小龙虾",
+						value: "2",
+						disabled: true, //禁用
+					},
+					{
+						label: "大龙虾",
+						value: "3",
+					},
+					{
+						label: "石头蟹",
+						value: "4",
+					},
+					{
+						label: "兰花蟹",
+						value: "5",
+					},
+					{
+						label: "面包蟹",
+						value: "6",
+					},
+					{
+						label: "石斑鱼",
+						value: "7",
+					},
+					{
+						label: "鲫鱼",
+						value: "8",
+					},
+					{
+						label: "鲨鱼",
+						value: "9",
+					},
+				],
+				date: currentDate,
 				numb:'',
 				imageSrc: '',
 				action: 'https://llz.halohealth.cn/api/0.1/upload/img',
-				fileList: []
+				fileList: [],
+				form: {
+					name: '',
+					mobile: '',
+				},
+				// rules: {
+				// 	name: [
+				// 		{
+				// 			required: true,
+				// 			message: '请输入姓名',
+				// 			trigger: ['blur', 'change']
+				// 		}
+				// 	],
+				// 	mobile: [
+				// 		{
+				// 			required: true,
+				// 			message: '请输入手机号',
+				// 			trigger: ['change','blur'],
+				// 		},
+				//
+				// 	]
+				// }
 			}
 		},
-		onLoad() {
-
+		computed: {
+			startDate() {
+				return this.getDate('start');
+			},
+		},
+		onReady() {
+			this.$refs.uForm.setRules(this.rules);
 		},
 		methods: {
+			confirm(data) {
+				console.log(data);
+				this.info = data.map((el) => el.label).join(",");
+			},
+			bindDateChange: function(e) {
+				this.date = e.target.value
+				console.log(this.date);
+			},
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
+			submit() {
+				this.$refs.uForm.validate(valid => {
+					if (valid) {
+						console.log('验证通过');
+						uni.showToast({
+							title: '标题',
+							duration: 2000
+						});
+					} else {
+						console.log('验证失败');
+					}
+				});
+			},
 			onUploaded(lists) {
 				console.log(lists);
 				// this.fileList = lists;
@@ -113,7 +268,27 @@
 		}
 	}
 </script>
-
+<style scoped>
+	/deep/ .uni-input-input, /deep/ .u-input__input{
+		flex: 1;
+		height:28px;
+		line-height: 28px;
+		background:rgba(255,255,255,1);
+		border-radius:8px;
+		border:1px solid rgba(230,230,230,1);
+		padding-left: 5px;
+		box-sizing: border-box;
+	}
+	/deep/ .uni-input-placeholder{
+		padding-left: 10px;
+	}
+	/deep/.u-input__input{
+		margin: 0!important;
+	}
+	/deep/.u-border-bottom:after{
+		border: none;
+	}
+</style>
 <style lang="less" scoped>
 	.content{
 		color: #666666;
@@ -139,6 +314,7 @@
 			font-weight:600;
 			color:rgba(255,255,255,1);
 			margin-top: 30px;
+			text-align: center;
 		}
 		.form{
 			.input-box{

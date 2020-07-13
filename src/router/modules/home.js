@@ -7,6 +7,10 @@ const home = [
 		name: '首页',
 	},
 	{
+		path: '/pages/login/login',
+		name: '登录',
+	},
+	{
 		path: '/pages/home/list',
 		name: '列表',
 	},
@@ -25,6 +29,30 @@ const home = [
 	{
 		path: '/pages/house/add-build',
 		name: '添加楼宇',
+	},
+	{
+		path: '/pages/tenant/tenant',
+		name: '租户信息',
+	},
+	{
+		path: '/pages/tenant/parking',
+		name: '车位信息',
+	},
+	{
+		path: '/pages/tenant/activity',
+		name: '活动管理',
+	},
+	{
+		path: '/pages/tenant/activity-detail',
+		name: '活动详情',
+	},
+	{
+		path: '/pages/tenant/examine',
+		name: '活动审核',
+	},
+	{
+		path: '/pages/tenant/charge',
+		name: '收费审核',
 	},
 
 ]

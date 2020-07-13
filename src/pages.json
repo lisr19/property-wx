@@ -4,6 +4,14 @@
 	},
 	"pages": [
 		{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					"titleNView":false
+				}
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "物业管理系统",
@@ -38,7 +46,25 @@
 			}
 		},
 		{
-			"path": "pages/house/add-build"
+			"path": "pages/tenant/tenant"
+		},
+		{
+			"path": "pages/tenant/parking"
+		},
+		{
+			"path": "pages/tenant/activity"
+		},
+		{
+			"path": "pages/tenant/activity-detail",
+			"style": {
+				"navigationBarTitleText": "活动详情"
+			}
+		},
+		{
+			"path": "pages/tenant/examine"
+		},
+		{
+			"path": "pages/tenant/charge"
 		}
 	],
 	"globalStyle": {

@@ -17,6 +17,13 @@ export function electList(params) {
         body: params
     })
 }
+export function getDetail(params) {
+    return fly.request({
+        url: '/detail',
+        method: 'get',
+        body: params
+    })
+}
 
 
 
