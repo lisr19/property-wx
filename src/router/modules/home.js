@@ -54,6 +54,17 @@ const home = [
 		path: '/pages/tenant/charge',
 		name: '收费审核',
 	},
-
+	{
+		path: '/pages/tenant/leaving',
+		name: '租户留言',
+	},
+	{
+		path: '/pages/finance/charging-manage',
+		name: '计费管理',
+	},
+	{
+		path: '/pages/finance/approval',
+		name: '计费审批',
+	},
 ]
 export default home

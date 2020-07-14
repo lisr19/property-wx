@@ -5,50 +5,35 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>收费审核</p>
-				<u-radio-group class="tab" v-model="value" size="45" active-color="">
-					<u-radio style="margin-right: 15px"
-							v-for="(item, index) in listType" :key="index"
-							shape="circle"
-							:name="item.name"
-							label-size="30"
-							@change="radioChange(item,index)"
-					>
-						<span :class="{active:currType===index}">{{item.name}}</span>
-					</u-radio>
-				</u-radio-group>
+				<p class="name"><em></em>计费审批</p>
+
+				<view class="input-box">
+					<span>所属楼宇：</span><u-input height="60"  v-model="currTypeName" placeholder="请选择楼宇" :type="type"  :border="border" @click="show = true" />
+				</view>
+				<view class="btn">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">活动主题：{{item.name}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.name}}</p>
-				<p><span>活动金额：</span>{{item.price}}</p>
-				<p><span>开始时间：</span>{{item.time}}</p>
+				<p class="title">收费项目：{{item.name}}</p>
+				<p><span>所属月份：</span>{{item.phone}}</p>
+				<p><span>开始日期：</span>{{item.time}}</p>
+				<p><span>结束日期：</span>{{item.time}}</p>
+				<p class="price"><span >应缴总金额：</span>{{item.price}}</p>
+				<p class="price"><span >应缴总户数：</span>{{item.price}}</p>
 				<view class="btn-group">
-					<span class="btn" @click="showConfirmC(item,1)">通过</span>
-					<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">驳回</span>
+					<span class="btn">通过</span>
+					<span class="btn" style="color: #C06E6E">驳回</span>
 				</view>
 
 			</view>
 		</view>
-<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
 		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
-<!--		确定弹窗-->
-		<u-popup v-model="showC" mode="bottom" border-radius="20" height="552rpx" closeable>
-			<view class="tip-box">
-				<view class="tip-content">{{tipsContent}}</view>
-				<view class="desc">说明：
-					<u-input type="textarea" v-model="reason" border class="text"/>
-				</view>
-				<view class="btn">确定</view>
-			</view>
-		</u-popup>
 	</view >
 </template>
 
@@ -63,10 +48,7 @@
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				tipsContent:'',
-				reason:'',
 				show: false,
-				showC: false,
 				showTime: false,
 				startTime: false,
 				data1: '',
@@ -89,19 +71,19 @@
 				],
 				listType:[
 					{
-						name: '未收款',
+						name: '租户活动',
 					},
 					{
-						name: '已收款',
+						name: '非租户活动',
 					},
 				],
 				currTypeName:'',
-				currType:0,
 				keyName:'',
+				active:0,
 				index:0,
 				dataList:[],
 				currIndex:0,
-				value: '未收款',
+				value: '租户活动',
 				current: 0,
 				total:0
 			}
@@ -110,17 +92,6 @@
 			this.getWater()
 		},
 		methods: {
-			showConfirmC(item,type){
-				if(type===1){
-					this.tipsContent = '确认通过此条记录吗？'
-				}else {
-					this.tipsContent = '确认驳回此条记录吗？'
-				}
-				this.showC = true
-			},
-			confirmC(){
-
-			},
 			openTime(e){
 				if(e==='start'){
 					this.startTime = true
@@ -281,16 +252,18 @@
 		}
 		.tab {
 			height: 80rpx;
+			position: absolute;
 			z-index: 9;
 			background: #ffffff;
 			top: 375rpx;
 			width: 100%;
+			padding: 0 38rpx;
 			.active{
 				color: #077AFF;
 			}
 		}
 		.items{
-			padding: 275rpx 0 50rpx;
+			padding: 360rpx 0 50rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -320,13 +293,19 @@
 				span{
 					color: #999999;
 				}
+				.price{
+					color:rgba(10,72,130,1);
+					span{
+						color:rgba(10,72,130,1);
+					}
+				}
 				.btn-group{
 					display: flex;
 					flex-direction: column;
 					position: absolute;
 					font-size:28rpx;
-					top: 20rpx;
-					right: 20rpx;
+					top: 50rpx;
+					right: 40rpx;
 					.btn{
 						width:206rpx;
 						height:76rpx;
@@ -340,40 +319,6 @@
 				}
 			}
 
-		}
-	}
-	.tip-box{
-		padding:60rpx;
-		font-size:28rpx;
-		.tip-content{
-			font-size: 36rpx;
-			padding-top: 30rpx;
-			font-weight:600;
-			color:rgba(51,51,51,1);
-		}
-		.desc{
-			margin: 40rpx 0 30rpx;
-			.text{
-				height:166rpx;
-				background:rgba(250,250,250,1);
-				border-radius:8rpx;
-				border:2rpx solid rgba(237,237,237,1);
-				margin-top: 20rpx;
-			}
-		}
-		.btn{
-			width:214rpx;
-			height:86rpx;
-			line-height:86rpx;
-			text-align: center;
-			background:rgba(1,122,255,1);
-			border-radius:14rpx;
-			font-size:30rpx;
-			font-weight:500;
-			color:rgba(255,255,255,1);
-			position: absolute;
-			right: 58rpx;
-			bottom: 40rpx;
 		}
 	}
 </style>

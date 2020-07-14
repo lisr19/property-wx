@@ -1,52 +1,59 @@
 <template>
-	<div class="content">
-		<div class="head-bar">
-			<div class="bg"></div>
+	<view class="content">
+		<view class="head-bar">
+			<view class="bg"></view>
 			<p class="title"><image class="menu" src="/static/logo.png" @click="openBox"></image>物业管理系统</p>
-			<div class="tab-bar">
+			<view class="tab-bar">
 				<ul class="nav">
 					<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
 						<p>{{item.name}}</p>
 						<uni-badge class="tip" text="5" type="error" size="small"></uni-badge>
 					</li>
 				</ul>
-			</div>
-			<div class="card">
-				<image class="logo" src="/static/logo.png"></image>
-				<p class="null">暂无通知</p>
-			</div>
-		</div>
-		<div class="card2">
-			<div class="item" @click="openDetail">
+			</view>
+			<template v-if="currIndex===0">
+				<view class="card">
+					<image class="logo" src="/static/logo.png"></image>
+					<p class="null">暂无通知</p>
+				</view>
+			</template>
+			<template v-else>
+				<view class="card">
+					<image class="logo" src="/static/logo.png"></image>
+					<p class="null">暂无提醒</p>
+				</view>
+			</template>
+		</view>
+		<view class="card2">
+			<view class="item" @click="openDetail">
 				<p class="name"><em></em>任务</p>
-				<div class="desc">
-					<span class="time">上午 9:10</span>
-					<div class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</div>
-				</div>
+				<view class="desc">
+					<span class="time">{{chageDate}}</span>
+					<view class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</view>
+				</view>
 				<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
-			</div>
-			<div class="item">
+			</view>
+			<view class="item">
 				<p class="name"><em style="background: #426FE4"></em>日程安排</p>
-				<div class="desc">
-					<span class="time">上午 9:10</span>
-					<div class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</div>
-				</div>
+				<view class="desc">
+					<span class="time">{{chageDate}}</span>
+					<view class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</view>
+				</view>
 				<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
-			</div>
-		</div>
-		<div class="data-box">
+			</view>
+		</view>
+		<view class="data-box">
 			<uni-calendar
 					:insert="true"
 					:lunar="false"
 					ref="calendar"
-					:start-date="'2019-3-2'"
 					@change="change"
 			/>
-		</div>
+		</view>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-	</div>
+	</view>
 </template>
 
 <script>
@@ -59,6 +66,7 @@
 		components: {uniDrawer,uniIcons,uniCalendar,uniBadge,leftMenu},
 		data() {
 			return {
+				chageDate:new Date().toISOString().slice(0, 10),
 				currIndex:0,
 				typeList:[
 					{
@@ -79,6 +87,7 @@
 			},
 			change(e) {
 				console.log(e);
+				this.chageDate = e.fulldate
 			},
 			tagType(index){
 				this.currIndex =index

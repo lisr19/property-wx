@@ -36,11 +36,11 @@
 						url:'/static/logo.png',
 						show:false
 					},
-					{
-						name:'房产管理',
-						url:'/static/logo.png',
-						show:true
-					},
+					// {
+					// 	name:'房产管理',
+					// 	url:'/static/logo.png',
+					// 	show:true
+					// },
 					{
 						name:'租户管理',
 						url:'/static/logo.png',

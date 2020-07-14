@@ -22,8 +22,7 @@
 		components: {
 			leftMenu
 		},
-		props: {
-		},
+
 		data(){
 			return{
 				typeName:'',
@@ -120,7 +119,7 @@
 
 			openDetail(item,index){
 				console.log(item.name);
-				if(item.name==='楼宇设置'){
+				if(item.name==='楼宇设置'){ //租户管理
 					this.$Router.push({name: '楼宇设置'})
 				}else if(item.name==='租户信息'){
 					this.$Router.push({name: '租户信息'})
@@ -132,6 +131,12 @@
 					this.$Router.push({name: '活动审核'})
 				}else if(item.name==='收费审核'){
 					this.$Router.push({name: '收费审核'})
+				}else if(item.name==='租户留言'){
+					this.$Router.push({name: '租户留言'})
+				} else if(item.name==='计费管理'){ //财务管理
+					this.$Router.push({name: '计费管理'})
+				}else if(item.name==='计费审批'){
+					this.$Router.push({name: '计费审批'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}

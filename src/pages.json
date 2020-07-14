@@ -4,17 +4,17 @@
 	},
 	"pages": [
 		{
-			"path": "pages/login/login",
+			"path": "pages/index/index",
 			"style": {
+				"navigationBarTitleText": "物业管理系统",
 				"app-plus": {
 					"titleNView":false
 				}
 			}
 		},
 		{
-			"path": "pages/index/index",
+			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "物业管理系统",
 				"app-plus": {
 					"titleNView":false
 				}
@@ -65,6 +65,15 @@
 		},
 		{
 			"path": "pages/tenant/charge"
+		},
+		{
+			"path": "pages/tenant/leaving"
+		},
+		{
+			"path": "pages/finance/charging-manage"
+		},
+		{
+			"path": "pages/finance/approval"
 		}
 	],
 	"globalStyle": {
