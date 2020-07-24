@@ -100,6 +100,8 @@
 					this.$Router.push({name: '分类', params:{type:'档案管理'}})
 				}else if(item.name==='外派管理'){
 					this.$Router.push({name: '分类', params:{type:'外派管理'}})
+				}else if(item.name==='巡检预警'){
+					this.$Router.push({name: '巡检'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}

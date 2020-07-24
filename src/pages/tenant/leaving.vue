@@ -17,13 +17,22 @@
 				<p>回复内容：{{item.time}}</p>
 				<p>留言日期：{{item.time}}</p>
 				<p>回复日期：{{item.time}}</p>
-				<span class="btn">回复</span>
+				<span class="btn" @click="replyQ">回复</span>
 			</view>
 		</view>
 <!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
+		<u-popup v-model="showReply" mode="bottom" border-radius="20" height="552rpx" closeable>
+			<view class="tip-box">
+				<view class="tip-content">标题</view>
+				<view class="desc">回复内容：
+					<u-input type="textarea" v-model="reason" border class="text"/>
+				</view>
+				<view class="btn">确定</view>
+			</view>
+		</u-popup>
 	</view >
 </template>
 
@@ -39,6 +48,8 @@
 		data() {
 			return {
 				currType:0,
+				showReply:false,
+				reason:'',
 				dataList:[],
 				currIndex:0,
 				value: '启用用户',
@@ -50,6 +61,9 @@
 			this.getWater()
 		},
 		methods: {
+			replyQ(){
+				this.showReply=true
+			},
 			chagePage(e){
 				console.log(e);
 			},
@@ -242,6 +256,40 @@
 				}
 			}
 
+		}
+	}
+	.tip-box{
+		padding:10rpx 60rpx;
+		font-size:28rpx;
+		.tip-content{
+			font-size: 36rpx;
+			padding-top: 30rpx;
+			font-weight:600;
+			color:rgba(51,51,51,1);
+		}
+		.desc{
+			margin: 40rpx 0 30rpx;
+			.text{
+				height:166rpx;
+				background:rgba(250,250,250,1);
+				border-radius:8rpx;
+				border:2rpx solid rgba(237,237,237,1);
+				margin-top: 20rpx;
+			}
+		}
+		.btn{
+			width:214rpx;
+			height:86rpx;
+			line-height:86rpx;
+			text-align: center;
+			background:rgba(1,122,255,1);
+			border-radius:14rpx;
+			font-size:30rpx;
+			font-weight:500;
+			color:rgba(255,255,255,1);
+			position: absolute;
+			right: 58rpx;
+			bottom: 40rpx;
 		}
 	}
 </style>

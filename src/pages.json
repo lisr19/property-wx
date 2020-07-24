@@ -74,6 +74,9 @@
 		},
 		{
 			"path": "pages/finance/approval"
+		},
+		{
+			"path": "pages/inspection/index"
 		}
 	],
 	"globalStyle": {

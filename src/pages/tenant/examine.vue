@@ -12,24 +12,12 @@
 				<view class="input-box">
 					<span>状态：</span><u-input height="60"  v-model="currTypeName" placeholder="请选择状态" :type="type"  :border="border" @click="show = true" />
 				</view>
-<!--				<view class="input-box">-->
-<!--					<span>范围：</span>-->
-<!--					<u-input v-model="data1" placeholder=""  disabled :border="border" height="60" @click="openTime('start')" /> &#45;&#45;-->
-<!--					<u-input v-model="data2" placeholder="" disabled :border="border" height="60" @click="openTime('end')" />-->
-<!--				</view>-->
 				<view class="btn">查询</view>
 			</view >
-			<u-radio-group class="tab" v-model="value" size="45" active-color="">
-				<u-radio
-						v-for="(item, index) in listType" :key="index"
-						shape="circle"
-						:name="item.name"
-						label-size="30"
-						@change="radioChange(item,index)"
-				>
-					<span :class="{active:active===index}">{{item.name}}</span>
-				</u-radio>
-			</u-radio-group>
+			<view class="tab">
+				<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"
+					  :key="index" @click="tabType(index)">{{item.name}}</view>
+			</view>
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
@@ -86,12 +74,12 @@
 						label: '通过'
 					},
 				],
-				listType:[
+				typeList:[
 					{
-						name: '租户活动',
+						name: '活动审核',
 					},
 					{
-						name: '非租户活动',
+						name: '装修过程',
 					},
 				],
 				currTypeName:'',
@@ -107,8 +95,12 @@
 		},
 		onLoad() {
 			this.getWater()
+
 		},
 		methods: {
+			tabType(index){
+				this.currIndex = index
+			},
 			openTime(e){
 				if(e==='start'){
 					this.startTime = true
@@ -272,15 +264,30 @@
 			position: absolute;
 			z-index: 9;
 			background: #ffffff;
-			top: 375rpx;
+			top: 476rpx;
 			width: 100%;
 			padding: 0 38rpx;
+			font-size:32rpx;
+			font-family:PingFangSC-Regular,PingFang SC;
+			font-weight:400;
+			color:rgba(131,131,131,1);
+			display: flex;
+			.item{
+				margin-right: 30rpx;
+				height:58rpx;
+				line-height:58rpx;
+				text-align: center;
+				background:rgba(238,238,242,1);
+				border-radius:29rpx;
+				padding:0 24rpx;
+			}
 			.active{
-				color: #077AFF;
+				color:rgba(249,249,249,1);
+				background:rgba(1,122,255,1);
 			}
 		}
 		.items{
-			padding: 450rpx 0 50rpx;
+			padding: 530rpx 0 50rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

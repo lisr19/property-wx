@@ -66,5 +66,9 @@ const home = [
 		path: '/pages/finance/approval',
 		name: '计费审批',
 	},
+	{
+		path: '/pages/inspection/index',
+		name: '巡检',
+	},
 ]
 export default home
