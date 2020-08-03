@@ -12,15 +12,35 @@
 				</ul>
 			</view>
 			<template v-if="currIndex===0">
-				<view class="card">
+				<view class="card null-card" v-if="noticeNull">
 					<image class="logo" src="/static/logo.png"></image>
 					<p class="null">暂无通知</p>
 				</view>
+				<view class="card" v-else>
+					<p class="msg">
+						<span class="msg-tip">假期通知：</span>
+						<span>准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</span>
+					</p>
+					<p class="msg">
+						<span class="msg-tip">假期通知：</span>
+						<span>准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</span>
+					</p>
+				</view>
 			</template>
 			<template v-else>
-				<view class="card">
+				<view class="card null-card" v-if="workNull">
 					<image class="logo" src="/static/logo.png"></image>
 					<p class="null">暂无提醒</p>
+				</view>
+				<view class="card" v-else>
+					<view class="work">
+						<p class="name">标题：多福多寿</p>
+						<p><span>来源：活动 </span><span>日期：2020-12-10</span></p>
+					</view>
+					<view class="work">
+						<p class="name">标题：多福多寿</p>
+						<p><span>来源：活动 </span><span>日期：2020-12-10</span></p>
+					</view>
 				</view>
 			</template>
 		</view>
@@ -68,6 +88,8 @@
 			return {
 				chageDate:new Date().toISOString().slice(0, 10),
 				currIndex:0,
+				noticeNull:true,
+				workNull:false,
 				typeList:[
 					{
 						name:'最新通知',
@@ -179,9 +201,8 @@
 				top: 200rpx;
 				left:5%;
 				z-index: 10;
-				font-size:64rpx;
 				font-family:PingFangSC-Medium,PingFang SC;
-				font-weight:500;
+				font-weight:400;
 				color:rgba(51,51,51,1);
 				height:240rpx;
 				background:rgba(255,255,255,1);
@@ -190,6 +211,37 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				flex-direction: column;
+				font-size:28rpx;
+				.msg{
+					padding: 15rpx 0rpx 20rpx;
+					margin: 0 18rpx;
+					display: flex;
+					.msg-tip{
+						width: 250rpx;
+					}
+				}
+				.msg:first-child{
+					border-bottom: solid 1rpx #c0c0c0;
+				}
+				.work{
+					font-size:28rpx;
+					padding: 15rpx 18rpx;
+					font-family:PingFangSC-Medium,PingFang SC;
+					font-weight:500;
+					color:rgba(0,0,0,1);
+					width: 90%;
+					.name{
+						margin-bottom: 10rpx;
+					}
+					span{
+						color:#999999;
+						margin-right: 30rpx;
+					}
+				}
+				.work:first-child{
+					border-bottom: solid 1rpx #c0c0c0;
+				}
 				image{
 					width: 80rpx;
 					height: 80rpx;
@@ -201,6 +253,9 @@
 					font-weight:400;
 					color:rgba(184,184,184,1);
 				}
+			}
+			.null-card{
+				flex-direction: row;
 			}
 		}
 		.nav-box{

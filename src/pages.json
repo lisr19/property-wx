@@ -73,11 +73,21 @@
 			"path": "pages/finance/charging-manage"
 		},
 		{
+			"path": "pages/finance/pay-count"
+		},
+		{
+			"path": "pages/finance/break-money"
+		},
+		{
 			"path": "pages/finance/approval"
+		},
+		{
+			"path": "pages/finance/bond"
 		},
 		{
 			"path": "pages/inspection/index"
 		}
+
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

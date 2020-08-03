@@ -67,6 +67,18 @@ const home = [
 		name: '计费审批',
 	},
 	{
+		path: '/pages/finance/bond',
+		name: '保证金管理',
+	},
+	{
+		path: '/pages/finance/break-money',
+		name: '违约金管理',
+	},
+	{
+		path: '/pages/finance/pay-count',
+		name: '缴费汇总',
+	},
+	{
 		path: '/pages/inspection/index',
 		name: '巡检',
 	},

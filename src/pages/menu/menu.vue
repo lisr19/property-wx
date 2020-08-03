@@ -138,8 +138,14 @@
 					this.$Router.push({name: '租户留言'})
 				} else if(item.name==='计费管理'){ //财务管理
 					this.$Router.push({name: '计费管理'})
-				}else if(item.name==='计费审批'){
+				}else if(item.name==='保证金管理'){
+					this.$Router.push({name: '保证金管理'})
+				} else if(item.name==='违约金管理'){
+					this.$Router.push({name: '违约金管理'})
+				} else if(item.name==='计费审批'){
 					this.$Router.push({name: '计费审批'})
+				}else if(item.name==='缴费汇总'){
+					this.$Router.push({name: '缴费汇总'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}

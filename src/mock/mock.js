@@ -43,6 +43,7 @@ let waterList = {
       'phone': /^1[3456789][1-9]\d{8}/,
       'parking|1': ['已租', '未租'],
       "licenseNumbers": /[粤][A-Z]\d{5,7}/,
+      'activeType|1':  ['装修', '其他', '清洁', '收楼','退楼']
     }]
   }
 };

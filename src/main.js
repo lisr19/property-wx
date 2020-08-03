@@ -4,6 +4,8 @@ import './common/less/reset.less'
 import router from './router'
 import { RouterMount } from 'uni-simple-router'
 import fly from './utils/request'
+import Print from 'vue-print-nb'
+Vue.use(Print);
 import uView from "uview-ui";
 Vue.use(uView);
 // 使用 Mock
