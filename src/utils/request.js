@@ -5,16 +5,19 @@ let fly = new Fly
 const token = uni.getStorageSync('token')
 fly.config.timeout = 30000 // 超时
 fly.config.baseURL = Config.baseURL // 基地址,配置在一个文件中。
+// fly.config.baseURL = "/api/";
 fly.config.params = {} // 设置公共参数
 
 
 
 //添加请求拦截器
 fly.interceptors.request.use((request) => {
-	uni.showLoading({
-		title: "加载中",
-		mask:true
-	});
+	if(request.url!=='/wechat/login/logincode'){
+		uni.showLoading({
+			title: "加载中",
+			mask:true
+		});
+	}
 	request.headers['content-type']= 'application/json';
 	if (uni.getStorageSync('token')) {
 		request.headers.authorization = uni.getStorageSync('token')

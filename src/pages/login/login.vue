@@ -6,49 +6,131 @@
 			<view class="card">
 				<p>
 					<image  src="/static/logo.png"></image>
-					<input  v-model="phoneNum"  placeholder='账号'  maxlength="16">
+					<input  v-model="username"  placeholder='账号'  maxlength="16">
 				</p>
 				<p>
 					<image  src="/static/logo.png"></image>
-					<input  v-model="passWord"  type="password" placeholder='密码' >
+					<input  v-model="password"  type="password" placeholder='密码' >
 				</p>
 				<p>
 					<input  v-model="code"  type="number" placeholder='输入验证码' maxlength="4">
-					<span class="code">1564</span>
+					<span class="code">{{codeNum}}</span>
 				</p>
 				<view class="tips">
 					<span style="display: flex;align-items: center;">
 					   <checkbox value="cb" checked="true" style="transform:scale(0.8)"/>
 						记住账号
 					</span>
-					<span style="border-bottom: 1px solid #42466D;padding-bottom: 1px">忘记密码?</span>
+					<span style="border-bottom: 1px solid #42466D;padding-bottom: 1px" @click="getPwd">忘记密码?</span>
 				</view>
-				<view class="btn"  @click="">登录</view>
+				<view class="btn"  @click="login">登录</view>
 			</view>
 		</template>
+		<u-popup v-model="showPWD" mode="bottom" border-radius="20" height="40%" closeable>
+			<view class="pwd">
+				<u-input  v-model="username" :type="type" border placeholder='账号' />
+				<u-button class="btn" type="warning" @click="loginpwd">重置密码</u-button>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
 <script>
+	import {login,getCode,loginpwd} from "@/utils/api/comment"
 	export default {
+		components: {},
 		data() {
 			return {
-				phoneNum:'',
+				value: '',
+				type: 'text',
+				username:'',
 				code:'',
-				passWord:'',
-				value:'apple',
-				list: [
-					{
-						name: 'apple',
-						disabled: false
-					},
-				],
+				codeNum:'',
+				password:'',
+				showPWD:false,
 			}
 		},
 		onLoad() {
-
+			this.getCode()
 		},
 		methods: {
+			getPwd(){
+				this.showPWD = true
+			},
+			async getCode(){
+				let res = await getCode()
+				if(res.code === 0){
+					this.codeNum= res.data.code
+				}
+			},
+			async loginpwd(){
+				if(!this.username){
+					return uni.showToast({
+						title: '账号不能为空',
+						icon: 'none',
+						mask: false
+					})
+				}
+				let params ={
+					username:this.username
+				}
+				let res = await loginpwd(params)
+				if(res.code === 0){
+					this.showPWD = false
+					 uni.showToast({
+						title: '密码已重置',
+						icon: 'none',
+						mask: false
+					})
+				}
+			},
+			async login(){
+				if(!this.username){
+					uni.showToast({
+						title: '账号不能为空',
+						icon: 'none',
+						mask: false
+					})
+					return
+				}else if(!this.password){
+					uni.showToast({
+						title: '密码不能为空',
+						icon: 'none',
+						mask: false
+					})
+					return
+				}else if(!this.code){
+					uni.showToast({
+						title: '验证码不能为空',
+						icon: 'none',
+						mask: false
+					})
+					return
+				}else if(this.code!=this.codeNum){
+					uni.showToast({
+						title: '验证码错误',
+						icon: 'none',
+						mask: false
+					})
+					return
+				}
+				let params = {
+					username:this.username,
+					password:this.password,
+					code:this.code,
+				}
+				let res = await login(params)
+				if(res.code ===0){
+					this.$Router.push({name:'首页'})
+					console.log(res);
+				}else {
+					uni.showToast({
+						title: res.msg,
+						icon: 'none',
+						mask: false
+					})
+				}
+			},
 			radioChange(e) {
 				// console.log(e);
 			},
@@ -140,5 +222,12 @@
 			}
 		}
 
+	}
+	.pwd{
+		margin-top: 80rpx;
+		padding: 50rpx;
+		.btn{
+			margin: 60rpx 0;
+		}
 	}
 </style>

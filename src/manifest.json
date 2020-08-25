@@ -71,5 +71,26 @@
     },
     "mp-qq" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "devServer" : {
+            "https" : false,
+            "port" : 8080,
+            "disableHostCheck" : true,
+            "proxy": {
+                "/api": {
+                    "target": "http://120.24.0.130:11008",
+                    "changeOrigin": true,
+                    "secure": false,
+                    "pathRewrite": {"^/api": ""}
+                }
+            }
+
+        },
+        "router" : {
+            "base" : "/h5/",
+            "mode" : "hash"
+        },
+        "title" : "wy"
     }
 }

@@ -121,7 +121,7 @@
 				this.$Router.push({name:'活动详情'})
 			},
 			confirm(e) {
-				console.log(e[0].label);
+				console.log(e[0].label)
 				this.currTypeName=e[0].label
 			},
 			confirmTime(e){

@@ -1,6 +1,7 @@
 const Mock = require('mockjs') // 获取mock对象
+var request=wx.request
 const Random = Mock.Random // 获取random对象，随机生成各种数据，具体请翻阅文档
-const domain = 'http://mockjs.com/api' // 定义默认域名，随便写
+const domain = 'https://mockjs.com/api' // 定义默认域名，随便写
 const code = 200 // 返回的状态码
 
 // 随机生成文章数据
@@ -32,11 +33,11 @@ let waterList = {
     total: 20,
     'rows|20': [{
       'id|+1': 1,
-      name: '@cname',
+      name: '@cname(3)',
       'job|1': ['前端工程师', '后端工程师', 'UI工程师', '需求工程师'],
-      'name|1': ['1楼', '2楼', '3楼', '4楼'],
       'sb|20006-99990': 20046,
       'price|1-10.1': 0.6,
+      'carPrice|100-300': 100,
       'state|0-1': 0,
       'time': Random.date('yyyy-MM-dd'),
       'address': Random.county(true),

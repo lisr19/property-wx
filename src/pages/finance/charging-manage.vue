@@ -15,7 +15,7 @@
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">收费项目：{{item.name}}</p>
-				<p><span>状态：</span>{{item.name}}</p>
+				<p><span>状态：</span>{{item.state}}</p>
 				<p><span>所属月份：</span>{{item.phone}}</p>
 				<p><span>开始日期：</span>{{item.time}}</p>
 				<p><span>结束日期：</span>{{item.time}}</p>
@@ -23,7 +23,7 @@
 				<p class="price"><span >应缴总户数：</span>{{item.price}}</p>
 				<view class="btns">
 					<span class="btn" @click="openDetail(item,index)">查看</span>
-					<span class="btn count" @click="openDetail(item,index)">开始计费</span>
+					<span class="btn count" @click="openTable(item,index)">开始计费</span>
 				</view>
 			</view>
 		</view>
@@ -33,6 +33,24 @@
 		</uni-drawer>
 		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
+		<u-popup v-model="showList" mode="bottom" border-radius="20" height="80%" closeable>
+			<view class="table">
+				<view class="name">收费项目：{{itemData.name}}</view>
+				<view class="content">
+					<view class="card2" v-for="(item,index) in dataList" :key="index">
+						<p class="title">租户：{{item.name}}</p>
+						<p>收费项目：{{item.name}}</p>
+						<p><span>用量：</span>{{item.state}}</p>
+						<p><span>方式：</span>{{item.state}}</p>
+						<p><span>车位号：</span>{{item.state}}</p>
+						<p class="price"><span >单价：</span>{{item.price}}</p>
+						<p class="price"><span >金额：</span>{{item.price}}</p>
+						<span class="del-btn" @click="delBtn(item,index)">作废</span>
+					</view>
+				</view>
+				<u-button type="success" @click="sureCount">提交计费</u-button>
+			</view>
+		</u-popup>
 	</view >
 </template>
 
@@ -48,6 +66,7 @@
 		data() {
 			return {
 				show: false,
+				showList: false,
 				showTime: false,
 				startTime: false,
 				data1: '',
@@ -91,7 +110,8 @@
 				currIndex:0,
 				value: '租户活动',
 				current: 0,
-				total:0
+				total:0,
+				itemData:{}
 			}
 		},
 		onLoad() {
@@ -103,6 +123,38 @@
 			},
 			openDetail(item){
 				this.$Router.push({name:'活动详情'})
+			},
+			sureCount(){
+				uni.showModal({
+					title: '提示',
+					content: '确定提交计费吗？',
+					success:  (res)=> {
+						if (res.confirm) {
+							console.log('用户点击确定');
+							this.showList = false
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
+			},
+			openTable(item){
+				console.log(item);
+				this.itemData = item
+				this.showList=true
+			},
+			delBtn(item,index){
+				uni.showModal({
+					title: '提示',
+					content: '确定作废此记录吗？',
+					success:  (res)=> {
+						if (res.confirm) {
+							console.log('用户点击确定');
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
 			},
 			confirm(e) {
 				console.log(e[0].label);
@@ -320,6 +372,48 @@
 				}
 			}
 
+		}
+	}
+	.table{
+		padding: 20rpx;
+		.name{
+			font-size: 32rpx;
+			font-weight: 500;
+			margin-bottom: 20rpx;
+		}
+		.content{
+			.card2{
+				background:rgba(255,255,255,1);
+				box-shadow:0rpx 4rpx 12rpx 0rpx rgba(0,0,0,0.09);
+				border-radius:10rpx;
+				box-sizing: border-box;
+				margin-bottom: 20rpx;
+				padding: 10rpx 20rpx;
+				position: relative;
+				.del-btn{
+					position: absolute;
+					right: 20rpx;
+					top: 20rpx;
+					width:156rpx;
+					height:56rpx;
+					line-height: 56rpx;
+					text-align: center;
+					background:rgba(245,245,245,1);
+					border-radius:38rpx;
+					color: #0a4882;
+					font-size: 28rpx;
+				}
+			}
+		}
+		.btn{
+			width:206rpx;
+			height:76rpx;
+			line-height: 76rpx;
+			text-align: center;
+			background:rgba(245,245,245,1);
+			border-radius:38rpx;
+			margin-bottom: 40rpx;
+			color: #0a4882;
 		}
 	}
 </style>

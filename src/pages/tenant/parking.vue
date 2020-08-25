@@ -14,7 +14,7 @@
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">车位编号：{{item.id}}</p>
 				<p>当前租户：{{item.name}}</p>
-				<p>车位单价：{{item.price}}</p>
+				<p>车位单价：{{item.carPrice}}</p>
 				<p>车位状态：{{item.parking}}</p>
 				<p>车牌号：{{item.licenseNumbers}}</p>
 				<p>租用期限：{{item.time}}</p>

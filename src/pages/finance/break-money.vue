@@ -48,12 +48,6 @@
 		</uni-drawer>
 		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
-		<u-popup v-model="showList" mode="bottom" border-radius="20" height="80%" closeable>
-			<view class="tip-box">
-				<view class="tip-content">2020-7-15未缴费明细</view>
-				<view class="btn">确定</view>
-			</view>
-		</u-popup>
 	</view >
 </template>
 

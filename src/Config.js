@@ -1,6 +1,7 @@
 //项目公共配置
 
 export default {
-	baseURL: 'http://mockjs.com/api',
+	// baseURL: 'https://mockjs.com/api',
+	baseURL: 'http://120.24.0.130:11008/',
 	// imgBaseUrl: 'https://yihu.gzjiankangdaojia.cn/upload/img',
 }

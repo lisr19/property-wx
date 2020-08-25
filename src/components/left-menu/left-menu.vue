@@ -8,7 +8,7 @@
 			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" :thumb="item.url" @click="openMenu(item,index)"></uni-list-item>
 		</uni-list>
 		<div style="display: flex;justify-content: center;margin: 40rpx 0">
-			<span class="btn">
+			<span class="btn" @click="quit">
 				退出登录
 			</span>
 		</div>
@@ -83,6 +83,9 @@
 			}
 		},
 		methods: {
+			quit(){
+				this.$Router.push({name: '登录'})
+			},
 			openMenu(item,index){
 				// console.log(item.name);
 				if(item.name==='房产管理'){
