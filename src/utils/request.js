@@ -1,26 +1,36 @@
 import Config from '@/Config'
+import qs from 'qs'
 
 import Fly from 'flyio/dist/npm/wx'
 let fly = new Fly
-const token = uni.getStorageSync('token')
+
 fly.config.timeout = 30000 // 超时
 fly.config.baseURL = Config.baseURL // 基地址,配置在一个文件中。
-// fly.config.baseURL = "/api/";
 fly.config.params = {} // 设置公共参数
 
 
 
 //添加请求拦截器
 fly.interceptors.request.use((request) => {
+	if (request.method === 'POST' || request.method === 'post') {
+		request.body = qs.stringify(request.body)
+	}
 	if(request.url!=='/wechat/login/logincode'){
 		uni.showLoading({
 			title: "加载中",
 			mask:true
 		});
 	}
-	request.headers['content-type']= 'application/json';
+	request.headers={
+		'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8',
+		'Accept':'application/json'
+	}
 	if (uni.getStorageSync('token')) {
 		request.headers.authorization = uni.getStorageSync('token')
+	}else {
+		request.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxL' +
+			'CJ1c2VyX25hbWUiOiJhZG1pbiIsImRlcGFydG1lbnRfaWQiOjkxLCJkZXBhcnRtZW50X25hbWUiOiJcdTg4NGNcdTY1M2ZcdTkwZTgiLCJzZXgiOjEsIm1ha' +
+			'WwiOm51bGwsInRlbCI6IjE1MTAyMDM5NDE2IiwiZXhwIjoxNTkxMjM0MDQ0fQ.dMIMgCaVAUxr46lHMGjHri-m9BFl0qL-Ip2XwPc85J4'
 	}
 	return request;
 });

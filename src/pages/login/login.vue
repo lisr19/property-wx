@@ -14,7 +14,7 @@
 				</p>
 				<p>
 					<input  v-model="code"  type="number" placeholder='输入验证码' maxlength="4">
-					<span class="code">{{codeNum}}</span>
+					<span class="code" @click="getCode">{{codeNum}}</span>
 				</p>
 				<view class="tips">
 					<span style="display: flex;align-items: center;">
@@ -28,7 +28,7 @@
 		</template>
 		<u-popup v-model="showPWD" mode="bottom" border-radius="20" height="40%" closeable>
 			<view class="pwd">
-				<u-input  v-model="username" :type="type" border placeholder='账号' />
+				<u-input  v-model="username2" :type="type" border placeholder='账号' />
 				<u-button class="btn" type="warning" @click="loginpwd">重置密码</u-button>
 			</view>
 		</u-popup>
@@ -44,6 +44,7 @@
 				value: '',
 				type: 'text',
 				username:'',
+				username2:'',
 				code:'',
 				codeNum:'',
 				password:'',
@@ -64,7 +65,7 @@
 				}
 			},
 			async loginpwd(){
-				if(!this.username){
+				if(!this.username2){
 					return uni.showToast({
 						title: '账号不能为空',
 						icon: 'none',
@@ -72,13 +73,19 @@
 					})
 				}
 				let params ={
-					username:this.username
+					username:this.username2
 				}
 				let res = await loginpwd(params)
 				if(res.code === 0){
-					this.showPWD = false
-					 uni.showToast({
+					uni.showToast({
 						title: '密码已重置',
+						icon: 'none',
+						mask: false
+					})
+					this.showPWD = false
+				}else {
+					uni.showToast({
+						title: res.msg,
 						icon: 'none',
 						mask: false
 					})

@@ -146,6 +146,8 @@
 					this.$Router.push({name: '计费审批'})
 				}else if(item.name==='缴费汇总'){
 					this.$Router.push({name: '缴费汇总'})
+				}else if(item.name==='保养计划'){
+					this.$Router.push({name: '保养计划'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}

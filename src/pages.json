@@ -86,6 +86,9 @@
 		},
 		{
 			"path": "pages/inspection/index"
+		},
+		{
+			"path": "pages/equipment/plan"
 		}
 
 	],

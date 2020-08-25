@@ -1,5 +1,4 @@
 import fly from '../request'
-
 export function uploadImg (params) {
     return post('api/0.1/upload/img', params)
 }
