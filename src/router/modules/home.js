@@ -85,6 +85,10 @@ const home = [
 	{
 		path: '/pages/equipment/plan',
 		name: '保养计划',
+	},
+	{
+		path: '/pages/index/detail',
+		name: '详情',
 	}
 ]
 export default home

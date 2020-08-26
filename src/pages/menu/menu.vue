@@ -3,9 +3,9 @@
 		<view  class="head-bar">
 			<view  class="bg"></view >
 			<p class="title"><image class="menu" src="/static/logo.png" @click="openBox"></image>物业管理系统</p>
-			<view  class="card" :style="{height:listHeight+'px'}">
+			<view  class="card" >
 				<p class="name"><em></em>{{typeName}}</p>
-				<ul class="type-items">
+				<ul class="type-items" :style="{height:listHeight+'px'}">
 					<li class="item" v-for="(item,index) in typeList" :key="index" @click="openDetail(item)">{{item.name}}</li>
 				</ul>
 			</view >
@@ -34,7 +34,7 @@
 			uni.getSystemInfo({
 				success: (res)=> {
 					console.log(res.windowHeight);
-					this.listHeight = res.windowHeight - 80
+					this.listHeight = res.windowHeight - 142
 				}
 			});
 			this.initData()
@@ -58,6 +58,14 @@
 					this.typeName = type
 				}
 				switch(type) {
+					case '日常工作':
+						this.typeList = [
+							{name:'工作台主页'},
+							{name:'报事管理'},
+							{name:'报事办理'},
+							{name:'报事备案'}
+						]
+						break;
 					case '房产管理':
 						this.typeList = [
 							{name:'楼宇设置'},
@@ -72,8 +80,8 @@
 						this.typeList = [
 							{name:'租户信息'},
 							{name:'车位信息'},
+							{name:'收楼管理'},
 							{name:'活动管理'},
-							// {name:'非租户活动管理'},
 							{name:'活动审核'},
 							{name:'收费审核'},
 							{name:'装修巡检'},
@@ -238,6 +246,7 @@
 				font-weight:400;
 				color:rgba(51,51,51,1);
 				line-height:22rpx;
+				overflow: auto;
 				.item{
 					text-align: center;
 					height:74rpx;

@@ -89,6 +89,9 @@
 		},
 		{
 			"path": "pages/equipment/plan"
+		},
+		{
+			"path": "pages/index/detail"
 		}
 
 	],

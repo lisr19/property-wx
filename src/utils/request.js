@@ -27,10 +27,6 @@ fly.interceptors.request.use((request) => {
 	}
 	if (uni.getStorageSync('token')) {
 		request.headers.authorization = uni.getStorageSync('token')
-	}else {
-		request.headers.authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxL' +
-			'CJ1c2VyX25hbWUiOiJhZG1pbiIsImRlcGFydG1lbnRfaWQiOjkxLCJkZXBhcnRtZW50X25hbWUiOiJcdTg4NGNcdTY1M2ZcdTkwZTgiLCJzZXgiOjEsIm1ha' +
-			'WwiOm51bGwsInRlbCI6IjE1MTAyMDM5NDE2IiwiZXhwIjoxNTkxMjM0MDQ0fQ.dMIMgCaVAUxr46lHMGjHri-m9BFl0qL-Ip2XwPc85J4'
 	}
 	return request;
 });

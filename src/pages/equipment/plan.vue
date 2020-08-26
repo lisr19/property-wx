@@ -12,12 +12,14 @@
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">车位编号：{{item.id}}</p>
-				<p>当前租户：{{item.name}}</p>
-				<p>车位单价：{{item.carPrice}}</p>
-				<p>车位状态：{{item.parking}}</p>
-				<p>车牌号：{{item.licenseNumbers}}</p>
-				<p>租用期限：{{item.time}}</p>
+				<p class="title">设备名称：{{item.name}}</p>
+				<p>图片：{{item.name}}</p>
+				<p>保养公司：{{item.carPrice}}</p>
+				<p>保养人：{{item.licenseNumbers}}</p>
+				<p>保养日期：{{item.time}}</p>
+				<p>验收人：{{item.time}}</p>
+				<p>备注：{{item.time}}</p>
+				<span class="tip">状态：1</span>
 			</view>
 		</view>
 		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
@@ -39,8 +41,13 @@
 		data() {
 			return {
 				currType:0,
-				dataList:[],
-				title: 'Hello',
+				dataList:[
+					{
+						state:1,
+						img:1,
+						name:'mingc',
+					}
+				],
 				currIndex:0,
 				current: 0,
 				total:0

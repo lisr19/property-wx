@@ -2,7 +2,7 @@
 	<div class="nav-box">
 		<div class="head-box">
 			<image class="head-img" src="/static/logo.png"></image>
-			<p >管理员：孙天生</p>
+			<p >管理员：{{user_name}}</p>
 		</div>
 		<uni-list>
 			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" :thumb="item.url" @click="openMenu(item,index)"></uni-list-item>
@@ -30,6 +30,7 @@
 		},
 		data(){
 			return{
+				user_name:'',
 				titleArr:[
 					{
 						name:'日常工作',
@@ -66,29 +67,33 @@
 						name:'档案管理',
 						url:'/static/logo.png'
 					},
-					// {
-					// 	name:'人事管理',
-					// 	url:'/static/logo.png'
-					// },
 					{
 						name:'外派管理',
 						url:'/static/logo.png'
 					},
-					// {
-					// 	name:'系统管理',
-					// 	url:'/static/logo.png'
-					// }
 
 				]
 			}
 		},
+		mounted(){
+			uni.getStorage({
+				key: 'user_name',
+				success: (res) =>{
+					this.user_name = res.data
+				}
+			})
+		},
 		methods: {
 			quit(){
+				uni.clearStorageSync();
 				this.$Router.push({name: '登录'})
+				this.$emit("closeMenu");
 			},
 			openMenu(item,index){
 				// console.log(item.name);
-				if(item.name==='房产管理'){
+				if(item.name==='日常工作'){
+					this.$Router.push({name: '分类', params:{type:'日常工作'}})
+				} else  if(item.name==='房产管理'){
 					// this.$Router.push({name: '房产管理'})
 					this.$Router.push({name: '分类', params:{type:'房产管理'}})
 				}else if(item.name==='租户管理'){

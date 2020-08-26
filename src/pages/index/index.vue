@@ -7,40 +7,42 @@
 				<ul class="nav">
 					<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
 						<p>{{item.name}}</p>
-						<uni-badge class="tip" text="5" type="error" size="small"></uni-badge>
+<!--						<uni-badge class="tip" :text="tzNum" type="error" size="small"></uni-badge>-->
 					</li>
 				</ul>
 			</view>
 			<template v-if="currIndex===0">
-				<view class="card null-card" v-if="noticeNull">
+				<view class="card null-card" v-if="list_tz.length===0">
 					<image class="logo" src="/static/logo.png"></image>
 					<p class="null">暂无通知</p>
 				</view>
-				<view class="card" v-else>
-					<p class="msg">
-						<span class="msg-tip">假期通知：</span>
-						<span>准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</span>
+				<view class="card" v-else  :class="{showall:isShowAll===true}">
+					<p class="msg" v-for="(item,index) in list_tz.slice(0,2)" v-if="isShowAll===false" @click="showItem(item)">
+						<span class="msg-tip">{{item.tz_dtmd}}：</span>
+						<span>{{item.tz_title}}</span>
 					</p>
-					<p class="msg">
-						<span class="msg-tip">假期通知：</span>
-						<span>准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</span>
+					<p class="msg" v-for="(item,index) in list_tz" v-if="isShowAll===true" @click="showItem(item)">
+						<span class="msg-tip">{{item.tz_dtmd}}：</span>
+						<span>{{item.tz_title}}</span>
 					</p>
+					<u-icon class="tip" name="arrow-down"  size="24" @click="showAll"></u-icon>
 				</view>
 			</template>
 			<template v-else>
-				<view class="card null-card" v-if="workNull">
+				<view class="card null-card" v-if="list_sw.length===0">
 					<image class="logo" src="/static/logo.png"></image>
 					<p class="null">暂无提醒</p>
 				</view>
-				<view class="card" v-else>
-					<view class="work">
-						<p class="name">标题：多福多寿</p>
-						<p><span>来源：活动 </span><span>日期：2020-12-10</span></p>
+				<view class="card" v-else :class="{showall:isShowAll2===true}">
+					<view class="work"  v-for="(item,index) in list_sw.slice(0,2)" v-if="isShowAll2===false" @click="showItem2(item)">
+						<p class="name">标题：{{item.sw_title}}</p>
+						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
 					</view>
-					<view class="work">
-						<p class="name">标题：多福多寿</p>
-						<p><span>来源：活动 </span><span>日期：2020-12-10</span></p>
+					<view class="work"  v-for="(item,index) in list_sw" v-if="isShowAll2===true" @click="showItem2(item)">
+						<p class="name">标题：{{item.sw_title}}</p>
+						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
 					</view>
+					<u-icon class="tip" name="arrow-down"  size="28" @click="showAll2"></u-icon>
 				</view>
 			</template>
 		</view>
@@ -49,7 +51,7 @@
 				<p class="name"><em></em>任务</p>
 				<view class="desc">
 					<span class="time">{{chageDate}}</span>
-					<view class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</view>
+					<view class="txt" v-if="list_rw[0]">{{list_rw[0].rw_title}}</view>
 				</view>
 				<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
 			</view>
@@ -57,9 +59,9 @@
 				<p class="name"><em style="background: #426FE4"></em>日程安排</p>
 				<view class="desc">
 					<span class="time">{{chageDate}}</span>
-					<view class="txt">准备消防安全物业课程，安排物业管理消防设备的检查和资料的整理…</view>
+					<view class="txt" v-if="list_rc[0]">{{list_rc[0].rc_title}}</view>
 				</view>
-				<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
+				<uni-icons class="icon" type="arrowright" size="18" color="#999" @click="openDeatil"></uni-icons>
 			</view>
 		</view>
 		<view class="data-box">
@@ -73,6 +75,20 @@
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
+		<u-popup v-model="showDetail" mode="center">
+			<view class="detail">
+				<p>{{itemData.tz_title}}</p>
+				<p v-html="itemData.tz_noty"></p>
+				<p>发布人：{{itemData.ld_una}}</p>
+				<p>发布时间：{{itemData.tz_dt}}</p>
+			</view>
+		</u-popup>
+		<u-popup v-model="showDetail2" mode="center">
+			<view class="detail">
+				<p>{{itemData.sw_title}}</p>
+				<p>{{itemData.sw_dt}}</p>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -82,14 +98,26 @@
 	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
+	import {getDesktop} from "@/utils/api/comment"
 	export default {
 		components: {uniDrawer,uniIcons,uniCalendar,uniBadge,leftMenu},
 		data() {
 			return {
+				showDetail:false,
+				showDetail2:false,
+				isShowAll:false,
+				isShowAll2:false,
 				chageDate:new Date().toISOString().slice(0, 10),
 				currIndex:0,
 				noticeNull:true,
 				workNull:false,
+				data:{},
+				list_sw:[],
+				list_rc:[], //日程
+				list_tz:[],
+				tzNum:[],
+				swNum:[],
+				showlist_tz:[],
 				typeList:[
 					{
 						name:'最新通知',
@@ -98,24 +126,66 @@
 						name:'事务提醒',
 					}
 				],
+				itemData:{},
 			}
 		},
-		onLoad() {
-
+		onShow() {
+			this.getDesktop()
 		},
 		methods: {
+			openDeatil(){
+				this.$Router.push({name: '详情',params:{list:this.list_rc,time:this.chageDate}})
+			},
+			showItem(item){
+				this.itemData = item
+				this.showDetail = true
+			},
+			showItem2(item){
+				this.itemData = item
+				this.showDetail2 = true
+			},
+			showAll(){
+				this.isShowAll =!this.isShowAll
+			},
+			showAll2(){
+				this.isShowAll2 =!this.isShowAll2
+			},
+			async getDesktop(){
+				let res = await getDesktop()
+				if(res.code === 0){
+					this.data= res.data
+					this.list_sw = res.data.list_sw
+					this.list_tz = res.data.list_tz
+					this.list_rc = res.data.list_rc
+					this.list_rw = res.data.list_rw
+					let rwList = []
+					let swList = []
+					this.list_rw.forEach((i,index)=>{
+						if(i.rc_dt===this.chageDate){
+							rwList.push(i)
+						}
+						this.list_rw = rwList
+					})
+					this.list_rc.forEach((i,index)=>{
+						if(i.rc_dt===this.chageDate){
+							swList.push(i)
+						}
+						this.list_rc = swList
+					})
+				}
+			},
 			openDetail(){
 				console.log(122);
 			},
 			change(e) {
 				console.log(e);
 				this.chageDate = e.fulldate
+				this.getDesktop()
 			},
 			tagType(index){
 				this.currIndex =index
-			},
-			open(){
-				this.$Router.push({name: '列表',params:{id:'45454'}})
+				this.isShowAll =false
+				this.isShowAll2 =false
 			},
 			openBox(){
 				this.$refs.leftBox.open()
@@ -210,19 +280,43 @@
 				border-radius:10rpx;
 				display: flex;
 				align-items: center;
-				justify-content: center;
 				flex-direction: column;
 				font-size:28rpx;
+				/*overflow: hidden;*/
+				padding: 15rpx 0;
+				box-sizing: border-box;
+				.tip{
+					position: absolute;
+					bottom: -22rpx;
+					width: 42rpx;
+					height: 42rpx;
+					background: #f1f1f1;
+					border-radius: 50%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
 				.msg{
 					padding: 15rpx 0rpx 20rpx;
 					margin: 0 18rpx;
 					display: flex;
+					border-top: solid 1rpx #c0c0c0;
 					.msg-tip{
-						width: 250rpx;
+						width: 120rpx;
 					}
+					span{
+						text-overflow: -o-ellipsis-lastline;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-line-clamp: 2;
+						line-clamp: 2;
+						-webkit-box-orient: vertical;
+					}
+					span:last-child{width: 480rpx}
 				}
 				.msg:first-child{
-					border-bottom: solid 1rpx #c0c0c0;
+					border-top: none;
 				}
 				.work{
 					font-size:28rpx;
@@ -233,6 +327,10 @@
 					width: 90%;
 					.name{
 						margin-bottom: 10rpx;
+						word-break:keep-all;
+						white-space:nowrap;
+						overflow:hidden;
+						text-overflow:ellipsis;
 					}
 					span{
 						color:#999999;
@@ -254,8 +352,15 @@
 					color:rgba(184,184,184,1);
 				}
 			}
+			.showall{
+				height: auto;
+				padding-bottom: 40rpx;
+			}
 			.null-card{
 				flex-direction: row;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 			}
 		}
 		.nav-box{
@@ -299,9 +404,10 @@
 			height:320rpx;
 			background:rgba(255,255,255,1);
 			border-radius:10rpx;
-			padding: 460rpx 60rpx 0;
+			padding: 470rpx 60rpx 0;
 			z-index: 1;
 			position: fixed;
+			width: 88%;
 			.item{
 				position: relative;
 				margin-bottom: 28rpx;
@@ -325,12 +431,19 @@
 				}
 				.desc{
 					display: flex;
+					height: 70rpx;
 					.time{
 						color:rgba(153,153,153,1);
 						margin-right: 20rpx;
 					}
 					.txt{
 						flex: 1;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-line-clamp: 2;
+						line-clamp: 2;
+						-webkit-box-orient: vertical;
 					}
 				}
 				.icon{
@@ -343,6 +456,12 @@
 		.data-box{
 			padding-top: 760rpx;
 		}
+	}
+	.detail{
+		font-size: 26rpx;
+		padding: 30rpx 20rpx;
+		margin: 10rpx;
+		line-height: 1.8;
 	}
 	.nav-box{
 		/deep/.uni-icons{
