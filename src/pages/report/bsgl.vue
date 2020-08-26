@@ -5,24 +5,29 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>保养计划</p>
-				<view class="input-box"><span>设备：</span><input class="uni-input" name="num"></view>
+				<p class="name"><em></em>报事管理</p>
+				<view class="btn btn1">新增</view>
+			</view >
+			<view  class="card card2">
+				<view class="input-box"><span>报事人：</span><input class="uni-input" name="num"></view>
 				<view class="btn">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">设备名称：{{item.name}}</p>
-				<p>图片：{{item.name}}</p>
-				<p>保养公司：{{item.carPrice}}</p>
-				<p>保养人：{{item.licenseNumbers}}</p>
-				<p>保养日期：{{item.time}}</p>
-				<p>验收人：{{item.time}}</p>
-				<p>备注：{{item.time}}</p>
-				<span class="tip">状态：1</span>
+				<p class="title">报事人：{{item.bs_bsr}}</p>
+				<p>报事描述：{{item.bs_ms}}</p>
+				<template>
+					<p  v-if="item.bs_zt===0" style="color:#FF9900">状态：未办理</p>
+					<p  v-else-if="item.bs_zt===4">状态：办理结束</p>
+					<p  v-else>状态：已办理</p>
+				</template>
+				<p>报事日期：{{item.bs_dt}}</p>
+				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
+				<svg class="icon" aria-hidden="true" @click="delItem(item)"><use xlink:href="#iconshanchu2x" ></use></svg>
 			</view>
 		</view>
-		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -35,50 +40,40 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getPlan} from "@/utils/api/index"
+	import {getbsList,delBs} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				currType:0,
-				dataList:[
-					{
-						state:1,
-						img:1,
-						name:'mingc',
-					}
-				],
+				dataList:[],
 				currIndex:0,
 				current: 0,
 				total:0
 			}
 		},
 		onLoad() {
-			this.getPlan()
+			this.getbsList()
 		},
 		methods: {
+			delItem(item){
+				this.delBs({bs_dh:item.bs_dh,del:1})
+			},
+			async delBs(params){
+				let res = await delBs(params)
+				if(res.code === 0){
+
+				}
+			},
+			async getbsList(params){
+				let res = await getbsList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+				}else {
+
+				}
+			},
 			chagePage(e){
 				console.log(e);
-			},
-			async getPlan(params){
-				let res = await getPlan(params)
-				if(res.code === 0){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
-				}
-			},
-			async getckList(params){
-				let res = await getckList(params)
-				if(res.code === 0){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
-				}
 			},
 			openBox(){
 				this.$refs.leftBox.open()
@@ -122,7 +117,7 @@
 			border-radius:10rpx;
 			width:90%;
 			position: absolute;
-			top: 60rpx;
+			top: 30rpx;
 			left:5%;
 			z-index: 10;
 			font-weight:500;
@@ -174,8 +169,18 @@
 				font-weight:400;
 				color:rgba(255,255,255,1);
 				background:rgba(4,17,73,1);
-				margin-top: 36rpx;
+				margin-top: 26rpx;
 			}
+			.btn1{
+				background:#017AFF;
+				position: absolute;
+				right: 30rpx;
+				top: 35rpx;
+				margin: 0;
+			}
+		}
+		.card2{
+			top: 190rpx;
 		}
 		.tab {
 			height: 80rpx;
@@ -190,7 +195,7 @@
 			}
 		}
 		.items{
-			padding: 380rpx 0 50rpx;
+			padding: 420rpx 0 50rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -211,6 +216,13 @@
 				box-sizing: border-box;
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
+				position: relative;
+				.icon{
+					position: absolute;
+					top: 20rpx;
+					right: 10rpx;
+					font-size: 24rpx;
+				}
 				.title{
 					font-size:32rpx;
 					font-weight:500;

@@ -1,11 +1,18 @@
 <template>
 	<div class="nav-box">
 		<div class="head-box">
-			<image class="head-img" src="/static/logo.png"></image>
+<!--			<image class="head-img" src="/static/logo.png"></image>-->
+			<svg class="icon head-img" aria-hidden="true" @click="openMenu">
+				<use xlink:href="#iconqianzhengbanli2x"></use>
+			</svg>
 			<p >管理员：{{user_name}}</p>
 		</div>
 		<uni-list>
-			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" :thumb="item.url" @click="openMenu(item,index)"></uni-list-item>
+			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" @click="openMenu(item,index)">
+				<svg class="icon head-img" aria-hidden="true" style="display: inline-block">
+					<use :href="item.url"></use>
+				</svg>
+			</uni-list-item>
 		</uni-list>
 		<div style="display: flex;justify-content: center;margin: 40rpx 0">
 			<span class="btn" @click="quit">
@@ -34,42 +41,37 @@
 				titleArr:[
 					{
 						name:'日常工作',
-						url:'/static/logo.png',
+						url:'#iconrenwu2x',
 						show:false
 					},
-					// {
-					// 	name:'房产管理',
-					// 	url:'/static/logo.png',
-					// 	show:true
-					// },
 					{
 						name:'租户管理',
-						url:'/static/logo.png',
+						url:'#iconfangchan2x',
 						show:true
 					},
 					{
 						name:'财务管理',
-						url:'/static/logo.png'
+						url:'#iconjiguancaiwuguanli2x'
 					},
 					{
 						name:'巡检预警',
-						url:'/static/logo.png'
+						url:'#iconyujing2x'
 					},
 					{
 						name:'设备管理',
-						url:'/static/logo.png'
+						url:'#iconshebei2x'
 					},
 					{
 						name:'仓库管理',
-						url:'/static/logo.png'
+						url:'#iconcangkumingcheng2x'
 					},
 					{
 						name:'档案管理',
-						url:'/static/logo.png'
+						url:'#icondanganguanli2x'
 					},
 					{
 						name:'外派管理',
-						url:'/static/logo.png'
+						url:'#iconfeihanglvyouchuchafeiji8002x'
 					},
 
 				]
@@ -122,14 +124,20 @@
 	};
 </script>
 <style scoped>
+
 	/deep/ .uni-list-item__container{
-		padding: 24rpx 28rpx 10rpx;
+		padding: 28rpx 28rpx 14rpx;
+	}
+	/deep/ .uni-list-item__content{
+		flex-direction: row;
+		padding: 8rpx 0;
 	}
 	/deep/ .uni-list-item__content-title{
 		font-size:32rpx;
 		font-family:PingFangSC-Regular,PingFang SC;
 		font-weight:400;
 		color:rgba(51,51,51,1);
+		display: flex;
 	}
 </style>
 <style lang="less" scoped>
@@ -173,5 +181,9 @@
 			font-size: 30rpx;
 			text-align: center;
 		}
+	}
+	.icon{
+		margin-top: -8rpx;
+		margin-right: 40rpx;
 	}
 </style>

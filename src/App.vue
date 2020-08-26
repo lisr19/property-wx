@@ -4,6 +4,7 @@
 </style>
 <script>
 	export default {
+
 		onLaunch: function() {
 			console.log('App Launch')
 		},
@@ -19,4 +20,13 @@
 <style>
 	/*每个页面公共css */
     @import url('./common/less/reset.less');
+    .icon {
+        width: 1.5em;
+        height: 1.5em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+        z-index: 99;
+        margin-right:0.5rem;
+    }
 </style>

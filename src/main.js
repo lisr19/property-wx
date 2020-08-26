@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import './common/less/reset.less'
+import './static/font/iconfont.js'
 import router from './router'
 import { RouterMount } from 'uni-simple-router'
 import fly from './utils/request'

@@ -89,6 +89,22 @@ const home = [
 	{
 		path: '/pages/index/detail',
 		name: '详情',
+	},
+	{
+		path: '/pages/warehouse/goods',
+		name: '物品管理',
+	},
+	{
+		path: '/pages/warehouse/ck-look',
+		name: '库存查询',
+	},
+	{
+		path: '/pages/expatriate/fwjl',
+		name: '服务记录',
+	},
+	{
+		path: '/pages/report/bsgl',
+		name: '报事管理',
 	}
 ]
 export default home

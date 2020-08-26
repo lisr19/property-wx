@@ -2,7 +2,9 @@
 	<view  class="content">
 		<view  class="head-bar">
 			<view  class="bg"></view >
-			<p class="title"><image class="menu" src="/static/logo.png" @click="openBox"></image>物业管理系统</p>
+			<p class="title"><svg class="icon" aria-hidden="true" @click="openBox">
+				<use xlink:href="#iconcaidan"></use>
+			</svg>物业管理系统</p>
 			<view  class="card" >
 				<p class="name"><em></em>{{typeName}}</p>
 				<ul class="type-items" :style="{height:listHeight+'px'}">
@@ -156,6 +158,14 @@
 					this.$Router.push({name: '缴费汇总'})
 				}else if(item.name==='保养计划'){
 					this.$Router.push({name: '保养计划'})
+				}else if(item.name==='物品管理'){
+					this.$Router.push({name: '物品管理'})
+				}else if(item.name==='库存查询'){
+					this.$Router.push({name: '库存查询'})
+				}else if(item.name==='服务记录'){
+					this.$Router.push({name: '服务记录'})
+				}else if(item.name==='报事管理'){
+					this.$Router.push({name: '报事管理'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}

@@ -92,8 +92,19 @@
 		},
 		{
 			"path": "pages/index/detail"
+		},
+		{
+			"path": "pages/warehouse/goods"
+		},
+		{
+			"path": "pages/warehouse/ck-look"
+		},
+		{
+			"path": "pages/expatriate/fwjl"
+		},
+		{
+			"path": "pages/report/bsgl"
 		}
-
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -2,7 +2,12 @@
 	<view class="content">
 		<view class="head-bar">
 			<view class="bg"></view>
-			<p class="title"><image class="menu" src="/static/logo.png" @click="openBox"></image>物业管理系统</p>
+			<p class="title">
+				<svg class="icon" aria-hidden="true" @click="openBox">
+					<use xlink:href="#iconcaidan"></use>
+				</svg>
+<!--				<image class="menu" src="/static/logo.png" @click="openBox"></image>-->
+				物业管理系统</p>
 			<view class="tab-bar">
 				<ul class="nav">
 					<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
@@ -13,7 +18,9 @@
 			</view>
 			<template v-if="currIndex===0">
 				<view class="card null-card" v-if="list_tz.length===0">
-					<image class="logo" src="/static/logo.png"></image>
+					<svg class="icon" aria-hidden="true" @click="openBox" style="font-size: 32px">
+						<use xlink:href="#iconxiangzi2x"></use>
+					</svg>
 					<p class="null">暂无通知</p>
 				</view>
 				<view class="card" v-else  :class="{showall:isShowAll===true}">
@@ -30,7 +37,9 @@
 			</template>
 			<template v-else>
 				<view class="card null-card" v-if="list_sw.length===0">
-					<image class="logo" src="/static/logo.png"></image>
+					<svg class="icon" aria-hidden="true" @click="openBox" style="font-size: 32px">
+						<use xlink:href="#iconxiangzi2x"></use>
+					</svg>
 					<p class="null">暂无提醒</p>
 				</view>
 				<view class="card" v-else :class="{showall:isShowAll2===true}">
@@ -115,6 +124,7 @@
 				list_sw:[],
 				list_rc:[], //日程
 				list_tz:[],
+				list_rw:[],
 				tzNum:[],
 				swNum:[],
 				showlist_tz:[],

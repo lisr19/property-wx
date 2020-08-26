@@ -5,21 +5,21 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>保养计划</p>
-				<view class="input-box"><span>设备：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<p class="name"><em></em>物品管理</p>
+				<view class="input-box"><span>物品：</span>
+					<input class="uni-input" name="num" v-model="wpph" placeholder="物品编号">
+				</view>
+				<view class="btn" @click="getwpList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">设备名称：{{item.name}}</p>
-				<p>图片：{{item.name}}</p>
-				<p>保养公司：{{item.carPrice}}</p>
-				<p>保养人：{{item.licenseNumbers}}</p>
-				<p>保养日期：{{item.time}}</p>
-				<p>验收人：{{item.time}}</p>
-				<p>备注：{{item.time}}</p>
-				<span class="tip">状态：1</span>
+				<p class="title">物品名称：{{item.wp_name}}</p>
+				<p>规格：{{item.wp_gg}}</p>
+				<p>单位：{{item.wp_dw}}</p>
+				<p>编号：{{item.wp_ph}}</p>
+				<p>所属仓库：{{item.ck_name}}</p>
+				<p>数量提醒：{{item.wp_tssl}}</p>
 			</view>
 		</view>
 		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
@@ -30,52 +30,37 @@
 </template>
 
 <script>
-	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getPlan} from "@/utils/api/index"
+	import {getwpList} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {leftMenu,uniPagination},
 		data() {
 			return {
+				wpph:'',
 				currType:0,
-				dataList:[
-					{
-						state:1,
-						img:1,
-						name:'mingc',
-					}
-				],
+				dataList:[],
 				currIndex:0,
 				current: 0,
 				total:0
 			}
 		},
 		onLoad() {
-			this.getPlan()
+			this.getwpList()
 		},
 		methods: {
 			chagePage(e){
 				console.log(e);
 			},
-			async getPlan(params){
-				let res = await getPlan(params)
-				if(res.code === 0){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
 
+			async getwpList(){
+				let params
+				if(this.wpph){
+					params.wp_ph=this.wpph
 				}
-			},
-			async getckList(params){
-				let res = await getckList(params)
+				let res = await getwpList(params)
 				if(res.code === 0){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
+					this.dataList = res.data.list.data
 				}else {
 
 				}
