@@ -13,6 +13,9 @@
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">物品名称：{{item.wp_name}}</p>
 				<p>规格：{{item.wp_gg}}</p>
@@ -22,7 +25,7 @@
 				<p>数量提醒：{{item.wp_tssl}}</p>
 			</view>
 		</view>
-		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix"  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -38,11 +41,11 @@
 		data() {
 			return {
 				skey_wp:'',
-				currType:0,
+				currPage:0,
 				dataList:[],
 				currIndex:0,
 				current: 0,
-				total:0
+				total:10
 			}
 		},
 		onLoad() {
@@ -51,18 +54,22 @@
 		methods: {
 			chagePage(e){
 				console.log(e);
+				this.getwpList({page:e.current})
 			},
 
-			async getwpList(){
-				let params={}
+			async getwpList(params){
 				if(this.skey_wp){
 					params.skey_wp=this.skey_wp
 				}
 				let res = await getwpList(params)
 				if(res.code === 0){
-					this.dataList = res.data
+					this.dataList = res.data.data
+					this.total = res.data.count
 				}else {
-
+					uni.showToast({
+						title: res.msg,
+						icon: 'none',
+					});
 				}
 			},
 			openBox(){
@@ -175,7 +182,7 @@
 			}
 		}
 		.items{
-			padding: 380rpx 0 50rpx;
+			padding: 380rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

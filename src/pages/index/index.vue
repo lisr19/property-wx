@@ -16,13 +16,11 @@
 			</view>
 			<template v-if="currIndex===0">
 				<view class="card null-card" v-if="list_tz.length===0">
-					<svg class="icon" aria-hidden="true" @click="openBox" style="font-size: 32px">
-						<use xlink:href="#iconxiangzi2x"></use>
-					</svg>
+					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>
 					<p class="null">暂无通知</p>
 				</view>
 				<view class="card" v-else  :class="{showall:isShowAll===true}">
-					<p class="msg" v-for="(item,index) in list_tz.slice(0,2)" v-if="isShowAll===false" @click="showItem(item)">
+					<p class="msg" v-for="(item,index) in showTZ" v-if="isShowAll===false" @click="showItem(item)">
 						<span class="msg-tip">{{item.tz_dtmd}}：</span>
 						<span>{{item.tz_title}}</span>
 					</p>
@@ -35,27 +33,19 @@
 			</template>
 			<template v-else>
 				<view class="card null-card" v-if="list_sw.length===0">
-					<svg class="icon" aria-hidden="true" @click="openBox" style="font-size: 32px">
-						<use xlink:href="#iconxiangzi2x"></use>
-					</svg>
+					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>
 					<p class="null">暂无提醒</p>
 				</view>
 				<view class="card" v-else :class="{showall:isShowAll2===true}">
-					<template v-if="isShowAll2===false">
-						<view class="work" >
-							<p class="name">标题：{{list_sw[0].sw_title}}</p>
-							<p><span>类别：活动 </span><span>日期：{{list_sw[0].sw_dt}}</span></p>
-						</view>
-						<view class="work" v-if="list_sw.length>1">
-							<p class="name">标题：{{list_sw[1].sw_title}}</p>
-							<p><span>类别：活动 </span><span>日期：{{list_sw[1].sw_dt}}</span></p>
-						</view>
-					</template>
+					<view class="work" v-for="(item,index) in showSW" v-if="isShowAll2===false" @click="showItem2(item)">
+						<p class="name">标题：{{item.sw_title}}</p>
+						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
+					</view>
 					<view class="work"  v-for="(item,index) in list_sw" v-if="isShowAll2===true" @click="showItem2(item)">
 						<p class="name">标题：{{item.sw_title}}</p>
 						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
 					</view>
-					<u-icon class="tip" name="arrow-down"  size="28" @click="showAll2"></u-icon>
+					<u-icon class="tip" name="arrow-down"  size="26" @click="showAll2"></u-icon>
 				</view>
 			</template>
 		</view>
@@ -141,6 +131,8 @@
 					}
 				],
 				itemData:{},
+				showTZ:[],
+				showSW:[],
 			}
 		},
 		onShow() {
@@ -168,8 +160,11 @@
 				let res = await getDesktop()
 				if(res.code === 0){
 					this.data= res.data
-					this.list_sw = res.data.list_sw
 					this.list_tz = res.data.list_tz
+					this.list_sw = res.data.list_sw
+					this.showTZ = res.data.list_tz.slice(0,2)
+					this.showSW= res.data.list_sw.slice(0,2)
+					console.log(this.showSW);
 					this.list_rc = res.data.list_rc
 					this.list_rw = res.data.list_rw
 					let rwList = []
@@ -186,13 +181,17 @@
 						}
 						this.list_rc = swList
 					})
+				}else {
+					uni.showToast({
+						title: res.msg,
+						icon: 'none',
+					});
 				}
 			},
 			openDetail(){
-				console.log(122);
 			},
 			change(e) {
-				console.log(e);
+				// console.log(e);
 				this.chageDate = e.fulldate
 				this.getDesktop()
 			},
@@ -339,6 +338,7 @@
 					font-weight:500;
 					color:rgba(0,0,0,1);
 					width: 90%;
+					border-top: solid 1rpx #c0c0c0;
 					.name{
 						margin-bottom: 10rpx;
 						word-break:keep-all;
@@ -352,7 +352,7 @@
 					}
 				}
 				.work:first-child{
-					border-bottom: solid 1rpx #c0c0c0;
+					border-top:none;
 				}
 				image{
 					width: 80rpx;

@@ -6,21 +6,26 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>服务记录</p>
-				<view class="input-box"><span>物品：</span>
-					<input class="uni-input" name="num" v-model="wpph" placeholder="项目名称">
+				<view class="input-box"><span>记录：</span>
+					<input class="uni-input" name="num" v-model="skey_xmna" placeholder="项目名称">
 				</view>
 				<view class="btn" @click="getwpjl">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
-			<view class="item" v-for="(item,index) in dataList" :key="index">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
+			<view class="item" v-for="(item,index) in dataList" :key="index"  >
 				<p class="title">项目名称：{{item.wxm_name}}</p>
 				<p>公司名称：{{item.wgs_name}}</p>
 				<p>服务主题：{{item.wjl_title}}</p>
 				<p>负责人：{{item.wgs_fzr}}</p>
 				<p>服务日期：{{item.wjl_dt}}</p>
 			</view>
+
 		</view>
+
 		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
@@ -36,7 +41,7 @@
 		components: {leftMenu,uniPagination},
 		data() {
 			return {
-				wpph:'',
+				skey_xmna:'',
 				currType:0,
 				dataList:[],
 				currIndex:0,
@@ -52,7 +57,11 @@
 				console.log(e);
 			},
 
-			async getwpjl(params){
+			async getwpjl(){
+				let params={}
+				if(this.skey_xmna){
+					params.skey_xmna=this.skey_xmna
+				}
 				let res = await getwpjl(params)
 				if(res.code === 0){
 					this.dataList = res.data
