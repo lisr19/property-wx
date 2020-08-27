@@ -6,10 +6,10 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>库存查询</p>
-				<view class="input-box"><span>物品：</span>
-					<input class="uni-input" name="num" v-model="wpph" placeholder="编号或名称">
+				<view class="input-box"><span>库存：</span>
+					<input class="uni-input" name="num" v-model="skey_wp" placeholder="名称/编号">
 				</view>
-				<view class="btn" @click="getwpList">查询</view>
+				<view class="btn" @click="getckList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
@@ -32,12 +32,12 @@
 <script>
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getwpList} from "@/utils/api/index"
+	import {getckList} from "@/utils/api/index"
 	export default {
 		components: {leftMenu,uniPagination},
 		data() {
 			return {
-				wpph:'',
+				skey_wp:'',
 				currType:0,
 				dataList:[],
 				currIndex:0,
@@ -46,17 +46,21 @@
 			}
 		},
 		onLoad() {
-			this.getwpList()
+			this.getckList()
 		},
 		methods: {
 			chagePage(e){
 				console.log(e);
 			},
 
-			async getwpList(params){
-				let res = await getwpList(params)
+			async getckList(){
+				let params={}
+				if(this.skey_wp){
+					params.skey_wp=this.skey_wp
+				}
+				let res = await getckList(params)
 				if(res.code === 0){
-					this.dataList = res.data.list.data
+					this.dataList = res.data
 				}else {
 
 				}

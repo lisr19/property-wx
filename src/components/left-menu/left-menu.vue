@@ -1,17 +1,16 @@
 <template>
 	<div class="nav-box">
 		<div class="head-box">
+			<view class="iconfont icontouxiang head-img" @click="openMenu"></view>
 <!--			<image class="head-img" src="/static/logo.png"></image>-->
-			<svg class="icon head-img" aria-hidden="true" @click="openMenu">
-				<use xlink:href="#iconqianzhengbanli2x"></use>
-			</svg>
+<!--			<svg class="icon head-img" aria-hidden="true" @click="openMenu">-->
+<!--				<use xlink:href="#iconqianzhengbanli2x"></use>-->
+<!--			</svg>-->
 			<p >管理员：{{user_name}}</p>
 		</div>
 		<uni-list>
 			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" @click="openMenu(item,index)">
-				<svg class="icon head-img" aria-hidden="true" style="display: inline-block">
-					<use :href="item.url"></use>
-				</svg>
+				<span class="iconfont" :class="item.url"></span>
 			</uni-list-item>
 		</uni-list>
 		<div style="display: flex;justify-content: center;margin: 40rpx 0">
@@ -41,37 +40,37 @@
 				titleArr:[
 					{
 						name:'日常工作',
-						url:'#iconrenwu2x',
+						url:'iconrenwu2x',
 						show:false
 					},
 					{
 						name:'租户管理',
-						url:'#iconfangchan2x',
+						url:'iconfangchan2x',
 						show:true
 					},
 					{
 						name:'财务管理',
-						url:'#iconjiguancaiwuguanli2x'
+						url:'iconjiguancaiwuguanli2x'
 					},
 					{
 						name:'巡检预警',
-						url:'#iconyujing2x'
+						url:'iconyujing2x'
 					},
 					{
 						name:'设备管理',
-						url:'#iconshebei2x'
+						url:'iconshebei2x'
 					},
 					{
 						name:'仓库管理',
-						url:'#iconcangkumingcheng2x'
+						url:'iconcangkumingcheng2x'
 					},
 					{
 						name:'档案管理',
-						url:'#icondanganguanli2x'
+						url:'icondanganguanli2x'
 					},
 					{
 						name:'外派管理',
-						url:'#iconfeihanglvyouchuchafeiji8002x'
+						url:'iconfeihanglvyouchuchafeiji8002x'
 					},
 
 				]
@@ -154,11 +153,16 @@
 			align-items: center;
 			flex-direction: column;
 			justify-content: center;
-			border-bottom: 1rrpx solid #D9D9D9;
+			border-bottom: 1rpx solid #D9D9D9;
 			.head-img{
 				width:156rpx;
 				height:156rpx;
 				border-radius: 50%;
+				font-size: 120rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0;
 			}
 		}
 		p{
@@ -182,8 +186,9 @@
 			text-align: center;
 		}
 	}
-	.icon{
-		margin-top: -8rpx;
-		margin-right: 40rpx;
+	.iconfont{
+		margin-right: 20rpx;
+		margin-top: 5rpx;
+		font-size: 38rpx;
 	}
 </style>

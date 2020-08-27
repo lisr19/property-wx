@@ -7,7 +7,7 @@
 			<view  class="card">
 				<p class="name"><em></em>物品管理</p>
 				<view class="input-box"><span>物品：</span>
-					<input class="uni-input" name="num" v-model="wpph" placeholder="物品编号">
+					<input class="uni-input" name="num" v-model="skey_wp" placeholder="输入物品关键字">
 				</view>
 				<view class="btn" @click="getwpList">查询</view>
 			</view >
@@ -37,7 +37,7 @@
 		components: {leftMenu,uniPagination},
 		data() {
 			return {
-				wpph:'',
+				skey_wp:'',
 				currType:0,
 				dataList:[],
 				currIndex:0,
@@ -54,13 +54,13 @@
 			},
 
 			async getwpList(){
-				let params
-				if(this.wpph){
-					params.wp_ph=this.wpph
+				let params={}
+				if(this.skey_wp){
+					params.skey_wp=this.skey_wp
 				}
 				let res = await getwpList(params)
 				if(res.code === 0){
-					this.dataList = res.data.list.data
+					this.dataList = res.data
 				}else {
 
 				}

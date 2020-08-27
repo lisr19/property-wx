@@ -3,9 +3,7 @@
 		<view class="head-bar">
 			<view class="bg"></view>
 			<p class="title">
-				<svg class="icon" aria-hidden="true" @click="openBox">
-					<use xlink:href="#iconcaidan"></use>
-				</svg>
+				<view class="iconfont iconcaidan" @click="openBox"></view>
 <!--				<image class="menu" src="/static/logo.png" @click="openBox"></image>-->
 				物业管理系统</p>
 			<view class="tab-bar">
@@ -43,10 +41,16 @@
 					<p class="null">暂无提醒</p>
 				</view>
 				<view class="card" v-else :class="{showall:isShowAll2===true}">
-					<view class="work"  v-for="(item,index) in list_sw.slice(0,2)" v-if="isShowAll2===false" @click="showItem2(item)">
-						<p class="name">标题：{{item.sw_title}}</p>
-						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
-					</view>
+					<template v-if="isShowAll2===false">
+						<view class="work" >
+							<p class="name">标题：{{list_sw[0].sw_title}}</p>
+							<p><span>类别：活动 </span><span>日期：{{list_sw[0].sw_dt}}</span></p>
+						</view>
+						<view class="work" v-if="list_sw.length>1">
+							<p class="name">标题：{{list_sw[1].sw_title}}</p>
+							<p><span>类别：活动 </span><span>日期：{{list_sw[1].sw_dt}}</span></p>
+						</view>
+					</template>
 					<view class="work"  v-for="(item,index) in list_sw" v-if="isShowAll2===true" @click="showItem2(item)">
 						<p class="name">标题：{{item.sw_title}}</p>
 						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
@@ -478,5 +482,10 @@
 			font-size: 30rpx!important;
 			color: #DCDCDC!important;
 		}
+	}
+	.iconcaidan{
+		font-size: 48rpx;
+		margin-right: 20rpx;
+		z-index: 99;
 	}
 </style>

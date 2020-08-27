@@ -38,6 +38,13 @@ export function getwpList(params) {
         body: params
     })
 }
+export function getckList(params) {
+    return fly.request({
+        url: 'cangku/cklist',
+        method: 'get',
+        body: params
+    })
+}
 //外派
 export function getwpjl(params) {
     return fly.request({

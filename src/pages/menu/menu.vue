@@ -2,9 +2,8 @@
 	<view  class="content">
 		<view  class="head-bar">
 			<view  class="bg"></view >
-			<p class="title"><svg class="icon" aria-hidden="true" @click="openBox">
-				<use xlink:href="#iconcaidan"></use>
-			</svg>物业管理系统</p>
+			<p class="title">
+				<span class="iconfont iconcaidan" @click="openBox"></span>物业管理系统</p>
 			<view  class="card" >
 				<p class="name"><em></em>{{typeName}}</p>
 				<ul class="type-items" :style="{height:listHeight+'px'}">
@@ -217,6 +216,11 @@
 					height: 60rpx;
 					margin-right: 20rpx;
 					z-index: 102;
+				}
+				.iconcaidan{
+					font-size: 48rpx;
+					margin-right: 20rpx;
+					z-index: 99;
 				}
 			}
 		}

@@ -24,7 +24,7 @@
 				</template>
 				<p>报事日期：{{item.bs_dt}}</p>
 				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
-				<svg class="icon" aria-hidden="true" @click="delItem(item)"><use xlink:href="#iconshanchu2x" ></use></svg>
+				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>
 			</view>
 		</view>
 <!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
@@ -32,7 +32,7 @@
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
 		<u-modal v-model="showTip" show-cancel-button content="确定删除此记录吗？" @confirm="delBs"></u-modal>
-		<u-modal v-model="showAdd" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
+		<u-modal  v-model="showAdd" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
 			<view class="slot-content" >
 				<u-form :model="form" ref="uForm" >
 					<u-form-item label="标题" label-width="120"  prop="bs_title">
@@ -144,17 +144,22 @@
 		methods: {
 			submit() {
 				this.$refs.uForm.setRules(this.rules)
+				console.log(this.form);
 				setTimeout(()=>{
 					this.$refs.uForm.validate(valid => {
 						console.log(valid);
 						if (valid) {
 							console.log('验证通过');
+							this.showAdd = false;
 						} else {
 							console.log('验证失败');
 						}
 					});
+					this.$refs.uModal.clearLoading();
 				},100)
-				// this.showAdd = false;
+
+
+
 			},
 			confirmTime(e){
 				console.log(e);
@@ -356,11 +361,11 @@
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
 				position: relative;
-				.icon{
+				.iconshanchu2x{
 					position: absolute;
-					top: 20rpx;
-					right: 10rpx;
-					font-size: 24rpx;
+					top: 10rpx;
+					right: 20rpx;
+					font-size: 34rpx;
 				}
 				.title{
 					font-size:32rpx;
