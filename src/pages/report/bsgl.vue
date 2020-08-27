@@ -6,7 +6,7 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>报事管理</p>
-				<view class="btn btn1">新增</view>
+				<view class="btn btn1" @click="showAdd=true">新增</view>
 			</view >
 			<view  class="card card2">
 				<view class="input-box"><span>报事人：</span><input class="uni-input" name="num"></view>
@@ -31,6 +31,33 @@
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
+		<u-modal v-model="showTip" show-cancel-button content="确定删除此记录吗？" @confirm="delBs"></u-modal>
+		<u-modal v-model="showAdd" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
+			<view class="slot-content" >
+				<u-form :model="form" ref="uForm" >
+					<u-form-item label="标题" label-width="120"  prop="bs_title">
+						<u-input  :border="true" v-model="form.bs_title"/>
+					</u-form-item>
+					<u-form-item label="报事人" label-width="120" prop="bs_bsr">
+						<u-input  :border="true" v-model="form.bs_bsr" />
+					</u-form-item>
+					<u-form-item label="日期" label-width="120" prop="bs_dt">
+						<u-input  type="select"   disabled :border="true" v-model="form.bs_dt" @click="showTime=true"/>
+					</u-form-item>
+					<u-form-item label="来源" label-width="120" prop="bs_ly">
+						<u-input  :border="true"  v-model="form.bs_ly"  type="select" @click="showLy=true"/>
+					</u-form-item>
+					<u-form-item label="办理人" label-width="120" prop="bs_blr">
+						<u-input  :border="true"   v-model="form.bs_blr"  type="select" @click="showLy=true"/>
+					</u-form-item>
+					<u-form-item label="描述" label-width="120"  prop="bs_ms" >
+						<u-input :border="true" v-model="form.bs_ms" type="textarea"/>
+					</u-form-item>
+				</u-form>
+			</view>
+		</u-modal>
+		<u-select v-model="showLy" :list="list" @confirm="confirmLy"></u-select>
+		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
 	</view >
 </template>
 
@@ -40,28 +67,140 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbsList,delBs} from "@/utils/api/index"
+	import {getbsList,delBs,getbsAdd} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				form: {
+					bs_title:'',
+					bs_bsr:'',
+				},
+				rules:{
+					bs_title: [
+						{
+							required: true,
+							message: '请输入标题',
+						}
+					],
+					bs_bsr: [
+						{
+							required: true,
+							message: '请输入报事人',
+						}
+					],
+					bs_dt: [
+						{
+							required: true,
+							message: '请选择日期',
+						}
+					],
+					bs_ly: [
+						{
+							required: true,
+							message: '请选择来源',
+						}
+					],
+					bs_blr: [
+						{
+							required: true,
+							message: '请选择办理人',
+						}
+					],
+					bs_ms: [
+						{
+							required: true,
+							message: '请输入描述',
+						}
+					],
+
+				},
+				list: [
+					{
+						value: '1',
+						label: '线上'
+					},
+					{
+						value: '2',
+						label: '线下'
+					}
+				],
+				showLy:false,
+				showTime:false,
 				dataList:[],
 				currIndex:0,
 				current: 0,
-				total:0
+				total:0,
+				showTip:false,
+				showAdd:false,
+				currbsdh:''
 			}
 		},
 		onLoad() {
 			this.getbsList()
 		},
+		onReady() {
+		},
 		methods: {
-			delItem(item){
-				this.delBs({bs_dh:item.bs_dh,del:1})
+			submit() {
+				this.$refs.uForm.setRules(this.rules)
+				setTimeout(()=>{
+					this.$refs.uForm.validate(valid => {
+						console.log(valid);
+						if (valid) {
+							console.log('验证通过');
+						} else {
+							console.log('验证失败');
+						}
+					});
+				},100)
+				// this.showAdd = false;
 			},
-			async delBs(params){
+			confirmTime(e){
+				console.log(e);
+				this.form.bs_dt = e.year + '-'+e.month+'-'+e.day
+
+			},
+			confirmLy(e) {
+				this.form.bs_ly = e[0].label
+				// this.form.bs_ly = e[0].value
+			},
+			delItem(item,index){
+				this.showTip =true
+				this.currbsdh = item.bs_dh
+				this.currIndex = index
+			},
+			async getbsAdd(params){
+				let res = await getbsAdd(params)
+				if(res.code === 0){
+					this.getbsList()
+				}else {
+					uni.showToast({
+						title: '添加失败',
+						icon: 'none',
+						mask: false
+					})
+				}
+			},
+			async delBs(){
+				let params ={
+					bs_dh:this.currbsdh,
+					del:1
+				}
 				let res = await delBs(params)
 				if(res.code === 0){
-
+					this.getbsList()
+					uni.showToast({
+						title: '删除成功',
+						icon: 'none',
+						mask: false
+					})
+				}else {
+					uni.showToast({
+						title: '删除失败',
+						icon: 'none',
+						mask: false
+					})
 				}
 			},
 			async getbsList(params){
@@ -231,5 +370,8 @@
 			}
 
 		}
+	}
+	.slot-content{
+		padding: 10rpx 26rpx;
 	}
 </style>
