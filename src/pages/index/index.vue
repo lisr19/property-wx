@@ -17,7 +17,7 @@
 			<template v-if="currIndex===0">
 				<view class="card null-card" v-if="list_tz.length===0">
 					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>
-					<p class="null">暂无通知</p>
+					<p class="null-tip">暂无通知</p>
 				</view>
 				<view class="card" v-else  :class="{showall:isShowAll===true}">
 					<p class="msg" v-for="(item,index) in showTZ" v-if="isShowAll===false" @click="showItem(item)">
@@ -34,7 +34,7 @@
 			<template v-else>
 				<view class="card null-card" v-if="list_sw.length===0">
 					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>
-					<p class="null">暂无提醒</p>
+					<p class="null-tip">暂无提醒</p>
 				</view>
 				<view class="card" v-else :class="{showall:isShowAll2===true}">
 					<view class="work" v-for="(item,index) in showSW" v-if="isShowAll2===false" @click="showItem2(item)">
@@ -136,7 +136,11 @@
 			}
 		},
 		onShow() {
-			this.getDesktop()
+			if(!uni.getStorageSync('token')){
+				this.$Router.push({name:'登录'})
+			}else {
+				this.getDesktop()
+			}
 		},
 		methods: {
 			openDeatil(){
@@ -359,7 +363,7 @@
 					height: 80rpx;
 					margin-right: 48rpx;
 				}
-				.null{
+				.null-tip{
 					font-size:32rpx;
 					font-family:PingFangSC-Regular,PingFang SC;
 					font-weight:400;

@@ -13,7 +13,7 @@
 					<input  v-model="password"  type="password" placeholder='密码' >
 				</p>
 				<p>
-					<input  v-model="code"  type="number" placeholder='输入验证码' maxlength="4">
+					<input  v-model="code"  type="number" placeholder='输入验证码' maxlength="4"  @confirm="login">
 					<span class="code" @click="getCode">{{codeNum}}</span>
 				</p>
 				<view class="tips">

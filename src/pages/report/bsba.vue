@@ -5,17 +5,16 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>报事管理</p>
-				<view class="btn btn1" @click="showAdd=true">新增</view>
-			</view >
-			<view  class="card card2">
-				<view class="input-box"><span>报事人：</span><input class="uni-input" name="num"></view>
+				<p class="name"><em></em>报事备案</p>
+				<view class="input-box"><span>报事标题：</span><input class="uni-input"  ></view>
 				<view class="btn">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">报事人：{{item.bs_bsr}}</p>
+
+				<p class="title">报事标题：{{item.bs_title}}</p>
+				<p>报事人：{{item.bs_bsr}}</p>
 				<p>报事描述：{{item.bs_ms}}</p>
 				<template>
 					<p  v-if="item.bs_zt===0" style="color:#FF9900">状态：未办理</p>
@@ -23,16 +22,26 @@
 					<p  v-else>状态：已办理</p>
 				</template>
 				<p>报事日期：{{item.bs_dt}}</p>
-				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
-				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>
-				<span class="iconfont iconguidang2x"  v-if="item.bs_zt===3" @click="gdItem(item)"></span>
+				<p >办理日期：{{item.bs_bldt}}</p>
+				<p >办理人：{{item.bs_blr}}</p>
+				<p >办理结果：{{item.bs_bljg}}</p>
+				<p >回访日期：{{item.bs_hfdt}}</p>
+				<template>
+					<p v-if="item.bs_hfpj===1">回访评价：非常不满意</p>
+					<p v-if="item.bs_hfpj===2">回访评价：不满意</p>
+					<p v-if="item.bs_hfpj===3">回访评价：一般</p>
+					<p v-if="item.bs_hfpj===4">回访评价：满意</p>
+					<p v-if="item.bs_hfpj===5">回访评价：非常满意</p>
+				</template>
+
+<!--				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>-->
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBs"></u-modal>
+		<u-modal v-model="showTip" show-cancel-button content="确定删除此记录吗？" @confirm="delBs"></u-modal>
 		<u-modal  v-model="showAdd" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
 			<view class="slot-content" >
 				<u-form :model="form" ref="uForm" >
@@ -68,12 +77,11 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbsList,delBs,getbsAdd} from "@/utils/api/index"
+	import {getbsbaList,delBs,getbsAdd} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				tipContent:'',
 				form: {
 					bs_title:'',
 					bs_bsr:'',
@@ -139,7 +147,7 @@
 			}
 		},
 		onLoad() {
-			this.getbsList()
+			this.getbsbaList()
 		},
 		onReady() {
 		},
@@ -173,21 +181,14 @@
 				// this.form.bs_ly = e[0].value
 			},
 			delItem(item,index){
-				this.tipContent ='确定删除此记录吗？'
 				this.showTip =true
-				this.currbsdh = item.bs_dh
-				this.currIndex = index
-			},
-			gdItem(item,index){
-				this.showTip =true
-				this.tipContent ='确定备案此记录吗？'
 				this.currbsdh = item.bs_dh
 				this.currIndex = index
 			},
 			async getbsAdd(params){
 				let res = await getbsAdd(params)
 				if(res.code === 0){
-					this.getbsList()
+					this.getbsbaList()
 				}else {
 					uni.showToast({
 						title: '添加失败',
@@ -197,31 +198,28 @@
 				}
 			},
 			async delBs(){
-				if(this.tipContent==='确定删除此记录吗？'){
-					let params ={
-						bs_dh:this.currbsdh,
-						del:1
-					}
-					let res = await delBs(params)
-					if(res.code === 0){
-						this.getbsList()
-						uni.showToast({
-							title: '删除成功',
-							icon: 'none',
-							mask: false
-						})
-					}else {
-						uni.showToast({
-							title: '删除失败',
-							icon: 'none',
-							mask: false
-						})
-					}
+				let params ={
+					bs_dh:this.currbsdh,
+					del:1
 				}
-
+				let res = await delBs(params)
+				if(res.code === 0){
+					this.getbsbaList()
+					uni.showToast({
+						title: '删除成功',
+						icon: 'none',
+						mask: false
+					})
+				}else {
+					uni.showToast({
+						title: '删除失败',
+						icon: 'none',
+						mask: false
+					})
+				}
 			},
-			async getbsList(params){
-				let res = await getbsList(params)
+			async getbsbaList(params){
+				let res = await getbsbaList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
 					this.total = res.data.total
@@ -352,7 +350,7 @@
 			}
 		}
 		.items{
-			padding: 420rpx 0 100rpx;
+			padding: 340rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -379,12 +377,6 @@
 					top: 10rpx;
 					right: 20rpx;
 					font-size: 34rpx;
-				}
-				.iconguidang2x{
-					position: absolute;
-					top: 50rpx;
-					right: 6rpx;
-					font-size: 68rpx;
 				}
 				.title{
 					font-size:32rpx;

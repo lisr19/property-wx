@@ -86,8 +86,18 @@
 		},
 		methods: {
 			quit(){
-				uni.clearStorageSync();
-				this.$Router.push({name: '登录'})
+				uni.showModal({
+					title: '提示',
+					content: '确定要退出吗？',
+					success:  (res)=> {
+						if (res.confirm) {
+							uni.clearStorageSync();
+							this.$Router.push({name: '登录'})
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
 				this.$emit("closeMenu");
 			},
 			openMenu(item,index){

@@ -16,6 +16,22 @@ export function getbsList(params) {
         body: params
     })
 }
+//报事办理
+export function getbsblList(params) {
+    return fly.request({
+        url: 'baoshi/bsbllist',
+        method: 'get',
+        body: params
+    })
+}
+//报事备案
+export function getbsbaList(params) {
+    return fly.request({
+        url: 'baoshi/bsba',
+        method: 'get',
+        body: params
+    })
+}
 export function getbsAdd(params) {
     return fly.request({
         url: 'baoshi/bsadd',
@@ -23,9 +39,23 @@ export function getbsAdd(params) {
         body: params
     })
 }
+export function bshfAdd(params) {
+    return fly.request({
+        url: 'baoshi/bsblhf',
+        method: 'post',
+        body: params
+    })
+}
 export function delBs(params) {
     return fly.request({
         url: 'baoshi/bslist',
+        method: 'get',
+        body: params
+    })
+}
+export function delBsbl(params) {
+    return fly.request({
+        url: 'baoshi/bsbllist',
         method: 'get',
         body: params
     })

@@ -104,6 +104,12 @@
 		},
 		{
 			"path": "pages/report/bsgl"
+		},
+		{
+			"path": "pages/report/bsbl"
+		},
+		{
+			"path": "pages/report/bsba"
 		}
 	],
 	"globalStyle": {

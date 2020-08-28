@@ -5,10 +5,7 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>报事管理</p>
-				<view class="btn btn1" @click="showAdd=true">新增</view>
-			</view >
-			<view  class="card card2">
+				<p class="name"><em></em>报事办理</p>
 				<view class="input-box"><span>报事人：</span><input class="uni-input" name="num"></view>
 				<view class="btn">查询</view>
 			</view >
@@ -19,39 +16,61 @@
 				<p>报事描述：{{item.bs_ms}}</p>
 				<template>
 					<p  v-if="item.bs_zt===0" style="color:#FF9900">状态：未办理</p>
+					<p  v-else-if="item.bs_zt===2">状态：已回访</p>
 					<p  v-else-if="item.bs_zt===4">状态：办理结束</p>
 					<p  v-else>状态：已办理</p>
 				</template>
 				<p>报事日期：{{item.bs_dt}}</p>
+				<p v-if="item.bs_bldt">办理日期：{{item.bs_bldt}}</p>
 				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
-				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>
-				<span class="iconfont iconguidang2x"  v-if="item.bs_zt===3" @click="gdItem(item)"></span>
+				<p v-if="item.bs_hfms">回访描述：{{item.bs_hfms}}</p>
+				<template>
+					<p v-if="item.bs_hfpj===1">回访评价：非常不满意</p>
+					<p v-if="item.bs_hfpj===2">回访评价：不满意</p>
+					<p v-if="item.bs_hfpj===3">回访评价：一般</p>
+					<p v-if="item.bs_hfpj===4">回访评价：满意</p>
+					<p v-if="item.bs_hfpj===5">回访评价：非常满意</p>
+				</template>
+				<view class="btn-group">
+					<span v-if="item.bs_zt===0" class="iconfont iconqianzhengbanli2x"  @click="blItem(item,index)">办理</span>
+					<span v-if="item.bs_zt===1" class="iconfont iconM-pingjia2x"  @click="hfItem(item,index)">回访</span>
+					<span v-if="item.bs_zt===1||item.bs_zt===2" class="iconfont icondatijieshu2x"  @click="endItem(item,index)">完成</span>
+				</view>
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBs"></u-modal>
+		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBsbl"></u-modal>
 		<u-modal  v-model="showAdd" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
 			<view class="slot-content" >
 				<u-form :model="form" ref="uForm" >
-					<u-form-item label="标题" label-width="120"  prop="bs_title">
-						<u-input  :border="true" v-model="form.bs_title"/>
-					</u-form-item>
-					<u-form-item label="报事人" label-width="120" prop="bs_bsr">
-						<u-input  :border="true" v-model="form.bs_bsr" />
-					</u-form-item>
-					<u-form-item label="日期" label-width="120" prop="bs_dt">
+					<u-form-item label="办理日期" label-width="150" prop="bs_dt">
 						<u-input  type="select"   disabled :border="true" v-model="form.bs_dt" @click="showTime=true"/>
 					</u-form-item>
-					<u-form-item label="来源" label-width="120" prop="bs_ly">
+					<u-form-item label="办理状态" label-width="150" prop="bs_ly">
 						<u-input  :border="true"  v-model="form.bs_ly"  type="select" @click="showLy=true"/>
 					</u-form-item>
-					<u-form-item label="办理人" label-width="120" prop="bs_blr">
-						<u-input  :border="true"   v-model="form.bs_blr"  type="select" @click="showLy=true"/>
+					<u-form-item label="移转办理" label-width="150" prop="bs_blr">
+						<u-input placeholder="选择所属办理人" :border="true"   v-model="form.bs_blr"  type="select" @click="showLy=true"/>
 					</u-form-item>
-					<u-form-item label="描述" label-width="120"  prop="bs_ms" >
+					<u-form-item label="办理描述" label-width="150"  prop="bs_ms" >
+						<u-input :border="true" v-model="form.bs_ms" type="textarea"/>
+					</u-form-item>
+				</u-form>
+			</view>
+		</u-modal>
+		<u-modal  v-model="showHf" ref="hfModal" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="">
+			<view class="slot-content" >
+				<u-form :model="form" ref="uForm" >
+					<u-form-item label="回访日期" label-width="150" prop="bs_dt">
+						<u-input  type="select"   disabled :border="true" v-model="form.bs_dt" @click="showTime=true"/>
+					</u-form-item>
+					<u-form-item label="回访评价" label-width="150" prop="bs_ly">
+						<u-input  :border="true"  v-model="form.bs_ly"  type="select" @click="showLy=true"/>
+					</u-form-item>
+					<u-form-item label="回访描述" label-width="150"  prop="bs_ms" >
 						<u-input :border="true" v-model="form.bs_ms" type="textarea"/>
 					</u-form-item>
 				</u-form>
@@ -68,12 +87,12 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbsList,delBs,getbsAdd} from "@/utils/api/index"
+	import {getbsblList,delBsbl,getbsAdd,bshfAdd} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				tipContent:'',
+				showHf:false,
 				form: {
 					bs_title:'',
 					bs_bsr:'',
@@ -120,11 +139,11 @@
 				list: [
 					{
 						value: '1',
-						label: '线上'
+						label: '未结束'
 					},
 					{
 						value: '2',
-						label: '线下'
+						label: '已结束'
 					}
 				],
 				showLy:false,
@@ -135,11 +154,12 @@
 				total:0,
 				showTip:false,
 				showAdd:false,
-				currbsdh:''
+				currbsdh:'',
+				tipContent:''
 			}
 		},
 		onLoad() {
-			this.getbsList()
+			this.getbsblList()
 		},
 		onReady() {
 		},
@@ -172,22 +192,24 @@
 				this.form.bs_ly = e[0].label
 				// this.form.bs_ly = e[0].value
 			},
-			delItem(item,index){
-				this.tipContent ='确定删除此记录吗？'
-				this.showTip =true
-				this.currbsdh = item.bs_dh
+			blItem(item,index){
+				this.showAdd =true
 				this.currIndex = index
 			},
-			gdItem(item,index){
+			hfItem(item,index){
+				this.showHf =true
+				this.currIndex = index
+			},
+			endItem(item,index){
+				this.tipContent ='确定结束此记录吗？'
 				this.showTip =true
-				this.tipContent ='确定备案此记录吗？'
 				this.currbsdh = item.bs_dh
 				this.currIndex = index
 			},
 			async getbsAdd(params){
 				let res = await getbsAdd(params)
 				if(res.code === 0){
-					this.getbsList()
+					this.getbsblList()
 				}else {
 					uni.showToast({
 						title: '添加失败',
@@ -196,32 +218,20 @@
 					})
 				}
 			},
-			async delBs(){
-				if(this.tipContent==='确定删除此记录吗？'){
+			async delBsbl(){
+				if(this.tipContent==='确定结束此记录吗？'){
 					let params ={
-						bs_dh:this.currbsdh,
+						dh:this.currbsdh,
 						del:1
 					}
-					let res = await delBs(params)
+					let res = await delBsbl(params)
 					if(res.code === 0){
-						this.getbsList()
-						uni.showToast({
-							title: '删除成功',
-							icon: 'none',
-							mask: false
-						})
-					}else {
-						uni.showToast({
-							title: '删除失败',
-							icon: 'none',
-							mask: false
-						})
-					}
+						this.getbsblList()
+					}else {}
 				}
-
 			},
-			async getbsList(params){
-				let res = await getbsList(params)
+			async getbsblList(params){
+				let res = await getbsblList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
 					this.total = res.data.total
@@ -352,7 +362,7 @@
 			}
 		}
 		.items{
-			padding: 420rpx 0 100rpx;
+			padding: 330rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -374,22 +384,21 @@
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
 				position: relative;
-				.iconshanchu2x{
-					position: absolute;
-					top: 10rpx;
-					right: 20rpx;
-					font-size: 34rpx;
-				}
-				.iconguidang2x{
-					position: absolute;
-					top: 50rpx;
-					right: 6rpx;
-					font-size: 68rpx;
-				}
 				.title{
 					font-size:32rpx;
 					font-weight:500;
 					color:rgba(89,89,89,1);
+				}
+				.btn-group{
+					display: flex;
+					align-items: center;
+					justify-content: space-around;
+					border-top: solid 1rpx #E5E5E5;
+					padding-top: 20rpx;
+					margin-top: 20rpx;
+					.iconfont{
+						font-size: 30rpx;
+					}
 				}
 			}
 

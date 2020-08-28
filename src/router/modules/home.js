@@ -105,6 +105,14 @@ const home = [
 	{
 		path: '/pages/report/bsgl',
 		name: '报事管理',
+	},
+	{
+		path: '/pages/report/bsbl',
+		name: '报事办理',
+	},
+	{
+		path: '/pages/report/bsba',
+		name: '报事备案',
 	}
 ]
 export default home

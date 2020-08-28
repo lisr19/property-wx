@@ -165,6 +165,10 @@
 					this.$Router.push({name: '服务记录'})
 				}else if(item.name==='报事管理'){
 					this.$Router.push({name: '报事管理'})
+				}else if(item.name==='报事办理'){
+					this.$Router.push({name: '报事办理'})
+				}else if(item.name==='报事备案'){
+					this.$Router.push({name: '报事备案'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}
