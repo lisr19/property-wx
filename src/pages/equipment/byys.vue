@@ -5,15 +5,15 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>报事管理</p>
-				<view class="btn btn1" @click="showAdd=true">新增</view>
-			</view >
-			<view  class="card card2">
-				<view class="input-box"><span>报事人：</span><input class="uni-input" name="num"></view>
+				<p class="name"><em></em>保养验收</p>
+				<view class="input-box"><span>设备：</span><input class="uni-input" name="num"></view>
 				<view class="btn">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">报事人：{{item.bs_bsr}}</p>
 				<p>报事描述：{{item.bs_ms}}</p>
@@ -24,8 +24,7 @@
 				</template>
 				<p>报事日期：{{item.bs_dt}}</p>
 				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
-				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>
-				<span class="iconfont iconguidang2x"  v-if="item.bs_zt===3" @click="gdItem(item)"></span>
+				<span class="iconfont iconguidang2x"  @click="gdItem(item,index)"><em>去验收</em></span>
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
@@ -33,32 +32,29 @@
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
 		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBs"></u-modal>
-		<u-modal  v-model="showAdd" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
+		<u-modal  v-model="showBox" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="600rpx" @confirm="submit">
 			<view class="slot-content" >
-				<u-form :model="form" ref="uForm" >
-					<u-form-item label="标题" label-width="120"  prop="bs_title">
-						<u-input  :border="true" v-model="form.bs_title"/>
-					</u-form-item>
-					<u-form-item label="报事人" label-width="120" prop="bs_bsr">
-						<u-input  :border="true" v-model="form.bs_bsr" />
-					</u-form-item>
-					<u-form-item label="日期" label-width="120" prop="bs_dt">
-						<u-input  type="select"   disabled :border="true" v-model="form.bs_dt" @click="showTime=true"/>
-					</u-form-item>
-					<u-form-item label="来源" label-width="120" prop="bs_ly">
-						<u-input  :border="true"  v-model="form.bs_ly"  type="select" @click="showLy=true"/>
-					</u-form-item>
-					<u-form-item label="办理人" label-width="120" prop="bs_blr">
-						<u-input  :border="true"   v-model="form.bs_blr"  type="select" @click="showSr=true"/>
-					</u-form-item>
-					<u-form-item label="描述" label-width="120"  prop="bs_ms" >
-						<u-input :border="true" v-model="form.bs_ms" type="textarea"/>
-					</u-form-item>
-				</u-form>
+				<view>
+					验收结果：
+					<u-radio-group class="change-box" v-model="value" @change="radioGroupChange" size="45" >
+						<u-radio
+								@change="radioChange"
+								v-for="(item, index) in list" :key="index"
+								shape="circle"
+								:name="item.name"
+								label-size="30"
+						>
+							{{item.name}}
+						</u-radio>
+					</u-radio-group>
+				</view>
+				<view>
+					验收说明：<u-input :border="true" v-model="form.bs_ms" type="textarea" style="margin-top: 20rpx"/>
+				</view>
+
 			</view>
 		</u-modal>
 		<u-select v-model="showLy" :list="list" @confirm="confirmLy"></u-select>
-		<u-select v-model="showSr" :list="rsList" @confirm="confirmSr"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
 	</view >
 </template>
@@ -70,94 +66,49 @@
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {getbsList,delBs,getbsAdd} from "@/utils/api/index"
-	import {getRslist} from "@/utils/api/comment"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				rsList:[],
 				tipContent:'',
 				form: {
 					bs_title:'',
 					bs_bsr:'',
 				},
-				rules:{
-					bs_title: [
-						{
-							required: true,
-							message: '请输入标题',
-						}
-					],
-					bs_bsr: [
-						{
-							required: true,
-							message: '请输入报事人',
-						}
-					],
-					bs_dt: [
-						{
-							required: true,
-							message: '请选择日期',
-						}
-					],
-					bs_ly: [
-						{
-							required: true,
-							message: '请选择来源',
-						}
-					],
-					bs_blr: [
-						{
-							required: true,
-							message: '请选择办理人',
-						}
-					],
-					bs_ms: [
-						{
-							required: true,
-							message: '请输入描述',
-						}
-					],
-
-				},
 				list: [
 					{
-						value: '1',
-						label: '线上'
+						name: '不通过',
 					},
 					{
-						value: '2',
-						label: '线下'
-					}
+						name: '通过',
+					},
 				],
+				value: '不通过',
 				showLy:false,
-				showSr:false,
 				showTime:false,
 				dataList:[],
 				currIndex:0,
 				current: 0,
 				total:0,
 				showTip:false,
-				showAdd:false,
+				showBox:false,
 				currbsdh:''
 			}
 		},
 		onLoad() {
 			this.getbsList()
-			this.getRslist()
 		},
 		onReady() {
 		},
 		methods: {
 			submit() {
 				this.$refs.uForm.setRules(this.rules)
-				// console.log(this.form);
+				console.log(this.form);
 				setTimeout(()=>{
 					this.$refs.uForm.validate(valid => {
 						console.log(valid);
 						if (valid) {
 							console.log('验证通过');
-							this.getbsAdd(this.form)
 							this.showAdd = false;
 						} else {
 							console.log('验证失败');
@@ -175,12 +126,8 @@
 
 			},
 			confirmLy(e) {
-				this.form.bs_ly = e[0].value
+				this.form.bs_ly = e[0].label
 				// this.form.bs_ly = e[0].value
-			},
-			confirmSr(e){
-				this.form.bs_blr = e[0].label
-				this.form.bs_blrid = e[0].value
 			},
 			delItem(item,index){
 				this.tipContent ='确定删除此记录吗？'
@@ -189,26 +136,21 @@
 				this.currIndex = index
 			},
 			gdItem(item,index){
-				this.showTip =true
-				this.tipContent ='确定备案此记录吗？'
-				this.currbsdh = item.bs_dh
+				this.showBox =true
 				this.currIndex = index
 			},
-			async getRslist(params){
-				let res = await getRslist(params)
-				if(res.code === 0){
-					let list = res.data
-					list.forEach((i,index)=>{
-						this.rsList.push({label:i.bmry_name,value:i.bmry_id})
-					})
-					console.log(this.rsList);
-				}else {
+			// 选中某个单选框时，由radio时触发
+			radioChange(e) {
+				// console.log(e);
+			},
+			// 选中任一radio时，由radio-group触发
+			radioGroupChange(e) {
+				console.log(e);
+				if(e==='通过'){
 
 				}
 			},
-
 			async getbsAdd(params){
-				console.log(params);
 				let res = await getbsAdd(params)
 				if(res.code === 0){
 					this.getbsList()
@@ -376,7 +318,7 @@
 			}
 		}
 		.items{
-			padding: 420rpx 0 100rpx;
+			padding: 320rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -406,9 +348,14 @@
 				}
 				.iconguidang2x{
 					position: absolute;
-					top: 50rpx;
-					right: 6rpx;
-					font-size: 68rpx;
+					top: -10rpx;
+					right: 20rpx;
+					font-size: 60rpx;
+					display: flex;
+					align-items: center;
+				}
+				em{
+					font-size: 28rpx;
 				}
 				.title{
 					font-size:32rpx;
@@ -418,8 +365,12 @@
 			}
 
 		}
+
 	}
 	.slot-content{
 		padding: 10rpx 26rpx;
+		.change-box{
+			margin: 20rpx 0 40rpx;
+		}
 	}
 </style>

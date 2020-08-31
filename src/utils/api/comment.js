@@ -32,6 +32,14 @@ export function getDesktop(params) {
         body: params
     })
 }
+//人员选择
+export function getRslist(params) {
+    return fly.request({
+        url: 'renshi/rsygsel',
+        method: 'get',
+        body: params
+    })
+}
 
 
 

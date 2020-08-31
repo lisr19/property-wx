@@ -6,23 +6,27 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>保养计划</p>
-				<view class="input-box"><span>设备：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>设备：</span><input  v-model="skey_sbna" class="uni-input" name="num"></view>
+				<view class="btn" @click="getPlan">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">设备名称：{{item.name}}</p>
-				<p>图片：{{item.name}}</p>
-				<p>保养公司：{{item.carPrice}}</p>
-				<p>保养人：{{item.licenseNumbers}}</p>
-				<p>保养日期：{{item.time}}</p>
-				<p>验收人：{{item.time}}</p>
-				<p>备注：{{item.time}}</p>
-				<span class="tip">状态：1</span>
+				<p class="title">设备名称：{{item.sb_name}}</p>
+<!--				<p>图片：{{item.name}}</p>-->
+<!--				<p>保养公司：{{item.sb_ywgs}}</p>-->
+				<p>保养人：{{item.sb_ywr}}</p>
+				<p>保养日期：{{item.sb_ywdt}}</p>
+				<p>下次保养日期：{{item.sb_xcbydt}}</p>
+				<p>验收人：{{item.sb_nsr}}</p>
+				<p>备注：{{item.sb_nsjg}}</p>
+				<span class="tip">状态：{{item.jh_zt===0?'未保养':'已保养'}}</span>
 			</view>
 		</view>
-		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix"  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -41,6 +45,7 @@
 		data() {
 			return {
 				currType:0,
+				skey_sbna:'',
 				dataList:[
 					{
 						state:1,
@@ -59,12 +64,16 @@
 		methods: {
 			chagePage(e){
 				console.log(e);
+				this.getPlan({page:e.current})
 			},
 			async getPlan(params){
+				if(this.skey_sbna){
+					params.skey_sbna=this.skey_sbna
+				}
 				let res = await getPlan(params)
 				if(res.code === 0){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -190,7 +199,7 @@
 			}
 		}
 		.items{
-			padding: 380rpx 0 50rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

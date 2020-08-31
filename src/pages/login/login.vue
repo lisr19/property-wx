@@ -133,7 +133,10 @@
 					uni.setStorage({key: 'user_id', data: data.user_id})
 					uni.setStorage({key: 'user_name', data: data.user_name})
 					uni.setStorage({key: 'userData', data: data})
-					this.$Router.push({name:'首页'})
+					// this.$Router.push({name:'首页'})
+					uni.redirectTo({
+						url: '/pages/index/index'
+					});
 					console.log(res);
 				}else {
 					uni.showToast({

@@ -110,6 +110,9 @@
 		},
 		{
 			"path": "pages/report/bsba"
+		},
+		{
+			"path": "pages/equipment/byys"
 		}
 	],
 	"globalStyle": {

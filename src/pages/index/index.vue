@@ -56,7 +56,7 @@
 					<span class="time">{{chageDate}}</span>
 					<view class="txt" v-if="list_rw[0]">{{list_rw[0].rw_title}}</view>
 				</view>
-				<uni-icons class="icon" type="arrowright" size="18" color="#999"></uni-icons>
+				<uni-icons class="icon" type="arrowright" size="18" color="#999" @click="openDeatil('任务')"></uni-icons>
 			</view>
 			<view class="item">
 				<p class="name"><em style="background: #426FE4"></em>日程安排</p>
@@ -64,7 +64,7 @@
 					<span class="time">{{chageDate}}</span>
 					<view class="txt" v-if="list_rc[0]">{{list_rc[0].rc_title}}</view>
 				</view>
-				<uni-icons class="icon" type="arrowright" size="18" color="#999" @click="openDeatil"></uni-icons>
+				<uni-icons class="icon" type="arrowright" size="18" color="#999" @click="openDeatil('日程安排')"></uni-icons>
 			</view>
 		</view>
 		<view class="data-box">
@@ -143,8 +143,12 @@
 			}
 		},
 		methods: {
-			openDeatil(){
-				this.$Router.push({name: '详情',params:{list:this.list_rc,time:this.chageDate}})
+			openDeatil(name){
+				if(name==='任务'){
+					this.$Router.push({name: '详情',params:{list:this.list_rw,time:this.chageDate}})
+				}else {
+					this.$Router.push({name: '详情',params:{list:this.list_rc,time:this.chageDate}})
+				}
 			},
 			showItem(item){
 				this.itemData = item
@@ -185,7 +189,12 @@
 						}
 						this.list_rc = swList
 					})
-				}else {
+				}else if(res.msg === 'token已过期！'){
+					uni.showToast({
+						title: 'token已过期,请重新登录',
+						icon: 'none',
+					})
+				} else {
 					uni.showToast({
 						title: res.msg,
 						icon: 'none',

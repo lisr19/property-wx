@@ -113,6 +113,10 @@ const home = [
 	{
 		path: '/pages/report/bsba',
 		name: '报事备案',
+	},
+	{
+		path: '/pages/equipment/byys',
+		name: '保养验收',
 	}
 ]
 export default home

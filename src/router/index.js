@@ -17,17 +17,17 @@ router.beforeEach((to, from, next) => {
 	console.log(to);
 	console.log(from);
 	if (!token && to.path === '/pages/login/login') {
-		console.log(111);
+		// console.log(111);
 		// 未登陆且要跳转的页面是登录页
 		next() // 跳转
 	} else if (token && to.path === '/pages/login/login') {
-		console.log(121221);
+		// console.log(121221);
 		// 已登录且要跳转的页面是登录页
 		next({
 			path: '/pages/index/index' // 跳转到首页
 		})
 	} else {
-		console.log(33);
+		// console.log(33);
 		next() // 跳转
 	}
 })

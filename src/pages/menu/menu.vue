@@ -157,6 +157,8 @@
 					this.$Router.push({name: '缴费汇总'})
 				}else if(item.name==='保养计划'){
 					this.$Router.push({name: '保养计划'})
+				}else if(item.name==='保养验收'){
+					this.$Router.push({name: '保养验收'})
 				}else if(item.name==='物品管理'){
 					this.$Router.push({name: '物品管理'})
 				}else if(item.name==='库存查询'){
