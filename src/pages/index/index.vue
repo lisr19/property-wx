@@ -4,7 +4,6 @@
 			<view class="bg"></view>
 			<p class="title">
 				<view class="iconfont iconcaidan" @click="openBox"></view>
-<!--				<image class="menu" src="/static/logo.png" @click="openBox"></image>-->
 				物业管理系统</p>
 			<view class="tab-bar">
 				<ul class="nav">
@@ -16,7 +15,7 @@
 			</view>
 			<template v-if="currIndex===0">
 				<view class="card null-card" v-if="list_tz.length===0">
-					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>
+					<image class="menu" src="/static/null-icon.png"></image>
 					<p class="null-tip">暂无通知</p>
 				</view>
 				<view class="card" v-else  :class="{showall:isShowAll===true}">
@@ -33,7 +32,8 @@
 			</template>
 			<template v-else>
 				<view class="card null-card" v-if="list_sw.length===0">
-					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>
+<!--					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>-->
+					<image class="menu" src="/static/null-icon.png"></image>
 					<p class="null-tip">暂无提醒</p>
 				</view>
 				<view class="card" v-else :class="{showall:isShowAll2===true}">
@@ -368,8 +368,8 @@
 					border-top:none;
 				}
 				image{
-					width: 80rpx;
-					height: 80rpx;
+					width: 120rpx;
+					height: 120rpx;
 					margin-right: 48rpx;
 				}
 				.null-tip{

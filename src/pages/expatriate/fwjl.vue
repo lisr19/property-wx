@@ -26,7 +26,7 @@
 
 		</view>
 
-		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix"  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -55,6 +55,7 @@
 		methods: {
 			chagePage(e){
 				console.log(e);
+				this.getwpjl({page:e.current})
 			},
 
 			async getwpjl(){
@@ -65,6 +66,7 @@
 				let res = await getwpjl(params)
 				if(res.code === 0){
 					this.dataList = res.data
+					this.total = res.data.count
 				}else {
 
 				}

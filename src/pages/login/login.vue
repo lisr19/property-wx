@@ -158,8 +158,11 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		background-size:100% 100%;
 		background: #EFF3F7;
+		background: url("../../static/bg.png") ;
+		background-size: cover;
+		background-position: 50% ;
+		background-repeat: no-repeat;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -172,6 +175,8 @@
 		}
 		.title{
 			margin: 26rpx 0 80rpx;
+			font-size: 30rpx;
+			font-weight: 600;
 		}
 		.card{
 			width:612rpx;

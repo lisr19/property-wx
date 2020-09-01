@@ -16,7 +16,7 @@
 		</u-sticky>
 		<view class="content">
 			<template v-if="currStep===0">
-				<image class="img" src="/static/logo.png"></image>
+				<image class="img0" src="/static/dingwei.png"></image>
 				<p class="">开始巡检后到指定巡检定点扫描二维码完成打卡</p>
 				<view class="btn" @click="chageStep(1)">开始巡检</view>
 			</template>
@@ -206,6 +206,13 @@
 			}
 			.img{
 				margin-bottom: 34rpx;
+			}
+			.img0{
+				width: 250rpx;
+				height:  250rpx;
+				margin-top: 120rpx;
+				margin-bottom: 34rpx;
+
 			}
 			.btn{
 				width:618rpx;
