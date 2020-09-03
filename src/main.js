@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App'
 import './common/less/reset.less'
 import './static/font/iconfont.css'
-// import './static/font/iconfont.js'
 import router from './router'
 import { RouterMount } from 'uni-simple-router'
 import fly from './utils/request'
@@ -11,7 +10,7 @@ import fly from './utils/request'
 import uView from "uview-ui";
 Vue.use(uView);
 // 使用 Mock
-// import Mock from './mock/mock' // 刚刚手写的mock.js文件
+import Mock from './mock/mock' // 刚刚手写的mock.js文件
 Vue.prototype.$fly = fly
 App.mpType = 'app'
 

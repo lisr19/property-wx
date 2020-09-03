@@ -41,6 +41,14 @@ export function getRslist(params) {
     })
 }
 
+//数据模拟
+export function getWater(params) {
+    return fly.request({
+        url: 'https://mockjs.com/api/waterList',
+        method: 'get',
+        body: params
+    })
+}
 
 
 

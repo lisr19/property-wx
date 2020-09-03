@@ -23,8 +23,11 @@
 				<p class="price"><span >实缴总金额：</span>{{item.price.toFixed(2)}}</p>
 				<p class="price2"><span >已缴总金额：</span>{{item.price.toFixed(2)}}</p>
 				<view class="btn-group">
-					<span class="btn"><image class="menu" src="/static/logo.png"></image>催缴</span>
-					<span class="btn"  @click="showList=true"><image class="menu" src="/static/logo.png"></image>未缴</span>
+					<view class="btn">
+						<span class="iconfont iconbianzu32x"></span>
+						催缴
+					</view>
+					<view class="btn"  @click="showList=true">	<span class="iconfont iconchakan2x"></span>未缴</view>
 				</view>
 				<span class="state">未发</span>
 			</view>
@@ -318,10 +321,9 @@
 					font-size:28rpx;
 					top: 60rpx;
 					right: 80rpx;
-					image{
-						width: 50rpx;
-						height: 50rpx;
+					.iconfont{
 						margin-right: 15rpx;
+						font-size: 36rpx;
 					}
 					.btn{
 						text-align: center;

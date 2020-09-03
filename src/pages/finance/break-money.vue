@@ -34,15 +34,17 @@
 				<p><span>欠费天数：</span>120</p>
 				<p class="price2">欠费总额：{{item.price.toFixed(2)}}</p>
 				<view class="btn-group">
-					<span class="btn"><image class="menu" src="/static/logo.png"></image>编辑</span>
-					<span class="btn"  @click="delBtn(item,index)"><image class="menu" src="/static/logo.png"></image>删除</span>
+<!--					<span class="btn"><image class="menu" src="/static/logo.png"></image>编辑</span>-->
+					<view class="btn"  @click="delBtn(item,index)">
+						<span class="iconfont iconbianzu62x"></span>删除
+					</view>
 				</view>
 				<span class="state" v-if="currType===1">未缴</span>
 				<span class="state" style="color: #999999" v-else>已缴</span>
 			</view>
 			<view class="null-list" v-if="dataList.length===0">暂无数据</view>
 		</view>
-		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -326,10 +328,9 @@
 				.btn-group{
 					display: flex;
 					align-items: center;
-					image{
-						width: 50rpx;
-						height: 50rpx;
+					.iconfont{
 						margin-right: 15rpx;
+						font-size: 36rpx;
 					}
 					.btn{
 						text-align: center;

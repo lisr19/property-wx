@@ -23,11 +23,11 @@
 				<p class="price"><span >应缴总户数：</span>{{item.price}}</p>
 				<view class="btns">
 					<span class="btn" @click="openDetail(item,index)">查看</span>
-					<span class="btn count" @click="openTable(item,index)">开始计费</span>
+<!--					<span class="btn count" @click="openTable(item,index)">开始计费</span>-->
 				</view>
 			</view>
 		</view>
-<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>

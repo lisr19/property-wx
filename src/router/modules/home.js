@@ -75,6 +75,10 @@ const home = [
 		name: '违约金管理',
 	},
 	{
+		path: '/pages/finance/incidental',
+		name: '杂费管理',
+	},
+	{
 		path: '/pages/finance/pay-count',
 		name: '缴费汇总',
 	},

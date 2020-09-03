@@ -171,6 +171,8 @@
 					this.$Router.push({name: '报事办理'})
 				}else if(item.name==='报事备案'){
 					this.$Router.push({name: '报事备案'})
+				}else if(item.name==='杂费管理'){
+					this.$Router.push({name: '杂费管理'})
 				}else {
 					this.$Router.push({name: '首页'})
 				}

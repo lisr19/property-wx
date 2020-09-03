@@ -4,66 +4,39 @@
 			<view  class="bg"></view >
 		</view >
 		<u-sticky>
-			<view  class="card" @click="showList=true">
-				<p class="name"><em></em>保证金</p>
+			<view  class="card">
+				<p class="name"><em></em>杂费管理</p>
 				<view class="input-box">
 					<span>租户名称：</span><u-input height="60"  v-model="currTypeName"  :border="border"/>
 				</view>
-<!--				<view class="input-box">-->
-<!--					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>-->
-<!--				</view>-->
+				<view class="input-box">
+					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>
+				</view>
 				<view class="btn">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户：{{item.name}}</p>
-				<p class=""><span >缴费项：</span>{{item.activeType}}</p>
-				<p class=""><span >缴费日期：</span>2020-12-12</p>
-				<p class=""><span >缴费金额：</span><span style="color: #A40B0B">{{item.price.toFixed(2)}}</span></p>
-				<template>
-					<span class="state"  style="color: #FF9900" v-if="item.state===0">未缴</span>
-					<span class="state" v-else>已缴</span>
-				</template>
-				<view class="btn-group" v-if="item.state!==0">
-					<view class="btn"  @click="refund(item,index)">
-						<span class="iconfont  icontuikuan"></span>退款
-					</view>
-				</view>
+				<p class="title">活动主题：{{item.name}}</p>
+				<p><span>租户名称：</span>{{item.name}}</p>
+				<p><span>房号：</span>{{item.time}}</p>
+				<p class="price2">活动费用：{{item.price.toFixed(2)}}</p>
+<!--				<view class="btn-group">-->
+<!--					<view class="btn"  @click="delBtn(item,index)">-->
+<!--						<span class="iconfont iconbianzu62x"></span>删除-->
+<!--					</view>-->
+<!--				</view>-->
+				<span class="state" v-if="currType===1">未完结</span>
+				<span class="state" style="color: #999999" v-else>已完结</span>
 			</view>
+			<view class="null-list" v-if="dataList.length===0">暂无数据</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-select v-model="showName" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
+		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
-		<u-popup v-model="showList" mode="bottom" border-radius="20" height="60%" closeable>
-			<view class="tip-box">
-				<view class="tip-content">退保证金</view>
-				<view class="content">
-					<view class="input-box">
-						<span>租户名称：</span><u-input height="60"  v-model="itemData.name"  :border="border" disabled/>
-					</view>
-					<view class="input-box">
-						<span>缴保金额：</span><u-input height="60" type="number"  v-model="itemData.price.toString()"  :border="border" disabled/>
-					</view>
-					<view class="input-box">
-						<span>退缴日期：</span><u-input height="60" @click="openTime" disabled v-model="data1"  :border="border"/>
-					</view>
-					<view class="input-box">
-						<span>退缴金额：</span><u-input height="60"  v-model="itemData.price.toString()"  :border="border"/>
-					</view>
-					<view class="input-box">
-						<span>退款人：</span><u-input height="60" type="select" @click="showName=true;showList=false" v-model="currName"  :border="border"/>
-					</view>
-					<view class="input-box">
-						<span>退款单号：</span><u-input height="60" v-model="currName"  :border="border"/>
-					</view>
-					<view class="btn">确定</view>
-				</view>
-			</view>
-		</u-popup>
 	</view >
 </template>
 
@@ -78,10 +51,7 @@
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				itemData:{
-					price:0
-				},
-				showName: false,
+				show: false,
 				showList: false,
 				showTime: false,
 				startTime: false,
@@ -91,55 +61,66 @@
 				arrState: [
 					{
 						value: '1',
-						label: '张三'
+						label: '未审'
 					},
 					{
 						value: '2',
-						label: '李四'
+						label: '不通过'
 					},
 					{
 						value: '3',
-						label: '旺旺'
-					},
-					{
-						value: '4',
-						label: '赵柳'
+						label: '通过'
 					},
 				],
+				listType:[
+					{
+						name: '已缴',
+					},
+					{
+						name: '未缴',
+					},
+				],
+				currType:0,
 				currTypeName:'',
-				currName:'',
 				keyName:'',
 				active:0,
 				index:0,
 				dataList:[],
 				currIndex:0,
-				value: '租户活动',
+				value: '已缴',
 				current: 0,
-				total:0,
+				total:0
 			}
 		},
 		onLoad() {
 			this.getWater()
 		},
 		methods: {
-			refund(item,index){
-				this.itemData = item
-				console.log(this.itemData);
-				this.showList =true
-			},
-			openTime(){
-				this.showList = false
+			openTime(e){
 				this.showTime = true
+			},
+			delBtn(item,index){
+				console.log(index);
+				uni.showModal({
+					title: '提示',
+					content: '确定删除此记录吗？',
+					success:  (res)=> {
+						if (res.confirm) {
+							console.log('用户点击确定');
+							this.dataList.splice(index,1)
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
 			},
 			confirm(e) {
 				console.log(e[0].label);
-				this.currName=e[0].label
-				this.showList = true
+				this.currTypeName=e[0].label
 			},
 			confirmTime(e){
 				console.log(e);
 				this.data1 = e.year + '-'+e.month+'-'+e.day
-				this.showList = true
 
 			},
 			chagePage(e){
@@ -148,7 +129,7 @@
 			async getWater(params){
 				let res = await getWater(params)
 				if(res.code === 200){
-					this.dataList = res.data.rows
+					this.dataList = res.data.rows.slice(0,5)
 					this.total = res.data.total
 					console.log(res);
 				}else {
@@ -167,7 +148,7 @@
 			},
 			radioGroupChange(e) {
 				// this.currType = e
-				if(e==='启用用户'){
+				if(e==='已缴'){
 					this.getWater()
 				}else {
 					this.electList()
@@ -193,9 +174,6 @@
 </script>
 
 <style lang="less" scoped>
-	.u-drawer{
-		z-index: 11000;
-	}
 	.wrap{
 		font-size: 24rpx;
 		color: #666666;
@@ -286,8 +264,8 @@
 			height: 80rpx;
 			position: absolute;
 			z-index: 9;
-			background: #ffffff;
-			top: 375rpx;
+			background: #FAFBFD;
+			top: 450rpx;
 			width: 100%;
 			padding: 0 38rpx;
 			.active{
@@ -295,7 +273,7 @@
 			}
 		}
 		.items{
-			padding: 360rpx 0 50rpx;
+			padding: 510rpx 0 50rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -332,48 +310,39 @@
 					}
 				}
 				.price2{
-					color: #5E5E5E;
-					span{
-						color:#A00000;
-					}
+					color:#A00000;
 				}
 				.btn-group{
 					display: flex;
-					flex-direction: column;
-					position: absolute;
-					font-size:28rpx;
-					bottom: 20rpx;
-					right: 20rpx;
+					align-items: center;
 					.iconfont{
-						margin-right: 10rpx;
+						margin-right: 15rpx;
 						font-size: 36rpx;
-						color: #017aff;
 					}
 					.btn{
-						width:236rpx;
-						height:72rpx;
-						background:rgba(245,245,245,1);
-						border-radius:38rpx;
-						font-size:28rpx;
-						font-family:PingFangSC-Medium,PingFang SC;
-						font-weight:500;
-						color:rgba(1,122,255,1);
+						text-align: center;
+						color: #7892B9;
+						margin-top: 30rpx;
+						margin-right: 64rpx;
 						display: flex;
 						align-items: center;
-						justify-content: center;
 					}
 				}
 				.state{
 					position: absolute;
-					top: 10rpx;
-					right: 20rpx;
+					top: 20rpx;
+					right: 26rpx;
 					font-size:28rpx;
 					font-family:PingFangSC-Regular,PingFang SC;
 					font-weight:400;
-
+					color:rgba(255,153,0,1);
 				}
 			}
 
+		}
+		.null-list{
+			font-size: 32rpx;
+			margin-top: 80rpx;
 		}
 	}
 	.tip-box{
@@ -384,13 +353,6 @@
 			padding-top: 30rpx;
 			font-weight:600;
 			color:rgba(51,51,51,1);
-		}
-		.content{
-			.input-box{
-				display: flex;
-				align-items: center;
-				margin: 30rpx 0;
-			}
 		}
 		.desc{
 			margin: 40rpx 0 30rpx;
@@ -403,7 +365,7 @@
 			}
 		}
 		.btn{
-			width:100%;
+			width:214rpx;
 			height:86rpx;
 			line-height:86rpx;
 			text-align: center;
@@ -412,7 +374,9 @@
 			font-size:30rpx;
 			font-weight:500;
 			color:rgba(255,255,255,1);
-			margin-top: 40rpx;
+			position: absolute;
+			right: 58rpx;
+			bottom: 40rpx;
 		}
 	}
 </style>

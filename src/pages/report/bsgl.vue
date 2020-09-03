@@ -6,14 +6,17 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>报事管理</p>
-				<view class="btn btn1" @click="showAdd=true">新增</view>
+				<view class="btn btn1" @click="showAddBox">新增</view>
 			</view >
 			<view  class="card card2">
-				<view class="input-box"><span>报事人：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>报事人：</span><input v-model="skey_bsr" class="uni-input" name="num"></view>
+				<view class="btn" @click="getbsList()">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">报事人：{{item.bs_bsr}}</p>
 				<p>报事描述：{{item.bs_ms}}</p>
@@ -45,8 +48,8 @@
 					<u-form-item label="日期" label-width="120" prop="bs_dt">
 						<u-input  type="select"   disabled :border="true" v-model="form.bs_dt" @click="showTime=true"/>
 					</u-form-item>
-					<u-form-item label="来源" label-width="120" prop="bs_ly">
-						<u-input  :border="true"  v-model="form.bs_ly"  type="select" @click="showLy=true"/>
+					<u-form-item label="来源" label-width="120" prop="bs_ly_name">
+						<u-input  :border="true"  v-model="form.bs_ly_name"  type="select" @click="showLy=true"/>
 					</u-form-item>
 					<u-form-item label="办理人" label-width="120" prop="bs_blr">
 						<u-input  :border="true"   v-model="form.bs_blr"  type="select" @click="showSr=true"/>
@@ -75,11 +78,14 @@
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_bsr:'',
 				rsList:[],
 				tipContent:'',
 				form: {
 					bs_title:'',
-					bs_bsr:'',
+					bs_dt:'',
+					bs_ly_name:'',
+					bs_blr:'',
 				},
 				rules:{
 					bs_title: [
@@ -98,18 +104,21 @@
 						{
 							required: true,
 							message: '请选择日期',
+							trigger: ['change', 'blur']
 						}
 					],
-					bs_ly: [
+					bs_ly_name: [
 						{
 							required: true,
 							message: '请选择来源',
+							trigger: ['change', 'blur']
 						}
 					],
 					bs_blr: [
 						{
 							required: true,
 							message: '请选择办理人',
+							trigger: ['change', 'blur']
 						}
 					],
 					bs_ms: [
@@ -149,9 +158,13 @@
 		onReady() {
 		},
 		methods: {
+			showAddBox(){
+				this.showAdd = true
+				// this.form = {}
+			},
 			submit() {
 				this.$refs.uForm.setRules(this.rules)
-				// console.log(this.form);
+				console.log(this.form);
 				setTimeout(()=>{
 					this.$refs.uForm.validate(valid => {
 						console.log(valid);
@@ -172,11 +185,12 @@
 			confirmTime(e){
 				console.log(e);
 				this.form.bs_dt = e.year + '-'+e.month+'-'+e.day
+				// console.log(new Date().getTime());
 
 			},
 			confirmLy(e) {
+				this.form.bs_ly_name = e[0].label
 				this.form.bs_ly = e[0].value
-				// this.form.bs_ly = e[0].value
 			},
 			confirmSr(e){
 				this.form.bs_blr = e[0].label
@@ -201,13 +215,14 @@
 					list.forEach((i,index)=>{
 						this.rsList.push({label:i.bmry_name,value:i.bmry_id})
 					})
-					console.log(this.rsList);
+					// console.log(this.rsList);
 				}else {
 
 				}
 			},
 
 			async getbsAdd(params){
+				params.dh_number = new Date().getTime()
 				console.log(params);
 				let res = await getbsAdd(params)
 				if(res.code === 0){
@@ -223,7 +238,7 @@
 			async delBs(){
 				if(this.tipContent==='确定删除此记录吗？'){
 					let params ={
-						bs_dh:this.currbsdh,
+						id:this.currbsdh,
 						del:1
 					}
 					let res = await delBs(params)
@@ -241,20 +256,45 @@
 							mask: false
 						})
 					}
+				}else {
+					let params ={
+						id:this.currbsdh,
+						del:2
+					}
+					let res = await delBs(params)
+					if(res.code === 0){
+						this.getbsList()
+						uni.showToast({
+							title: '确定备案成功',
+							icon: 'none',
+							mask: false
+						})
+					}else {
+						uni.showToast({
+							title: '备案失败',
+							icon: 'none',
+							mask: false
+						})
+					}
 				}
 
 			},
 			async getbsList(params){
+				if(this.skey_bsr){
+					params.skey_bsr=this.skey_bsr
+				}
+				console.log(params);
 				let res = await getbsList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
-					this.total = res.data.total
+					this.total = res.data.count
 				}else {
 
 				}
 			},
 			chagePage(e){
 				console.log(e);
+				this.getbsList({page:e.current})
 			},
 			openBox(){
 				this.$refs.leftBox.open()
