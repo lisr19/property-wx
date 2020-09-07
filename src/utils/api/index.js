@@ -60,6 +60,21 @@ export function delBsbl(params) {
         body: params
     })
 }
+//设备验收
+export function getsbbysList(params) {
+    return fly.request({
+        url: 'sebei/sbby',
+        method: 'get',
+        body: params
+    })
+}
+export function ysItem(params) {
+    return fly.request({
+        url: 'sebei/sbby',
+        method: 'post',
+        body: params
+    })
+}
 //仓库
 export function getwpList(params) {
     return fly.request({

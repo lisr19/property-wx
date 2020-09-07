@@ -6,8 +6,8 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>保养验收</p>
-				<view class="input-box"><span>设备：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>设备：</span><input v-model="skey_sbna" class="uni-input" name="num"></view>
+				<view class="btn" @click="getsbbysList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
@@ -15,23 +15,23 @@
 				暂无数据
 			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">报事人：{{item.bs_bsr}}</p>
-				<p>报事描述：{{item.bs_ms}}</p>
-				<template>
-					<p  v-if="item.bs_zt===0" style="color:#FF9900">状态：未办理</p>
-					<p  v-else-if="item.bs_zt===4">状态：办理结束</p>
-					<p  v-else>状态：已办理</p>
-				</template>
-				<p>报事日期：{{item.bs_dt}}</p>
-				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
-				<span class="iconfont iconguidang2x"  @click="gdItem(item,index)"><em>去验收</em></span>
+				<p class="title">设备名称：{{item.sb_name}}</p>
+				<p>保养人：{{item.sb_ywr}}</p>
+				<p>保养日期：{{item.sb_ywdt}}</p>
+				<p>下次保养日期：{{item.sb_xcbydt}}</p>
+<!--				<p>验收人：{{item.sb_nsr}}</p>-->
+				<p>验收说明：{{item.sb_nsjg}}</p>
+				<p>备注：{{item.jh_bz}}</p>
+				<span class="tip">状态：{{item.jh_zt===0?'未验收':(item.jh_zt===1?'验收未通过':'通过验收')}}</span>
+
+				<span v-if="item.jh_zt===0" class="iconfont iconguidang2x"  @click="gdItem(item,index)"><em>去验收</em></span>
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBs"></u-modal>
+<!--		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="ysItem"></u-modal>-->
 		<u-modal  v-model="showBox" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="600rpx" @confirm="submit">
 			<view class="slot-content" >
 				<view>
@@ -49,7 +49,7 @@
 					</u-radio-group>
 				</view>
 				<view>
-					验收说明：<u-input :border="true" v-model="form.bs_ms" type="textarea" style="margin-top: 20rpx"/>
+					验收说明：<u-input :border="true" v-model="hby_ztsm" type="textarea" style="margin-top: 20rpx"/>
 				</view>
 
 			</view>
@@ -65,16 +65,17 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbsList,delBs,getbsAdd} from "@/utils/api/index"
+	import {getsbbysList,ysItem} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_sbna:'',
+				hby_ztsm:'',
+				hby_zt:1,
+				id:'',
 				tipContent:'',
-				form: {
-					bs_title:'',
-					bs_bsr:'',
-				},
+				form: {},
 				list: [
 					{
 						name: '不通过',
@@ -96,29 +97,17 @@
 			}
 		},
 		onLoad() {
-			this.getbsList()
+			this.getsbbysList()
 		},
 		onReady() {
 		},
 		methods: {
 			submit() {
-				this.$refs.uForm.setRules(this.rules)
-				console.log(this.form);
+				this.ysItem()
+				// this.$refs.uForm.setRules(this.rules)
 				setTimeout(()=>{
-					this.$refs.uForm.validate(valid => {
-						console.log(valid);
-						if (valid) {
-							console.log('验证通过');
-							this.showAdd = false;
-						} else {
-							console.log('验证失败');
-						}
-					});
 					this.$refs.uModal.clearLoading();
 				},100)
-
-
-
 			},
 			confirmTime(e){
 				console.log(e);
@@ -137,57 +126,57 @@
 			},
 			gdItem(item,index){
 				this.showBox =true
+				this.id = item.jh_dh
 				this.currIndex = index
 			},
 			// 选中某个单选框时，由radio时触发
 			radioChange(e) {
-				// console.log(e);
+				console.log(e);
+				if(e==='通过'){
+					this.hby_zt = 2
+				}else {
+					this.hby_zt = 1
+				}
 			},
 			// 选中任一radio时，由radio-group触发
 			radioGroupChange(e) {
-				console.log(e);
+				// console.log(e);
 				if(e==='通过'){
 
 				}
 			},
-			async getbsAdd(params){
-				let res = await getbsAdd(params)
-				if(res.code === 0){
-					this.getbsList()
-				}else {
-					uni.showToast({
-						title: '添加失败',
-						icon: 'none',
-						mask: false
-					})
+
+			async ysItem(){
+				let params ={
+					id:this.id,
+					del:2,
+					hby_zt:this.hby_zt,
+					hby_ztsm:this.hby_ztsm
 				}
-			},
-			async delBs(){
-				if(this.tipContent==='确定删除此记录吗？'){
-					let params ={
-						bs_dh:this.currbsdh,
-						del:1
-					}
-					let res = await delBs(params)
+				console.log(params);
+				let res = await ysItem(params)
 					if(res.code === 0){
-						this.getbsList()
+						this.getsbbysList()
 						uni.showToast({
-							title: '删除成功',
+							title: '验收成功',
 							icon: 'none',
 							mask: false
 						})
 					}else {
 						uni.showToast({
-							title: '删除失败',
+							title: '验收失败',
 							icon: 'none',
 							mask: false
 						})
 					}
-				}
-
+				this.showBox = false
 			},
-			async getbsList(params){
-				let res = await getbsList(params)
+			async getsbbysList(params){
+				if(this.skey_sbna){
+					params.skey_sbna=this.skey_sbna
+				}
+				console.log(params);
+				let res = await getsbbysList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
 					this.total = res.data.total

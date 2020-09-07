@@ -23,7 +23,7 @@
 				<p class="price"><span >实缴总金额：</span>{{item.price.toFixed(2)}}</p>
 				<p class="price2"><span >已缴总金额：</span>{{item.price.toFixed(2)}}</p>
 				<view class="btn-group">
-					<view class="btn">
+					<view class="btn" @click="send(item)">
 						<span class="iconfont iconbianzu32x"></span>
 						催缴
 					</view>
@@ -116,6 +116,19 @@
 			confirm(e) {
 				console.log(e[0].label);
 				this.currTypeName=e[0].label
+			},
+			send(item){
+				uni.showModal({
+					title: '提示',
+					content: '确定发送此催缴记录吗？',
+					success:  (res)=> {
+						if (res.confirm) {
+							console.log('用户点击确定');
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
 			},
 			confirmTime(e){
 				console.log(e);
