@@ -61,6 +61,15 @@
 			}
 		},
 		{
+			"path": "pages/tenant/building"
+		},
+		{
+			"path": "pages/tenant/building-detail",
+			"style": {
+				"navigationBarTitleText": "租户信息详情"
+			}
+		},
+		{
 			"path": "pages/tenant/examine"
 		},
 		{
@@ -116,6 +125,12 @@
 		},
 		{
 			"path": "pages/equipment/byys"
+		},
+		{
+			"path": "pages/archives/da-look"
+		},
+		{
+			"path": "pages/archives/remind"
 		}
 	],
 	"globalStyle": {

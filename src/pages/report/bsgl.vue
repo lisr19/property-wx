@@ -10,7 +10,7 @@
 			</view >
 			<view  class="card card2">
 				<view class="input-box"><span>报事人：</span><input v-model="skey_bsr" class="uni-input" name="num"></view>
-				<view class="btn" @click="getbsList()">查询</view>
+				<view class="btn" @click="getbsList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
@@ -19,15 +19,19 @@
 			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">报事人：{{item.bs_bsr}}</p>
+				<p>报事标题：{{item.bs_title}}</p>
 				<p>报事描述：{{item.bs_ms}}</p>
 				<template>
 					<p  v-if="item.bs_zt===0" style="color:#FF9900">状态：未办理</p>
-					<p  v-else-if="item.bs_zt===4">状态：办理结束</p>
-					<p  v-else>状态：已办理</p>
+					<p  v-else-if="item.bs_zt===1">状态：已办理</p>
+					<p  v-else-if="item.bs_zt===2">状态：已回访</p>
+					<p  v-else-if="item.bs_zt===3">状态：已结束</p>
+					<p  v-else>状态：已备案</p>
 				</template>
 				<p>报事日期：{{item.bs_dt}}</p>
 				<p v-if="item.bs_bljg">办理结果：{{item.bs_bljg}}</p>
 				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>
+				<span class="iconfont iconbianji12x" v-if="item.bs_zt===0" @click="editItem(item)"></span>
 				<span class="iconfont iconguidang2x"  v-if="item.bs_zt===3" @click="gdItem(item)"></span>
 			</view>
 		</view>
@@ -38,6 +42,7 @@
 		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBs"></u-modal>
 		<u-modal  v-model="showAdd" ref="uModal" show-cancel-button  :show-title="false" :async-close="true" width="700rpx" @confirm="submit">
 			<view class="slot-content" >
+				<h6 style="margin: 20rpx 0;text-align: center">{{isEdit?'报事编辑':'报事新增'}}</h6>
 				<u-form :model="form" ref="uForm" >
 					<u-form-item label="标题" label-width="120"  prop="bs_title">
 						<u-input  :border="true" v-model="form.bs_title"/>
@@ -57,6 +62,11 @@
 					<u-form-item label="描述" label-width="120"  prop="bs_ms" >
 						<u-input :border="true" v-model="form.bs_ms" type="textarea"/>
 					</u-form-item>
+					<u-form-item label="附图" label-width="120"  prop="" >
+						<u-upload width="150"  ref="uUpload" :form-data="uploadData"  :format="['jpg','jpeg','png']" :header="myHeader"
+								  :before-upload="beforeUpload"	 name="upfile"  :action="action" :file-list="fileList"  @on-remove="handleRemove"
+						></u-upload>
+					</u-form-item>
 				</u-form>
 			</view>
 		</u-modal>
@@ -72,12 +82,19 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbsList,delBs,getbsAdd} from "@/utils/api/index"
-	import {getRslist} from "@/utils/api/comment"
+	import {getbsList,delBs,getbsAdd,eidtItem,lookItem} from "@/utils/api/index"
+	import {getRslist,delFile} from "@/utils/api/comment"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				uploadData:{
+					lm_ftitle:'',
+					dh_number:'',
+				},
+				action: 'http://120.24.0.130:11008/wechat/pic/upload_file',
+				myHeader: { authorization: uni.getStorageSync('token')},
+				fileList: [],
 				skey_bsr:'',
 				rsList:[],
 				tipContent:'',
@@ -148,7 +165,11 @@
 				total:0,
 				showTip:false,
 				showAdd:false,
-				currbsdh:''
+				currbsdh:'',
+				isEdit:false,
+				delIndex:0,
+				delId:0,
+				dh_number:'',
 			}
 		},
 		onLoad() {
@@ -158,10 +179,43 @@
 		onReady() {
 		},
 		methods: {
+			beforeUpload(index, list) {
+				if(this.isEdit){
+					this.uploadData.dh_number=this.form.bs_dh
+					this.uploadData.lm_ftitle='报事'
+				}
+			},
+			handleRemove(index){
+				this.delIndex = index
+				this.fileList.forEach((item,index)=>{
+					if(this.delIndex===index){
+						this.delId = item.picid
+					}
+				})
+				console.log(this.delId);
+				this.delFile({picid:this.delId})
+			},
 			showAddBox(){
 				this.showAdd = true
-				// this.form = {}
+				this.fileList = []
+				this.form = {}
+				this.isEdit = false
+				this.dh_number=new Date().getTime()
+				this.uploadData.dh_number=this.dh_number
+				this.uploadData.lm_ftitle='报事'
 			},
+			editItem(item){
+				this.showAdd =true
+				this.isEdit =true
+				this.form = item
+				if(item.bs_ly===0){
+					this.form.bs_ly_name = '线上'
+				}else {
+					this.form.bs_ly_name = '线下'
+				}
+				this.lookItem({id:item.bs_id})
+			},
+
 			submit() {
 				this.$refs.uForm.setRules(this.rules)
 				console.log(this.form);
@@ -170,7 +224,11 @@
 						console.log(valid);
 						if (valid) {
 							console.log('验证通过');
-							this.getbsAdd(this.form)
+							if(this.isEdit){
+								this.eidtItem()
+							}else {
+								this.getbsAdd(this.form)
+							}
 							this.showAdd = false;
 						} else {
 							console.log('验证失败');
@@ -202,6 +260,14 @@
 				this.currbsdh = item.bs_dh
 				this.currIndex = index
 			},
+			async delFile(params){
+				let res = await delFile(params)
+				if(res.code === 0){
+
+				}else {
+
+				}
+			},
 			gdItem(item,index){
 				this.showTip =true
 				this.tipContent ='确定备案此记录吗？'
@@ -220,9 +286,50 @@
 
 				}
 			},
+			async lookItem(params){
+				this.fileList=[]
+				let res = await lookItem(params)
+				if(res.code === 0){
+					res.data.bs_fj.forEach((i,index)=>{
+						this.fileList.push({url:i.pic_phat,picid:i.dh_number,index:index})
+					})
+					console.log(this.fileList);
+				}else {
 
+				}
+			},
+			async eidtItem(){
+				let params = {
+					add1:1,
+					id:this.form.bs_id,
+					dh_number:this.form.bs_dh,
+					bs_title:this.form.bs_title,
+					bs_bsr:this.form.bs_bsr,
+					bs_ly:this.form.bs_ly,
+					bs_blrid:this.form.bs_blrid,
+					bs_blr:this.form.bs_blr,
+					bs_ms:this.form.bs_ms,
+					bs_dt:this.form.bs_dt,
+				}
+				// console.log(params);
+				let res = await eidtItem(params)
+				if(res.code === 0){
+					uni.showToast({
+						title: '编辑成功',
+						icon: 'none',
+						mask: false
+					})
+					this.getbsList()
+				}else {
+					// uni.showToast({
+					// 	title: '编辑失败',
+					// 	icon: 'none',
+					// 	mask: false
+					// })
+				}
+			},
 			async getbsAdd(params){
-				params.dh_number = new Date().getTime()
+				params.dh_number = this.dh_number
 				console.log(params);
 				let res = await getbsAdd(params)
 				if(res.code === 0){
@@ -449,6 +556,12 @@
 					top: 50rpx;
 					right: 6rpx;
 					font-size: 68rpx;
+				}
+				.iconbianji12x{
+					position: absolute;
+					top: 70rpx;
+					right: 18rpx;
+					font-size: 36rpx;
 				}
 				.title{
 					font-size:32rpx;

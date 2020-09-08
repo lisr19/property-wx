@@ -5,23 +5,32 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>租户信息</p>
-				<view class="input-box"><span>租户名称：</span><input v-model="skey_title" class="uni-input"></view>
-				<view class="btn" @click="getzhList">查询</view>
+				<p class="name"><em></em>收楼管理</p>
+				<view class="input-box"><span>租户名称：</span><input class="uni-input" name="num"></view>
+				<view class="btn">查询</view>
 			</view >
+			<u-radio-group class="tab" v-model="value" size="45" active-color="">
+				<u-radio
+						v-for="(item, index) in listType" :key="index"
+						shape="circle"
+						:name="item.name"
+						label-size="30"
+						@change="radioChange(item,index)"
+				>
+					<span :class="{active:currType===index}">{{item.name}}</span>
+				</u-radio>
+			</u-radio-group>
 		</u-sticky>
 		<view class="items">
-			<view class="null" v-if="dataList.length===0">
-				暂无数据
-			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户名称：{{item.zh_name}}</p>
-				<p>所属楼宇：{{item.fc_name}}</p>
-				<p>联系方式：{{item.zh_tel}}</p>
-				<p>创建日期：{{item.ld_dt}}</p>
+				<p class="title">租户名称：{{item.name}}</p>
+				<p>房号：{{item.name}}</p>
+				<p>联系方式：{{item.phone}}</p>
+				<p>建面（m³）：{{item.time}}</p>
+				<span class="more-btn" @click="openDetail(item,index)">查看详情</span>
 			</view>
 		</view>
-		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
+<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -34,45 +43,91 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getzhList} from "@/utils/api/index"
+	import {getWater,electList} from "@/utils/api/comment"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				skey_title:'',
 				listType:[
 					{
-						name: '启用用户',
+						name: '启用',
 					},
 					{
-						name: '停用用户',
+						name: '停用',
 					},
 				],
 				currType:0,
-				dataList:[],
+				dataList:[
+					{
+						state:'0',
+						name:'智慧园区',
+						sb:'F141',
+						price:'3'
+					},
+					{
+						state:'0',
+						name:'智慧园区',
+						sb:'F14199789',
+						price:'3'
+					},
+					{
+						state:'1',
+						name:'智慧园区',
+						sb:'F142',
+						price:'3.5'
+					}
+				],
 				currIndex:0,
-				value: '启用用户',
+				value: '启用',
 				current: 0,
 				total:0
 			}
 		},
 		onLoad() {
-			this.getzhList()
+			this.getWater()
 		},
 		methods: {
-			chagePage(e){
-				this.getzhList({page:e.current})
+			openDetail(item){
+				this.$Router.push({name:'收楼详情'})
 			},
-			async getzhList(params){
-				if(this.skey_title){
-					params.skey_title=this.skey_title
-				}
-				let res = await getzhList(params)
-				if(res.code === 0){
-					this.dataList = res.data.data
-					this.total = res.data.count
+			chagePage(e){
+				console.log(e);
+			},
+			async getWater(params){
+				let res = await getWater(params)
+				if(res.code === 200){
+					this.dataList = res.data.rows
+					this.total = res.data.total
+					console.log(res);
 				}else {
 
+				}
+			},
+			async electList(params){
+				let res = await electList(params)
+				if(res.code === 200){
+					this.dataList = res.data.rows
+					this.total = res.data.total
+					console.log(res);
+				}else {
+
+				}
+			},
+			radioGroupChange(e) {
+				// this.currType = e
+				if(e==='启用'){
+					this.getWater()
+				}else {
+					this.electList()
+				}
+			},
+			radioChange(e,index) {
+				console.log(e);
+				this.currType = index
+				if(index===0){
+					this.getWater()
+				}else {
+					this.electList()
 				}
 			},
 			openBox(){
@@ -185,7 +240,7 @@
 			}
 		}
 		.items{
-			padding: 370rpx 0 100rpx;
+			padding: 450rpx 0 50rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -206,10 +261,19 @@
 				box-sizing: border-box;
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
+				position: relative;
 				.title{
 					font-size:32rpx;
 					font-weight:500;
 					color:rgba(89,89,89,1);
+				}
+				span{
+					color: #999999;
+				}
+				.more-btn{
+					position: absolute;
+					right: 30rpx;
+					top:16rpx;
 				}
 			}
 

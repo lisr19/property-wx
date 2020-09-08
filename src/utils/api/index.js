@@ -24,6 +24,14 @@ export function getbsblList(params) {
         body: params
     })
 }
+//新增报事回访
+export function addBshf(params) {
+    return fly.request({
+        url: 'baoshi/bsblhf',
+        method: 'post',
+        body: params
+    })
+}
 //报事备案
 export function getbsbaList(params) {
     return fly.request({
@@ -36,6 +44,19 @@ export function getbsAdd(params) {
     return fly.request({
         url: 'baoshi/bsadd',
         method: 'post',
+        body: params
+    })
+}
+export function eidtItem(params) {
+    return fly.request({
+        url: 'baoshi/bsedit',
+        method: 'post',
+        body: params
+    })
+}export function lookItem(params) {
+    return fly.request({
+        url: 'baoshi/bsedit',
+        method: 'get',
         body: params
     })
 }
@@ -98,9 +119,29 @@ export function getwpjl(params) {
         body: params
     })
 }
-
-
-
+//档案
+export function getdaList(params) {
+    return fly.request({
+        url: 'dangan/dacx',
+        method: 'get',
+        body: params
+    })
+}
+export function gettxList(params) {
+    return fly.request({
+        url: 'dangan/datx',
+        method: 'get',
+        body: params
+    })
+}
+//租户
+export function getzhList(params) {
+    return fly.request({
+        url: 'zufu/zhhdzh',
+        method: 'get',
+        body: params
+    })
+}
 
 
 

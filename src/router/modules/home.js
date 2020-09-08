@@ -43,8 +43,16 @@ const home = [
 		name: '活动管理',
 	},
 	{
+		path: '/pages/tenant/building',
+		name: '收楼管理',
+	},
+	{
 		path: '/pages/tenant/activity-detail',
 		name: '活动详情',
+	},
+	{
+		path: '/pages/tenant/building-detail',
+		name: '收楼详情',
 	},
 	{
 		path: '/pages/tenant/examine',
@@ -121,6 +129,14 @@ const home = [
 	{
 		path: '/pages/equipment/byys',
 		name: '保养验收',
+	},
+	{
+		path: '/pages/archives/da-look',
+		name: '档案查询',
+	},
+	{
+		path: '/pages/archives/remind',
+		name: '到期提醒',
 	}
 ]
 export default home

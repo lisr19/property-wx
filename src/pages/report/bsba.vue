@@ -6,11 +6,14 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>报事备案</p>
-				<view class="input-box"><span>报事标题：</span><input class="uni-input"  ></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>报事标题：</span><input v-model="skey_title" class="uni-input"  ></view>
+				<view class="btn" @click="getbsbaList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 
 				<p class="title">报事标题：{{item.bs_title}}</p>
@@ -18,8 +21,10 @@
 				<p>报事描述：{{item.bs_ms}}</p>
 				<template>
 					<p  v-if="item.bs_zt===0" style="color:#FF9900">状态：未办理</p>
-					<p  v-else-if="item.bs_zt===4">状态：办理结束</p>
-					<p  v-else>状态：已办理</p>
+					<p  v-else-if="item.bs_zt===1">状态：已办理</p>
+					<p  v-else-if="item.bs_zt===2">状态：已回访</p>
+					<p  v-else-if="item.bs_zt===3">状态：已结束</p>
+					<p  v-else>状态：已备案</p>
 				</template>
 				<p>报事日期：{{item.bs_dt}}</p>
 				<p >办理日期：{{item.bs_bldt}}</p>
@@ -34,7 +39,6 @@
 					<p v-if="item.bs_hfpj===5">回访评价：非常满意</p>
 				</template>
 
-<!--				<span class="iconfont iconshanchu2x"  @click="delItem(item)"></span>-->
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
@@ -77,11 +81,12 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbsbaList,delBs,getbsAdd} from "@/utils/api/index"
+	import {getbsbaList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_title:'',
 				form: {
 					bs_title:'',
 					bs_bsr:'',
@@ -185,43 +190,14 @@
 				this.currbsdh = item.bs_dh
 				this.currIndex = index
 			},
-			async getbsAdd(params){
-				let res = await getbsAdd(params)
-				if(res.code === 0){
-					this.getbsbaList()
-				}else {
-					uni.showToast({
-						title: '添加失败',
-						icon: 'none',
-						mask: false
-					})
-				}
-			},
-			async delBs(){
-				let params ={
-					bs_dh:this.currbsdh,
-					del:1
-				}
-				let res = await delBs(params)
-				if(res.code === 0){
-					this.getbsbaList()
-					uni.showToast({
-						title: '删除成功',
-						icon: 'none',
-						mask: false
-					})
-				}else {
-					uni.showToast({
-						title: '删除失败',
-						icon: 'none',
-						mask: false
-					})
-				}
-			},
+
 			async getbsbaList(params){
+				if(this.skey_title){
+					params.skey_title=this.skey_title
+				}
 				let res = await getbsbaList(params)
 				if(res.code === 0){
-					this.dataList = res.data.data
+					this.dataList = res.data
 					this.total = res.data.total
 				}else {
 

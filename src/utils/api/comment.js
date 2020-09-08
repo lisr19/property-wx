@@ -41,6 +41,15 @@ export function getRslist(params) {
     })
 }
 
+//删除上传
+export function delFile(params) {
+    return fly.request({
+        url: 'pic/delete_file',
+        method: 'get',
+        body: params
+    })
+}
+
 //数据模拟
 export function getWater(params) {
     return fly.request({

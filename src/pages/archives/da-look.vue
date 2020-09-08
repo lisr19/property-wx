@@ -5,9 +5,11 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>租户信息</p>
-				<view class="input-box"><span>租户名称：</span><input v-model="skey_title" class="uni-input"></view>
-				<view class="btn" @click="getzhList">查询</view>
+				<p class="name"><em></em>档案查询</p>
+				<view class="input-box"><span>档案：</span>
+					<input class="uni-input" name="num" v-model="skey_title" placeholder="名称">
+				</view>
+				<view class="btn" @click="getdaList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
@@ -15,13 +17,15 @@
 				暂无数据
 			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户名称：{{item.zh_name}}</p>
-				<p>所属楼宇：{{item.fc_name}}</p>
-				<p>联系方式：{{item.zh_tel}}</p>
-				<p>创建日期：{{item.ld_dt}}</p>
+				<p class="title">档案名称：{{item.da_name}}</p>
+				<p>档案编号：{{item.da_ph}}</p>
+				<p>档案类别：{{item.da_sort===0?'采购':(item.da_sort===1?'租赁':'人事')}}</p>
+				<p>文档有效期：{{item.da_yxdt}}</p>
+				<p>管理人：{{item.bm_una}}</p>
+<!--				<p>借阅否：{{item.da_id===1?'已借阅':'未借阅'}}</p>-->
 			</view>
 		</view>
-		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
+		<uni-pagination class="page-fix"  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -29,45 +33,34 @@
 </template>
 
 <script>
-	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getzhList} from "@/utils/api/index"
+	import {getdaList} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {leftMenu,uniPagination},
 		data() {
 			return {
 				skey_title:'',
-				listType:[
-					{
-						name: '启用用户',
-					},
-					{
-						name: '停用用户',
-					},
-				],
 				currType:0,
 				dataList:[],
 				currIndex:0,
-				value: '启用用户',
 				current: 0,
 				total:0
 			}
 		},
 		onLoad() {
-			this.getzhList()
+			this.getdaList()
 		},
 		methods: {
 			chagePage(e){
-				this.getzhList({page:e.current})
+				this.getdaList({page:e.current})
 			},
-			async getzhList(params){
+
+			async getdaList(params){
 				if(this.skey_title){
 					params.skey_title=this.skey_title
 				}
-				let res = await getzhList(params)
+				let res = await getdaList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
 					this.total = res.data.count
@@ -185,7 +178,7 @@
 			}
 		}
 		.items{
-			padding: 370rpx 0 100rpx;
+			padding: 380rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
