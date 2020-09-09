@@ -4,28 +4,32 @@
 			<view  class="bg"></view >
 		</view >
 		<u-sticky>
-			<view  class="card" @click="showList=true">
+			<view  class="card" >
 				<p class="name"><em></em>保证金</p>
 				<view class="input-box">
-					<span>租户名称：</span><u-input height="60"  v-model="currTypeName"  :border="border"/>
+					<span>租户名称：</span><u-input height="60"  v-model="skey_zh"  :border="border"/>
 				</view>
 <!--				<view class="input-box">-->
 <!--					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>-->
 <!--				</view>-->
-				<view class="btn">查询</view>
+				<view class="btn" @click="getbzjList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户：{{item.name}}</p>
-				<p class=""><span >缴费项：</span>{{item.activeType}}</p>
-				<p class=""><span >缴费日期：</span>2020-12-12</p>
-				<p class=""><span >缴费金额：</span><span style="color: #A40B0B">{{item.price.toFixed(2)}}</span></p>
+				<p class="title">租户：{{item.zhi_name}}</p>
+				<p class="title">房号：{{item.fcfx_ph}}</p>
+				<p class=""><span >缴费项：</span>{{item.bz_title}}</p>
+				<p v-if="item.sfx_dtstr"><span >缴费日期：</span>{{item.sfx_dtstr}}</p>
+				<p class=""><span >缴费金额：</span><span style="color: #A40B0B">{{parseFloat(item.bz_yjjr).toFixed(2)}}</span></p>
 				<template>
-					<span class="state"  style="color: #FF9900" v-if="item.state===0">未缴</span>
+					<span class="state"  style="color: #FF9900" v-if="item.bz_ybl===0">未缴</span>
 					<span class="state" v-else>已缴</span>
 				</template>
-				<view class="btn-group" v-if="item.state!==0">
+				<view class="btn-group" v-if="item.bz_ybl!==0">
 					<view class="btn"  @click="refund(item,index)">
 						<span class="iconfont  icontuikuan"></span>退款
 					</view>
@@ -46,13 +50,13 @@
 						<span>租户名称：</span><u-input height="60"  v-model="itemData.name"  :border="border" disabled/>
 					</view>
 					<view class="input-box">
-						<span>缴保金额：</span><u-input height="60" type="number"  v-model="itemData.price.toString()"  :border="border" disabled/>
+						<span>缴保金额：</span><u-input height="60" type="number"  v-model="itemData.price"  :border="border" disabled/>
 					</view>
 					<view class="input-box">
 						<span>退缴日期：</span><u-input height="60" @click="openTime" disabled v-model="data1"  :border="border"/>
 					</view>
 					<view class="input-box">
-						<span>退缴金额：</span><u-input height="60"  v-model="itemData.price.toString()"  :border="border"/>
+						<span>退缴金额：</span><u-input height="60"  v-model="itemData.price"  :border="border"/>
 					</view>
 					<view class="input-box">
 						<span>退款人：</span><u-input height="60" type="select" @click="showName=true;showList=false" v-model="currName"  :border="border"/>
@@ -73,11 +77,12 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getbzjList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_zh:'',
 				itemData:{
 					price:0
 				},
@@ -119,7 +124,7 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getbzjList()
 		},
 		methods: {
 			refund(item,index){
@@ -145,21 +150,14 @@
 			chagePage(e){
 				console.log(e);
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
+			async getbzjList(params){
+				if(this.skey_zh){
+					params.skey_zh=this.skey_zh
 				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+				let res = await getbzjList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -168,7 +166,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getWater()
+					this.getbzjList()
 				}else {
 					this.electList()
 				}
@@ -177,7 +175,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getbzjList()
 				}else {
 					this.electList()
 				}
@@ -295,7 +293,7 @@
 			}
 		}
 		.items{
-			padding: 360rpx 0 50rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

@@ -24,6 +24,14 @@ export function getbsblList(params) {
         body: params
     })
 }
+//新增报事办理结果
+export function addBsbljs(params) {
+    return fly.request({
+        url: 'baoshi/bsbljg',
+        method: 'post',
+        body: params
+    })
+}
 //新增报事回访
 export function addBshf(params) {
     return fly.request({
@@ -143,13 +151,48 @@ export function getzhList(params) {
     })
 }
 
+//车位
+export function getcarList(params) {
+    return fly.request({
+        url: 'zufu/zhhdcwf',
+        method: 'get',
+        body: params
+    })
+}
 
+//计费审批
+export function getjfspList(params) {
+    return fly.request({
+        url: 'caiwu/cwjfsp',
+        method: 'get',
+        body: params
+    })
+}
+//杂费
+export function getzfList(params) {
+    return fly.request({
+        url: 'caiwu/cwzf',
+        method: 'get',
+        body: params
+    })
+}
+//保证金
+export function getbzjList(params) {
+    return fly.request({
+        url: 'caiwu/cwbzj',
+        method: 'get',
+        body: params
+    })
+}
 
-
-
-
-
-
+//违约金
+export function getwyjList(params) {
+    return fly.request({
+        url: 'caiwu/cwwyj',
+        method: 'get',
+        body: params
+    })
+}
 
 
 

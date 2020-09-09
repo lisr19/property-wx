@@ -9,18 +9,21 @@
 				<view class="input-box">
 					<span>租户名称：</span><u-input height="60"  v-model="currTypeName"  :border="border"/>
 				</view>
-				<view class="input-box">
-					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>
-				</view>
+<!--				<view class="input-box">-->
+<!--					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>-->
+<!--				</view>-->
 				<view class="btn">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">活动主题：{{item.name}}</p>
-				<p><span>租户名称：</span>{{item.name}}</p>
-				<p><span>房号：</span>{{item.time}}</p>
-				<p class="price2">活动费用：{{item.price.toFixed(2)}}</p>
+				<p class="title">活动主题：{{item.zhhd_title}}</p>
+				<p><span>租户名称：</span>{{item.sfx_zhina}}</p>
+				<p><span>房号：</span>{{item.fcfx_ph}}</p>
+				<p class="price2">活动费用：{{parseFloat(item.bz_yjjr).toFixed(2)}}</p>
 <!--				<view class="btn-group">-->
 <!--					<view class="btn"  @click="delBtn(item,index)">-->
 <!--						<span class="iconfont iconbianzu62x"></span>删除-->
@@ -46,7 +49,7 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getzfList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
@@ -93,7 +96,7 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getzfList()
 		},
 		methods: {
 			openTime(e){
@@ -126,22 +129,11 @@
 			chagePage(e){
 				console.log(e);
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows.slice(0,5)
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
-				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
+			async getzfList(params){
+				let res = await getzfList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 				}else {
 
 				}
@@ -149,7 +141,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='已缴'){
-					this.getWater()
+					this.getzfList()
 				}else {
 					this.electList()
 				}
@@ -158,7 +150,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getzfList()
 				}else {
 					this.electList()
 				}
@@ -273,7 +265,7 @@
 			}
 		}
 		.items{
-			padding: 510rpx 0 50rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

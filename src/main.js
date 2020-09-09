@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 import './common/less/reset.less'
 import './static/font/iconfont.css'
 import router from './router'
@@ -15,6 +16,7 @@ Vue.prototype.$fly = fly
 App.mpType = 'app'
 
 const app = new Vue({
+  store,
   ...App
 })
 //v1.3.5起 H5端 你应该去除原有的app.$mount();使用路由自带的渲染方式

@@ -7,12 +7,12 @@
 			<view  class="card">
 				<p class="name"><em></em>违约金</p>
 				<view class="input-box">
-					<span>租户名称：</span><u-input height="60"  v-model="currTypeName"  :border="border"/>
+					<span>租户名称：</span><u-input height="60"  v-model="skey_zh"  :border="border"/>
 				</view>
-				<view class="input-box">
-					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>
-				</view>
-				<view class="btn">查询</view>
+<!--				<view class="input-box">-->
+<!--					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>-->
+<!--				</view>-->
+				<view class="btn" @click="getwyjList">查询</view>
 			</view >
 			<u-radio-group class="tab" v-model="value" size="45" active-color="">
 				<u-radio
@@ -27,22 +27,24 @@
 			</u-radio-group>
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户：{{item.name}}</p>
-				<p><span>截止日期：</span>{{item.time}}</p>
-				<p><span>欠费月份：</span>{{item.time}}</p>
+				<p class="title">租户：{{item.zhi_name}}</p>
+				<p>收费名称：{{item.bz_title}}</p>
+				<p><span>截止日期：</span>{{item.wyj_qxdt}}</p>
+				<p><span>欠费月份：</span>{{item.wyj_mm}}</p>
 				<p><span>欠费天数：</span>120</p>
-				<p class="price2">欠费总额：{{item.price.toFixed(2)}}</p>
+				<p class="price2">欠费总额：{{parseFloat(item.wyj_zjr).toFixed(2)}}</p>
 				<view class="btn-group">
-<!--					<span class="btn"><image class="menu" src="/static/logo.png"></image>编辑</span>-->
 					<view class="btn"  @click="delBtn(item,index)">
 						<span class="iconfont iconbianzu62x"></span>删除
 					</view>
 				</view>
-				<span class="state" v-if="currType===1">未缴</span>
+				<span class="state" v-if="item.wyj_zt===0">未缴</span>
 				<span class="state" style="color: #999999" v-else>已缴</span>
 			</view>
-			<view class="null-list" v-if="dataList.length===0">暂无数据</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
@@ -59,11 +61,12 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getwyjList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_zh:'',
 				show: false,
 				showList: false,
 				showTime: false,
@@ -93,7 +96,7 @@
 						name: '未缴',
 					},
 				],
-				currType:0,
+				currType:1,
 				currTypeName:'',
 				keyName:'',
 				active:0,
@@ -102,25 +105,31 @@
 				currIndex:0,
 				value: '已缴',
 				current: 0,
-				total:0
+				total:0,
+				isDel:false
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getwyjList({skey_zt:1})
 		},
 		methods: {
 			openTime(e){
 				this.showTime = true
 			},
 			delBtn(item,index){
-				console.log(index);
+				console.log(this.isDel);
 				uni.showModal({
 					title: '提示',
 					content: '确定删除此记录吗？',
 					success:  (res)=> {
 						if (res.confirm) {
 							console.log('用户点击确定');
-							this.dataList.splice(index,1)
+							this.isDel= true
+							this.getwyjList({id:item.wyj_id,del:1})
+							setTimeout(()=>{
+								this.isDel= false
+								this.getwyjList()
+							},100)
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 						}
@@ -137,43 +146,31 @@
 
 			},
 			chagePage(e){
-				console.log(e);
+				this.getwyjList({page:e.current})
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows.slice(0,5)
-					this.total = res.data.total
+			async getwyjList(params){
+				if(this.currType===1){
+					params.skey_zt = 1
+				}else {
+					params.skey_zt = 0
+				}
+				if(this.skey_zh){
+					params.skey_zh=this.skey_zh
+				}
+				let res = await getwyjList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
-				}else {
-
 				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
-				}
-			},
-			radioGroupChange(e) {
-				// this.currType = e
-				if(e==='已缴'){
-					this.getWater()
-				}else {
-					this.electList()
-				}
+				this.isDel =false
 			},
 			radioChange(e,index) {
-				console.log(e);
-				this.currType = index
-				if(index===0){
-					this.getWater()
+				this.currType = index+1
+				if(this.currType===1){
+					this.getwyjList({skey_zt:1})
 				}else {
-					this.electList()
+					this.getwyjList({skey_zt:0})
 				}
 			},
 			openBox(){
@@ -278,7 +275,7 @@
 			position: absolute;
 			z-index: 9;
 			background: #FAFBFD;
-			top: 450rpx;
+			top: 360rpx;
 			width: 100%;
 			padding: 0 38rpx;
 			.active{
@@ -286,7 +283,7 @@
 			}
 		}
 		.items{
-			padding: 510rpx 0 50rpx;
+			padding: 420rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -352,10 +349,6 @@
 				}
 			}
 
-		}
-		.null-list{
-			font-size: 32rpx;
-			margin-top: 80rpx;
 		}
 	}
 	.tip-box{

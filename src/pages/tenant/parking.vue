@@ -6,21 +6,24 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>车位信息</p>
-				<view class="input-box"><span>车位编号：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>车位：</span><input placeholder="车位编号" v-model="skey_ph" class="uni-input"></view>
+				<view class="btn" @click="getcarList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">车位编号：{{item.id}}</p>
-				<p>当前租户：{{item.name}}</p>
-				<p>车位单价：{{item.carPrice}}</p>
-				<p>车位状态：{{item.parking}}</p>
-				<p>车牌号：{{item.licenseNumbers}}</p>
-				<p>租用期限：{{item.time}}</p>
+				<p class="title">车位编号：{{item.chw_ph}}</p>
+				<p>当前租户：{{item.zhi_name?item.zhi_name:'暂无租户'}}</p>
+				<p>车位单价：{{item.chw_dj}}</p>
+				<p>车位状态：{{item.chw_zt===0?'未租':'已租'}}</p>
+<!--				<p>车牌号：{{item.licenseNumbers}}</p>-->
+<!--				<p>租用期限：{{item.time}}</p>-->
 			</view>
 		</view>
-<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -33,11 +36,12 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getcarList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_ph:'',
 				listType:[
 					{
 						name: '启用用户',
@@ -64,27 +68,20 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getcarList()
 		},
 		methods: {
 			chagePage(e){
-				console.log(e);
+				this.getcarList({page:e.current})
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
+			async getcarList(params){
+				if(this.skey_ph){
+					params.skey_ph=this.skey_ph
 				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+				let res = await getcarList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -93,7 +90,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getWater()
+					this.getcarList()
 				}else {
 					this.electList()
 				}
@@ -102,7 +99,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getcarList()
 				}else {
 					this.electList()
 				}
@@ -217,7 +214,7 @@
 			}
 		}
 		.items{
-			padding: 380rpx 0 50rpx;
+			padding: 370rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

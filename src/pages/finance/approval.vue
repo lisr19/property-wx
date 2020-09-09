@@ -15,12 +15,12 @@
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">收费项目：{{item.name}}</p>
-				<p><span>所属月份：</span>{{item.phone}}</p>
-				<p><span>开始日期：</span>{{item.time}}</p>
-				<p><span>结束日期：</span>{{item.time}}</p>
-				<p class="price"><span >应缴总金额：</span>{{item.price}}</p>
-				<p class="price"><span >应缴总户数：</span>{{item.price}}</p>
+				<p class="title">收费项目：{{item.cw_title}}</p>
+				<p><span>所属月份：</span>{{item.jh_zq}}</p>
+				<p><span>开始日期：</span>{{item.jh_sdt}}</p>
+				<p><span>结束日期：</span>{{item.jh_edt}}</p>
+				<p class="price"><span >应缴总金额：</span>{{parseFloat(item.jh_yjzjr).toFixed(2)}}</p>
+				<p class="price"><span >应缴总户数：</span>{{item.jh_yjzhs}}</p>
 				<view class="btn-group">
 					<span class="btn">通过</span>
 					<span class="btn" style="color: #C06E6E">驳回</span>
@@ -28,7 +28,7 @@
 
 			</view>
 		</view>
-		<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -43,7 +43,7 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getjfspList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
@@ -89,7 +89,7 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getjfspList()
 		},
 		methods: {
 			openTime(e){
@@ -114,23 +114,13 @@
 
 			},
 			chagePage(e){
-				console.log(e);
+				this.getjfspList({page:e.current})
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
-				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+			async getjfspList(params){
+				let res = await getjfspList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -139,18 +129,18 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getWater()
+					this.getjfspList()
 				}else {
-					this.electList()
+
 				}
 			},
 			radioChange(e,index) {
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getjfspList()
 				}else {
-					this.electList()
+
 				}
 			},
 			openBox(){
