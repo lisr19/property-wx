@@ -5,12 +5,10 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>缴费汇总</p>
+				<p class="name"><em></em>查看收费计划</p>
+
 				<view class="input-box">
-					<span>租户名称：</span><u-input height="60"  v-model="currTypeName"  :border="border"/>
-				</view>
-				<view class="input-box">
-					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>
+					<span>租户：</span><u-input height="60"   placeholder=""  :border="border"  />
 				</view>
 				<view class="btn">查询</view>
 			</view >
@@ -20,33 +18,24 @@
 				暂无数据
 			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户：{{item.zhi_name}}</p>
-				<p><span>所属年月：</span>{{item.jh_zq}}</p>
-				<p class="price"><span >应缴总金额：</span>{{parseFloat(item.yzjr).toFixed(2)}}</p>
-				<p class="price"><span >实缴总金额：</span>{{parseFloat(item.szjr).toFixed(2)}}</p>
-				<p class="price2"><span >已缴总金额：</span>{{parseFloat(item.okzjr).toFixed(2)}}</p>
-				<view class="btn-group">
-					<view class="btn" @click="send(item)">
-						<span class="iconfont iconbianzu32x"></span>
-						催缴
-					</view>
-					<view class="btn"  @click="showDetai(item,index)">	<span class="iconfont iconchakan2x"></span>未缴</view>
+				<view style="flex: 1">
+					<p class="title">租户：{{item.zhi_name}}</p>
+					<p>标题：{{item.bz_title}}</p>
+					<p><span>所属月份：</span>{{item.jh_zq}}</p>
+					<p class="price"><span >金额：</span>{{parseFloat(item.fcfx_jzmj).toFixed(2)}}</p>
 				</view>
-				<span class="state">未发</span>
+				<view class="btn-group">
+					<span class="btn" @click="">通过</span>
+					<span class="btn" @click="" style="color: #C06E6E">不通过</span>
+				</view>
+
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
-		<u-popup v-model="showList" mode="bottom" border-radius="20" height="80%" closeable>
-			<view class="tip-box">
-				<view class="tip-content">{{currMonth}}未缴费明细</view>
-				<view class="btn">确定</view>
-			</view>
-		</u-popup>
 	</view >
 </template>
 
@@ -56,19 +45,15 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getjfhzList,getjfmxList} from "@/utils/api/index"
+	import {getfvList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				dataDetail:{},
-				currMonth:'',
-				currId:'',
-				show: false,
-				showList: false,
 				showTime: false,
 				startTime: false,
 				data1: '',
+				data2: '',
 				type:'select',
 				border: true,
 				arrState: [
@@ -85,84 +70,60 @@
 						label: '通过'
 					},
 				],
-				listType:[
-					{
-						name: '租户活动',
-					},
-					{
-						name: '非租户活动',
-					},
-				],
 				currTypeName:'',
 				keyName:'',
 				active:0,
 				index:0,
 				dataList:[],
 				currIndex:0,
-				value: '租户活动',
 				current: 0,
 				total:0
 			}
 		},
 		onLoad() {
-			this.getjfhzList()
+			let id =this.$Route.query.id
+			this.getfvList({id:id})
 		},
 		methods: {
-			showDetai(item,index){
-				this.getjfmxList({id:item.zh_id,xid:item.jh_zq})
-				this.currMonth = item.jh_zq.toString().substr(0,4)+'年'+ item.jh_zq.toString().substr(4,2)+'月'
-				this.showList = true
-			},
-
-			openTime(e){
-				if(e==='start'){
-					this.startTime = true
-				}else{
-					this.startTime = false
-				}
-				this.showTime = true
-			},
 			confirm(e) {
 				console.log(e[0].label);
 				this.currTypeName=e[0].label
 			},
-			send(item){
-				uni.showModal({
-					title: '提示',
-					content: '确定发送此催缴记录吗？',
-					success:  (res)=> {
-						if (res.confirm) {
-							console.log('用户点击确定');
-						} else if (res.cancel) {
-							console.log('用户点击取消');
-						}
-					}
-				});
-			},
 			confirmTime(e){
 				console.log(e);
-				this.data1 = e.year + '-'+e.month+'-'+e.day
+				if(this.startTime){
+					this.data1 = e.year + '-'+e.month+'-'+e.day
+				}else{
+					this.data2 = e.year + '-'+e.month+'-'+e.day
+				}
 
 			},
 			chagePage(e){
-				console.log(e);
+				this.getfvList({page:e.current})
 			},
-			async getjfhzList(params){
-				let res = await getjfhzList(params)
+			async getfvList(params){
+				let res = await getfvList(params)
 				if(res.code === 0){
-					this.dataList = res.data.data
+					this.dataList = res.data
 					this.total = res.data.count
 					console.log(res);
 				}else {
 
 				}
 			},
-			async getjfmxList(params){
-				let res = await getjfmxList(params)
-				if(res.code === 0){
-					this.dataDetail = res.data.data
+			radioGroupChange(e) {
+				// this.currType = e
+				if(e==='启用用户'){
+					this.getfvList()
+				}else {
 
-					console.log(res);
+				}
+			},
+			radioChange(e,index) {
+				console.log(e);
+				this.currType = index
+				if(index===0){
+					this.getfvList()
 				}else {
 
 				}
@@ -277,7 +238,7 @@
 			}
 		}
 		.items{
-			padding: 450rpx 0 50rpx;
+			padding: 360rpx 0 50rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -292,13 +253,12 @@
 				width:690rpx;
 				background:rgba(255,255,255,1);
 				border-radius:10rpx;
-				/*background: #00D29C;*/
 				margin-top: 20rpx;
 				padding: 24rpx 30rpx;
 				box-sizing: border-box;
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
-				position: relative;
+				display: flex;
 				.title{
 					font-size:32rpx;
 					font-weight:500;
@@ -308,81 +268,29 @@
 					color: #999999;
 				}
 				.price{
-					color:#C5C5C5;
+					color:rgba(10,72,130,1);
 					span{
-						color:#7A7A7A;
-					}
-				}
-				.price2{
-					color: #5E5E5E;
-					span{
-						color:#A00000;
+						color:rgba(10,72,130,1);
 					}
 				}
 				.btn-group{
 					display: flex;
 					flex-direction: column;
-					position: absolute;
-					font-size:28rpx;
-					top: 60rpx;
-					right: 80rpx;
-					.iconfont{
-						margin-right: 15rpx;
-						font-size: 36rpx;
-					}
+					align-items: center;
+					justify-content: center;
 					.btn{
+						width:166rpx;
+						height:68rpx;
+						line-height: 68rpx;
 						text-align: center;
-						color: #7892B9;
-						margin-top: 36rpx;
-						display: flex;
-						align-items: center;
+						background:rgba(245,245,245,1);
+						border-radius:38rpx;
+						color:rgba(120,192,110,1);
+						margin: 18rpx 0;
 					}
-				}
-				.state{
-					position: absolute;
-					top: 10rpx;
-					right: 20rpx;
-					font-size:28rpx;
-					font-family:PingFangSC-Regular,PingFang SC;
-					font-weight:400;
-					color:rgba(255,153,0,1);
 				}
 			}
 
-		}
-	}
-	.tip-box{
-		padding:10rpx 60rpx;
-		font-size:28rpx;
-		.tip-content{
-			font-size: 36rpx;
-			padding-top: 30rpx;
-			font-weight:600;
-			color:rgba(51,51,51,1);
-		}
-		.desc{
-			margin: 40rpx 0 30rpx;
-			.text{
-				height:166rpx;
-				background:rgba(250,250,250,1);
-				border-radius:8rpx;
-				border:2rpx solid rgba(237,237,237,1);
-				margin-top: 20rpx;
-			}
-		}
-		.btn{
-			width:214rpx;
-			height:86rpx;
-			line-height:86rpx;
-			text-align: center;
-			background:rgba(1,122,255,1);
-			border-radius:14rpx;
-			font-size:30rpx;
-			font-weight:500;
-			color:rgba(255,255,255,1);
-			position: absolute;
-			right: 58rpx;
-			bottom: 40rpx;
 		}
 	}
 </style>

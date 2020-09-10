@@ -168,6 +168,21 @@ export function getjfspList(params) {
         body: params
     })
 }
+//收费计划
+export function getfvList(params) {
+    return fly.request({
+        url: 'caiwu/cwjfv',
+        method: 'get',
+        body: params
+    })
+}
+export function editFv(params) {
+    return fly.request({
+        url: 'caiwu/cwjfv',
+        method: 'post',
+        body: params
+    })
+}
 //杂费
 export function getzfList(params) {
     return fly.request({
@@ -193,7 +208,21 @@ export function getwyjList(params) {
         body: params
     })
 }
-
+//缴费汇总
+export function getjfhzList(params) {
+    return fly.request({
+        url: 'caiwu/cwjfhz',
+        method: 'get',
+        body: params
+    })
+}
+export function getjfmxList(params) {
+    return fly.request({
+        url: 'caiwu/caiwu/cwjfhzall',
+        method: 'get',
+        body: params
+    })
+}
 
 
 

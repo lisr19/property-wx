@@ -75,6 +75,10 @@ const home = [
 		name: '计费审批',
 	},
 	{
+		path: '/pages/finance/approval-detail',
+		name: '计费详情',
+	},
+	{
 		path: '/pages/finance/bond',
 		name: '保证金管理',
 	},

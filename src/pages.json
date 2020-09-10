@@ -91,6 +91,9 @@
 			"path": "pages/finance/approval"
 		},
 		{
+			"path": "pages/finance/approval-detail"
+		},
+		{
 			"path": "pages/finance/bond"
 		},
 		{

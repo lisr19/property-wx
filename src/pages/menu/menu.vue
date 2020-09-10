@@ -95,7 +95,7 @@
 						break;
 					case '财务管理':
 						this.typeList = [
-							{name:'计费管理'},
+							// {name:'计费管理'},
 							{name:'计费审批'},
 							{name:'杂费管理'},
 							{name:'保证金管理'},

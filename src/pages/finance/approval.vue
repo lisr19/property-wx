@@ -8,7 +8,7 @@
 				<p class="name"><em></em>计费审批</p>
 
 				<view class="input-box">
-					<span>所属楼宇：</span><u-input height="60"  v-model="currTypeName" placeholder="请选择楼宇" :type="type"  :border="border" @click="show = true" />
+					<span>所属楼宇：</span><u-input height="60"  v-model="currTypeName" placeholder="请选择楼宇" :type="type"  :border="border" @click="" />
 				</view>
 				<view class="btn">查询</view>
 			</view >
@@ -16,15 +16,18 @@
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">收费项目：{{item.cw_title}}</p>
+				<p><span>所属楼宇：</span>{{item.fc_name}}</p>
 				<p><span>所属月份：</span>{{item.jh_zq}}</p>
 				<p><span>开始日期：</span>{{item.jh_sdt}}</p>
 				<p><span>结束日期：</span>{{item.jh_edt}}</p>
 				<p class="price"><span >应缴总金额：</span>{{parseFloat(item.jh_yjzjr).toFixed(2)}}</p>
 				<p class="price"><span >应缴总户数：</span>{{item.jh_yjzhs}}</p>
-				<view class="btn-group">
-					<span class="btn">通过</span>
-					<span class="btn" style="color: #C06E6E">驳回</span>
-				</view>
+				<span @click="openDeatil(item)" class="tip" v-if="item.jh_ztspsm">已计费<u-icon name="arrow-right" style="margin-left: 10rpx" color="#D6D6D6" size="28"></u-icon></span>
+				<span @click="openDeatil(item)" class="tip" style="color: #FCA302" v-else>待计费<u-icon name="arrow-right" style="margin-left: 10rpx" color="#D6D6D6" size="28"></u-icon></span>
+<!--				<view class="btn-group">-->
+<!--					<span class="btn">通过</span>-->
+<!--					<span class="btn" style="color: #C06E6E">驳回</span>-->
+<!--				</view>-->
 
 			</view>
 		</view>
@@ -92,13 +95,8 @@
 			this.getjfspList()
 		},
 		methods: {
-			openTime(e){
-				if(e==='start'){
-					this.startTime = true
-				}else{
-					this.startTime = false
-				}
-				this.showTime = true
+			openDeatil(item){
+				this.$Router.push({name:'计费详情',params:{id:item.jh_dh}})
 			},
 			confirm(e) {
 				console.log(e[0].label);
@@ -275,6 +273,11 @@
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
 				position: relative;
+				.tip{
+					position: absolute;
+					right: 20rpx;
+					top: 5%;
+				}
 				.title{
 					font-size:32rpx;
 					font-weight:500;
