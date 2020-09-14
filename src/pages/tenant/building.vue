@@ -6,31 +6,37 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>收楼管理</p>
-				<view class="input-box"><span>租户名称：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>租户名称：</span><input placeholder="租户名称" v-model="skey_zh" class="uni-input" name="num"></view>
+				<view class="btn" @click="getfcspList">查询</view>
 			</view >
-			<u-radio-group class="tab" v-model="value" size="45" active-color="">
-				<u-radio
-						v-for="(item, index) in listType" :key="index"
-						shape="circle"
-						:name="item.name"
-						label-size="30"
-						@change="radioChange(item,index)"
-				>
-					<span :class="{active:currType===index}">{{item.name}}</span>
-				</u-radio>
-			</u-radio-group>
+<!--			<u-radio-group class="tab" v-model="value" size="45" active-color="">-->
+<!--				<u-radio-->
+<!--						v-for="(item, index) in listType" :key="index"-->
+<!--						shape="circle"-->
+<!--						:name="item.name"-->
+<!--						label-size="30"-->
+<!--						@change="radioChange(item,index)"-->
+<!--				>-->
+<!--					<span :class="{active:currType===index}">{{item.name}}</span>-->
+<!--				</u-radio>-->
+<!--			</u-radio-group>-->
 		</u-sticky>
 		<view class="items">
-			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">租户名称：{{item.name}}</p>
-				<p>房号：{{item.name}}</p>
-				<p>联系方式：{{item.phone}}</p>
-				<p>建面（m³）：{{item.time}}</p>
-				<span class="more-btn" @click="openDetail(item,index)">查看详情</span>
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
 			</view>
+			<view class="item" v-for="(item,index) in dataList" :key="index">
+				<view style="flex:2;padding-right: 30rpx">
+					<p class="title">租户名称：{{item.zhi_name}}</p>
+					<p>房号：{{item.fcfx_ph}}</p>
+					<p>联系方式：{{item.zhi_tel}}</p>
+					<p>建面（m³）：{{item.fcfx_jzmj}}</p>
+				</view>
+				<view class="more-btn" @click="openDetail(item,index)">查看详情</view>
+			</view>
+
 		</view>
-<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -43,7 +49,7 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getfcspList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
@@ -57,34 +63,16 @@
 					},
 				],
 				currType:0,
-				dataList:[
-					{
-						state:'0',
-						name:'智慧园区',
-						sb:'F141',
-						price:'3'
-					},
-					{
-						state:'0',
-						name:'智慧园区',
-						sb:'F14199789',
-						price:'3'
-					},
-					{
-						state:'1',
-						name:'智慧园区',
-						sb:'F142',
-						price:'3.5'
-					}
-				],
+				dataList:[],
 				currIndex:0,
 				value: '启用',
 				current: 0,
-				total:0
+				total:0,
+				skey_zh:''
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getfcspList()
 		},
 		methods: {
 			openDetail(item){
@@ -92,22 +80,16 @@
 			},
 			chagePage(e){
 				console.log(e);
+				this.getfcspList({page:e.current})
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
-				}else {
-
+			async getfcspList(params){
+				if(this.skey_zh){
+					params.skey_zh=this.skey_zh
 				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+				let res = await getfcspList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -116,7 +98,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用'){
-					this.getWater()
+					this.getfcspList()
 				}else {
 					this.electList()
 				}
@@ -125,7 +107,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getfcspList()
 				}else {
 					this.electList()
 				}
@@ -240,7 +222,7 @@
 			}
 		}
 		.items{
-			padding: 450rpx 0 50rpx;
+			padding: 370rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -252,12 +234,13 @@
 			font-weight:400;
 			color:rgba(122,122,122,1);
 			.item{
-				width:690rpx;
+				width:700rpx;
 				background:rgba(255,255,255,1);
 				border-radius:10rpx;
 				/*background: #00D29C;*/
+				display: flex;
 				margin-top: 20rpx;
-				padding: 24rpx 48rpx;
+				padding: 24rpx 20rpx 24rpx 30rpx;
 				box-sizing: border-box;
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
@@ -271,9 +254,7 @@
 					color: #999999;
 				}
 				.more-btn{
-					position: absolute;
-					right: 30rpx;
-					top:16rpx;
+					margin-top: 6rpx;
 				}
 			}
 

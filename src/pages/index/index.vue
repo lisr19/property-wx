@@ -172,7 +172,7 @@
 					this.list_sw = res.data.list_sw
 					this.showTZ = res.data.list_tz.slice(0,2)
 					this.showSW= res.data.list_sw.slice(0,2)
-					console.log(this.showSW);
+					// console.log(this.showSW);
 					this.list_rc = res.data.list_rc
 					this.list_rw = res.data.list_rw
 					let rwList = []
@@ -190,10 +190,23 @@
 						this.list_rc = swList
 					})
 				}else if(res.msg === 'token已过期！'){
-					uni.showToast({
-						title: 'token已过期,请重新登录',
-						icon: 'none',
-					})
+					uni.showModal({
+						title: '提示',
+						content: 'token已过期,请重新登录',
+						showCancel:false,
+						success:  (res)=> {
+							if (res.confirm) {
+								uni.clearStorageSync();
+								this.$Router.push({name: '登录'})
+							} else if (res.cancel) {
+								console.log('用户点击取消');
+							}
+						}
+					});
+					// uni.showToast({
+					// 	title: 'token已过期,请重新登录',
+					// 	icon: 'none',
+					// })
 				} else {
 					uni.showToast({
 						title: res.msg,

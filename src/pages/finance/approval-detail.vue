@@ -25,8 +25,8 @@
 					<p class="price"><span >金额：</span>{{parseFloat(item.fcfx_jzmj).toFixed(2)}}</p>
 				</view>
 				<view class="btn-group">
-					<span class="btn" @click="">通过</span>
-					<span class="btn" @click="" style="color: #C06E6E">不通过</span>
+					<span class="btn" @click="passBtn(item)">通过</span>
+					<span class="btn" @click="nopassBtn(item)" style="color: #C06E6E">不通过</span>
 				</view>
 
 			</view>
@@ -36,6 +36,15 @@
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
+		<u-popup v-model="showC" mode="bottom" border-radius="20" height="552rpx" closeable>
+			<view class="tip-box">
+				<view class="tip-content">确认不通过此条记录吗？</view>
+				<view class="desc">不通过说明：
+					<u-input type="textarea" v-model="reason" border class="text"/>
+				</view>
+				<view class="btn" @click="comNopass">确定</view>
+			</view>
+		</u-popup>
 	</view >
 </template>
 
@@ -45,11 +54,15 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getfvList} from "@/utils/api/index"
+	import {getfvList,editJfsp} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				nopassData:{},
+				showC:false,
+				tipsContent:'',
+				reason:'',
 				showTime: false,
 				startTime: false,
 				data1: '',
@@ -85,6 +98,47 @@
 			this.getfvList({id:id})
 		},
 		methods: {
+			nopassBtn(item){
+				this.showC=true
+				this.nopassData = {
+						add51:1,
+						qyid:item.jmx_id,
+						qydh:item.jh_dh,
+						qydel:2,
+						qycwid:item.cw_id,
+						xid:item.fcfx_id,
+						gxid:item.jh_zq,
+
+				}
+			},
+			comNopass(){
+				this.nopassData.lysm=this.reason
+				console.log(this.nopassData);
+				this.editJfsp(this.nopassData)
+			},
+			passBtn(item){
+				console.log(item);
+				uni.showModal({
+					title: '提示',
+					content: '确定通过此记录吗？',
+					success:  (res)=> {
+						if (res.confirm) {
+							console.log('用户点击确定');
+							this.editJfsp({
+								add51:1,
+								qyid:item.jmx_id,
+								qydh:item.jh_dh,
+								qydel:2,
+								qycwid:item.cw_id,
+								xid:item.fcfx_id,
+								gxid:item.jh_zq
+							})
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
+			},
 			confirm(e) {
 				console.log(e[0].label);
 				this.currTypeName=e[0].label
@@ -107,6 +161,18 @@
 					this.dataList = res.data
 					this.total = res.data.count
 					console.log(res);
+				}else {
+
+				}
+			},
+			async editJfsp(params){
+				let res = await editJfsp(params)
+				if(res.code === 0){
+					uni.showToast({
+						title: '审核通过',
+						icon: 'none',
+						mask: false
+					})
 				}else {
 
 				}
@@ -291,6 +357,40 @@
 				}
 			}
 
+		}
+	}
+	.tip-box{
+		padding:10rpx 60rpx;
+		font-size:28rpx;
+		.tip-content{
+			font-size: 36rpx;
+			padding-top: 30rpx;
+			font-weight:600;
+			color:rgba(51,51,51,1);
+		}
+		.desc{
+			margin: 40rpx 0 30rpx;
+			.text{
+				height:166rpx;
+				background:rgba(250,250,250,1);
+				border-radius:8rpx;
+				border:2rpx solid rgba(237,237,237,1);
+				margin-top: 20rpx;
+			}
+		}
+		.btn{
+			width:214rpx;
+			height:86rpx;
+			line-height:86rpx;
+			text-align: center;
+			background:rgba(1,122,255,1);
+			border-radius:14rpx;
+			font-size:30rpx;
+			font-weight:500;
+			color:rgba(255,255,255,1);
+			position: absolute;
+			right: 58rpx;
+			bottom: 40rpx;
 		}
 	}
 </style>

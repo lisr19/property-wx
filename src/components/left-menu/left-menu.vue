@@ -8,11 +8,19 @@
 <!--			</svg>-->
 			<p >管理员：{{user_name}}</p>
 		</div>
-		<uni-list>
-			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" @click="openMenu(item,index)">
-				<span class="iconfont" :class="item.url"></span>
-			</uni-list-item>
-		</uni-list>
+<!--		<uni-list>-->
+<!--			<uni-list-item v-for="(item,index) in titleArr" :key="index" :title="item.name" @click="openMenu(item,index)">-->
+<!--				<span class="iconfont" :class="item.url"></span>-->
+<!--			</uni-list-item>-->
+<!--		</uni-list>-->
+		<template>
+			<u-cell-group>
+				<u-cell-item  :center="true" v-for="(item,index) in titleArr" :key="index" @click="openMenu(item,index)">
+					<span class="iconfont" :class="item.url"></span>
+					{{item.name}}
+				</u-cell-item>
+			</u-cell-group>
+		</template>
 		<div style="display: flex;justify-content: center;margin: 40rpx 0">
 			<span class="btn" @click="quit">
 				退出登录
@@ -105,7 +113,6 @@
 				if(item.name==='日常工作'){
 					this.$Router.push({name: '分类', params:{type:'日常工作'}})
 				} else  if(item.name==='房产管理'){
-					// this.$Router.push({name: '房产管理'})
 					this.$Router.push({name: '分类', params:{type:'房产管理'}})
 				}else if(item.name==='租户管理'){
 					this.$Router.push({name: '分类', params:{type:'租户管理'}})
@@ -133,20 +140,14 @@
 	};
 </script>
 <style scoped>
-
-	/deep/ .uni-list-item__container{
-		padding: 28rpx 28rpx 14rpx;
-	}
-	/deep/ .uni-list-item__content{
-		flex-direction: row;
+	
+	/deep/ .u-cell__value{
+		text-align: left;
 		padding: 8rpx 0;
-	}
-	/deep/ .uni-list-item__content-title{
 		font-size:32rpx;
 		font-family:PingFangSC-Regular,PingFang SC;
 		font-weight:400;
 		color:rgba(51,51,51,1);
-		display: flex;
 	}
 </style>
 <style lang="less" scoped>

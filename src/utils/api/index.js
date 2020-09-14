@@ -159,7 +159,31 @@ export function getcarList(params) {
         body: params
     })
 }
+//收楼列表
+export function getfcspList(params) {
+    return fly.request({
+        url: 'fangchan/fcsplist',
+        method: 'get',
+        body: params
+    })
+}
 
+//留言
+export function getlyList(params) {
+    return fly.request({
+        url: 'weixin/wxly',
+        method: 'get',
+        body: params
+    })
+}
+//回访留言
+export function addLyhf(params) {
+    return fly.request({
+        url: 'weixin/wxlyre',
+        method: 'post',
+        body: params
+    })
+}
 //计费审批
 export function getjfspList(params) {
     return fly.request({
@@ -216,17 +240,39 @@ export function getjfhzList(params) {
         body: params
     })
 }
-export function getjfmxList(params) {
+//催缴
+export function addCj(params) {
     return fly.request({
-        url: 'caiwu/caiwu/cwjfhzall',
+        url: 'caiwu/cwjfhz',
         method: 'get',
         body: params
     })
 }
+//缴费明细
+export function getmxDetail(params) {
+    return fly.request({
+        url: 'caiwu/cwjfhzall',
+        method: 'get',
+        body: params
+    })
+}
+//缴费明细
+export function comTk(params) {
+    return fly.request({
+        url: 'caiwu/cwbzjt',
+        method: 'post',
+        body: params
+    })
+}
 
-
-
-
+//计费审批通过不通过
+export function editJfsp(params) {
+    return fly.request({
+        url: 'caiwu/cwjfvsp',
+        method: 'post',
+        body: params
+    })
+}
 
 
 

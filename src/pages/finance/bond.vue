@@ -24,7 +24,11 @@
 				<p class="title">房号：{{item.fcfx_ph}}</p>
 				<p class=""><span >缴费项：</span>{{item.bz_title}}</p>
 				<p v-if="item.sfx_dtstr"><span >缴费日期：</span>{{item.sfx_dtstr}}</p>
-				<p class=""><span >缴费金额：</span><span style="color: #A40B0B">{{parseFloat(item.bz_yjjr).toFixed(2)}}</span></p>
+				<p><span >缴费金额：</span><span style="color: #A40B0B">{{parseFloat(item.bz_yjjr).toFixed(2)}}</span></p>
+				<p v-if="item.sfx_djh"><span >退款单号：</span><span >{{item.sfx_djh}}</span></p>
+				<p v-if="item.sfx_tkuna"><span >退款人：</span><span >{{item.sfx_tkuna}}</span></p>
+				<p v-if="item.sfx_tkjr"><span >退款金额：</span><span >{{parseFloat(item.sfx_tkjr).toFixed(2)}}</span></p>
+				<p v-if="item.sfx_tkdt"><span >退款日期：</span><span>{{item.sfx_tkdt}}</span></p>
 				<template>
 					<span class="state"  style="color: #FF9900" v-if="item.bz_ybl===0">未缴</span>
 					<span class="state" v-else>已缴</span>
@@ -40,31 +44,32 @@
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-select v-model="showName" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
+		<u-select v-model="showSr" :list="rsList" @confirm="confirmSr"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
 		<u-popup v-model="showList" mode="bottom" border-radius="20" height="60%" closeable>
 			<view class="tip-box">
 				<view class="tip-content">退保证金</view>
 				<view class="content">
 					<view class="input-box">
-						<span>租户名称：</span><u-input height="60"  v-model="itemData.name"  :border="border" disabled/>
+						<span>租户名称：</span><u-input height="60" disabled  v-model="itemData.zhi_name"  :border="border" disabled/>
+					</view>
+
+					<view class="input-box">
+						<span>缴保金额：</span><u-input height="60" type="number" disabled  v-model="parseFloat(itemData.bz_yjjr).toFixed(2)"  :border="border" disabled/>
 					</view>
 					<view class="input-box">
-						<span>缴保金额：</span><u-input height="60" type="number"  v-model="itemData.price"  :border="border" disabled/>
+						<span>退缴日期：</span><u-input height="60" @click="openTime" disabled v-model="itemData.bzj_tkdt"  :border="border"/>
 					</view>
 					<view class="input-box">
-						<span>退缴日期：</span><u-input height="60" @click="openTime" disabled v-model="data1"  :border="border"/>
+						<span>退缴金额：</span><u-input height="60"  v-model="itemData.bzj_tkjr"  :border="border"/>
 					</view>
 					<view class="input-box">
-						<span>退缴金额：</span><u-input height="60"  v-model="itemData.price"  :border="border"/>
+						<span>退款人：</span><u-input height="60" type="select" @click="showSr=true;showList=false" v-model="itemData.bzj_tkr"  :border="border"/>
 					</view>
 					<view class="input-box">
-						<span>退款人：</span><u-input height="60" type="select" @click="showName=true;showList=false" v-model="currName"  :border="border"/>
+						<span>退款单号：</span><u-input height="60" v-model="itemData.bzj_djh"  :border="border"/>
 					</view>
-					<view class="input-box">
-						<span>退款单号：</span><u-input height="60" v-model="currName"  :border="border"/>
-					</view>
-					<view class="btn">确定</view>
+					<view class="btn" @click="comTk">确定</view>
 				</view>
 			</view>
 		</u-popup>
@@ -77,15 +82,16 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getbzjList} from "@/utils/api/index"
+	import {getbzjList,comTk} from "@/utils/api/index"
+	import {getRslist} from "@/utils/api/comment"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				showSr:false,
+				rsList:[],
 				skey_zh:'',
-				itemData:{
-					price:0
-				},
+				itemData:{},
 				showName: false,
 				showList: false,
 				showTime: false,
@@ -118,15 +124,50 @@
 				index:0,
 				dataList:[],
 				currIndex:0,
-				value: '租户活动',
 				current: 0,
 				total:0,
 			}
 		},
 		onLoad() {
 			this.getbzjList()
+			this.getRslist()
 		},
 		methods: {
+			confirmSr(e){
+				this.itemData.bzj_tkr=e[0].label
+				this.itemData.bzj_tkrid = e[0].value
+				this.showList =true
+			},
+			async comTk(){
+				this.itemData.id =this.itemData.jmx_id
+				let params =this.itemData
+				let res = await comTk(params)
+				if(res.code === 0){
+					this.showList =false
+					this.getbzjList()
+					uni.showToast({
+						title: '退款成功',
+						icon: 'none',
+					})
+				}else {
+					uni.showToast({
+						title: '退款失败',
+						icon: 'none',
+					})
+					this.showList =false
+				}
+			},
+			async getRslist(params){
+				let res = await getRslist(params)
+				if(res.code === 0){
+					let list = res.data
+					list.forEach((i,index)=>{
+						this.rsList.push({label:i.bmry_name,value:i.bmry_id})
+					})
+				}else {
+
+				}
+			},
 			refund(item,index){
 				this.itemData = item
 				console.log(this.itemData);
@@ -143,7 +184,7 @@
 			},
 			confirmTime(e){
 				console.log(e);
-				this.data1 = e.year + '-'+e.month+'-'+e.day
+				this.itemData.bzj_tkdt = e.year + '-'+e.month+'-'+e.day
 				this.showList = true
 
 			},

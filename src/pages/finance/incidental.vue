@@ -23,7 +23,7 @@
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
 				<p><span>租户名称：</span>{{item.sfx_zhina}}</p>
 				<p><span>房号：</span>{{item.fcfx_ph}}</p>
-				<p class="price2">活动费用：{{parseFloat(item.bz_yjjr).toFixed(2)}}</p>
+				<p class="price2">活动费用：{{item.bz_yjjr}}</p>
 <!--				<view class="btn-group">-->
 <!--					<view class="btn"  @click="delBtn(item,index)">-->
 <!--						<span class="iconfont iconbianzu62x"></span>删除-->
@@ -32,7 +32,6 @@
 				<span class="state" v-if="currType===1">未完结</span>
 				<span class="state" style="color: #999999" v-else>已完结</span>
 			</view>
-			<view class="null-list" v-if="dataList.length===0">暂无数据</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">

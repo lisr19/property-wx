@@ -6,31 +6,35 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>租户留言</p>
-				<view class="input-box"><span>租户名称：</span><input class="uni-input" name="num"></view>
-				<view class="btn">查询</view>
+				<view class="input-box"><span>租户名称：</span><input placeholder="租户名称或手机号" v-model="skey_zhna" class="uni-input" name="num"></view>
+				<view class="btn" @click="getlyList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">标题：{{item.id}}</p>
-				<p>租户：{{item.name}}</p>
-				<p>回复内容：{{item.time}}</p>
-				<p>留言日期：{{item.time}}</p>
-				<p>回复日期：{{item.time}}</p>
-				<span class="btn" @click="replyQ">回复</span>
+				<p class="title">标题：{{item.ly_title?item.ly_title:'无'}}</p>
+				<p>租户：{{item.zhi_name?item.zhi_name:'无'}}</p>
+				<p>留言日期：{{item.ly_dt}}</p>
+				<p>回复内容：{{item.ly_hfnoty?item.ly_hfnoty:'无'}}</p>
+				<p v-if="item.ly_hfuna">回复人：{{item.ly_hfuna}}</p>
+				<p  v-if="item.ly_hfdt">回复日期：{{item.ly_hfdt}}</p>
+				<span class="btn" @click="openHf(item)">回复</span>
 			</view>
 		</view>
-<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
 		<u-popup v-model="showReply" mode="bottom" border-radius="20" height="552rpx" closeable>
 			<view class="tip-box">
-				<view class="tip-content">标题</view>
+<!--				<view class="tip-content">标题</view>-->
 				<view class="desc">回复内容：
 					<u-input type="textarea" v-model="reason" border class="text"/>
 				</view>
-				<view class="btn">确定</view>
+				<view class="btn" @click="addLyhf">确定</view>
 			</view>
 		</u-popup>
 	</view >
@@ -42,14 +46,16 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getlyList,addLyhf} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_zhna:'',
 				currType:0,
 				showReply:false,
 				reason:'',
+				hf_id:'',
 				dataList:[],
 				currIndex:0,
 				value: '启用用户',
@@ -58,30 +64,46 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getlyList()
 		},
 		methods: {
-			replyQ(){
+			openHf(item){
 				this.showReply=true
-			},
-			chagePage(e){
-				console.log(e);
-			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
+				this.hf_id = item.ly_id
+				if(item.ly_hfnoty){
+					this.reason =item.ly_hfnoty
 				}else {
+					this.reason = ''
+				}
+			},
+			async addLyhf(){
+				let params = {
+					id:this.hf_id,
+					ly_hfnoty:this.reason,
+				}
+				let res = await addLyhf(params)
+				if(res.code === 0){
+					this.getlyList()
+					this.showReply=false
+					uni.showToast({
+						title: '回复成功',
+						icon: 'none',
+						mask: false
+					})
 
 				}
 			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+			chagePage(e){
+				this.getlyList({page:e.current})
+			},
+			async getlyList(params){
+				if(this.skey_zhna){
+					params.skey_zhna=this.skey_zhna
+				}
+				let res = await getlyList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -90,7 +112,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getWater()
+					this.getlyList()
 				}else {
 					this.electList()
 				}
@@ -99,7 +121,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getlyList()
 				}else {
 					this.electList()
 				}
@@ -214,7 +236,7 @@
 			}
 		}
 		.items{
-			padding: 380rpx 0 50rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

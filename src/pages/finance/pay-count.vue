@@ -7,12 +7,12 @@
 			<view  class="card">
 				<p class="name"><em></em>缴费汇总</p>
 				<view class="input-box">
-					<span>租户名称：</span><u-input height="60"  v-model="currTypeName"  :border="border"/>
+					<span>租户名称：</span><u-input height="60"  v-model="skey_zh"  :border="border"/>
 				</view>
-				<view class="input-box">
-					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>
-				</view>
-				<view class="btn">查询</view>
+<!--				<view class="input-box">-->
+<!--					<span>年月：</span><u-input height="60"  v-model="data1" disabled :border="border" @click="openTime"/>-->
+<!--				</view>-->
+				<view class="btn" @click="getjfhzList">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
@@ -22,17 +22,17 @@
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">租户：{{item.zhi_name}}</p>
 				<p><span>所属年月：</span>{{item.jh_zq}}</p>
-				<p class="price"><span >应缴总金额：</span>{{parseFloat(item.yzjr).toFixed(2)}}</p>
-				<p class="price"><span >实缴总金额：</span>{{parseFloat(item.szjr).toFixed(2)}}</p>
-				<p class="price2"><span >已缴总金额：</span>{{parseFloat(item.okzjr).toFixed(2)}}</p>
+				<p class="price"><span >应缴总金额：</span>{{item.yzjr}}</p>
+				<p class="price"><span >实缴总金额：</span>{{item.szjr}}</p>
+				<p class="price2"><span >已缴总金额：</span>{{item.okzjr}}</p>
 				<view class="btn-group">
-					<view class="btn" @click="send(item)">
+					<view class="btn" @click="send(item)"  v-if="item.okzjr<item.szjr">
 						<span class="iconfont iconbianzu32x"></span>
 						催缴
 					</view>
-					<view class="btn"  @click="showDetai(item,index)">	<span class="iconfont iconchakan2x"></span>未缴</view>
+					<view class="btn" v-if="item.okzjr<item.szjr" @click="showDetai(item,index)"><span class="iconfont iconchakan2x"></span>未缴</view>
 				</view>
-				<span class="state">未发</span>
+				<span class="state">{{item.zjls===parseInt(item.fbzs)?'已发':'未发'}}</span>
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
@@ -41,10 +41,23 @@
 		</uni-drawer>
 		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
-		<u-popup v-model="showList" mode="bottom" border-radius="20" height="80%" closeable>
+		<u-popup v-model="showList" mode="bottom" border-radius="20" height="60%" closeable>
 			<view class="tip-box">
 				<view class="tip-content">{{currMonth}}未缴费明细</view>
-				<view class="btn">确定</view>
+				<view class="detail-items">
+					<view class="null" v-if="dataDetail.length===0">
+						暂无数据
+					</view>
+					<view class="item" v-for="(item,index) in dataDetail" :key="index">
+						<p class="title">名称：{{item.bz_title}}</p>
+						<p><span>财务项目：</span>{{item.cw_title}}</p>
+						<p><span >单位：</span>{{item.bz_dw}}</p>
+						<p><span >单价：</span>{{item.bz_dj}}</p>
+						<p><span >数量：</span>{{item.jmx_bcyl}}</p>
+						<p ><span >总金额：</span>{{item.bz_yjjr}}</p>
+					</view>
+				</view>
+<!--				<view class="btn">确定</view>-->
 			</view>
 		</u-popup>
 	</view >
@@ -56,12 +69,13 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getjfhzList,getjfmxList} from "@/utils/api/index"
+	import {getjfhzList,getmxDetail,addCj} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				dataDetail:{},
+				skey_zh:'',
+				dataDetail:[],
 				currMonth:'',
 				currId:'',
 				show: false,
@@ -109,9 +123,10 @@
 		},
 		methods: {
 			showDetai(item,index){
-				this.getjfmxList({id:item.zh_id,xid:item.jh_zq})
-				this.currMonth = item.jh_zq.toString().substr(0,4)+'年'+ item.jh_zq.toString().substr(4,2)+'月'
 				this.showList = true
+				this.getmxDetail({id:item.zh_id,xid:item.jh_zq})
+				this.currMonth = item.jh_zq.toString().substr(0,4)+'年'+ item.jh_zq.toString().substr(4,2)+'月'
+
 			},
 
 			openTime(e){
@@ -133,6 +148,7 @@
 					success:  (res)=> {
 						if (res.confirm) {
 							console.log('用户点击确定');
+							this.addCj({id:item.zh_id,xid:item.jh_zq,del:1})
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 						}
@@ -147,22 +163,50 @@
 			chagePage(e){
 				console.log(e);
 			},
+			async addCj(params){
+				let res = await addCj(params)
+				if(res.code === 0){
+					console.log(res);
+					uni.showToast({
+						title: '发送成功',
+						icon: 'none',
+						mask: false
+					})
+				}else {
+					uni.showToast({
+						title: '发送失败',
+						icon: 'none',
+						mask: false
+					})
+				}
+			},
 			async getjfhzList(params){
+				if(this.skey_zh){
+					params.skey_zh = this.skey_zh
+				}
 				let res = await getjfhzList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
+					this.dataList.map((item,index)=>{
+						item.yzjr= parseFloat(item.yzjr).toFixed(2)
+						item.szjr= parseFloat(item.szjr).toFixed(2)
+						item.okzjr= parseFloat(item.okzjr).toFixed(2)
+					})
 					this.total = res.data.count
 					console.log(res);
 				}else {
 
 				}
 			},
-			async getjfmxList(params){
-				let res = await getjfmxList(params)
+			async getmxDetail(params){
+				let res = await getmxDetail(params)
 				if(res.code === 0){
-					this.dataDetail = res.data.data
-
 					console.log(res);
+					this.dataDetail = res.data
+					this.dataDetail.map((item)=>{
+						item.bz_dj= parseFloat(item.bz_dj).toFixed(2)
+						item.bz_yjjr= parseFloat(item.bz_yjjr).toFixed(2)
+					})
 				}else {
 
 				}
@@ -276,8 +320,9 @@
 				color: #077AFF;
 			}
 		}
+
 		.items{
-			padding: 450rpx 0 50rpx;
+			padding: 370rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -349,6 +394,21 @@
 				}
 			}
 
+		}
+		.detail-items{
+			padding: 0 ;
+			height: 680rpx;
+			overflow: auto;
+			.item{
+				border-radius: 10rpx;
+				background: #f7f7f7;
+				width: 100%;
+				margin-top: 20rpx;
+				padding: 24rpx 30rpx;
+				box-sizing: border-box;
+				line-height: 1.8;
+				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
+			}
 		}
 	}
 	.tip-box{

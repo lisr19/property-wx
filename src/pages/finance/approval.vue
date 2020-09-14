@@ -14,7 +14,7 @@
 			</view >
 		</u-sticky>
 		<view class="items">
-			<view class="item" v-for="(item,index) in dataList" :key="index">
+			<view class="item" v-for="(item,index) in dataList" v-if="item.jh_yjzjr!==0" :key="index">
 				<p class="title">收费项目：{{item.cw_title}}</p>
 				<p><span>所属楼宇：</span>{{item.fc_name}}</p>
 				<p><span>所属月份：</span>{{item.jh_zq}}</p>
