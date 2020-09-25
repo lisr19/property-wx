@@ -5,18 +5,16 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>活动管理</p>
-				<view class="input-box">
-					<span>状态：</span><u-input height="60"  v-model="currTypeName" placeholder="请选择状态" :type="type"  :border="border" @click="show = true" />
-				</view>
-				<view class="input-box">
-					<span>范围：</span>
-					<u-input v-model="data1" placeholder=""  disabled :border="border" height="60" @click="openTime('start')" /> --
-					<u-input v-model="data2" placeholder="" disabled :border="border" height="60" @click="openTime('end')" />
-				</view>
-				<view class="btn">查询</view>
+				<p class="name"><em></em>{{currTypeName}}管理</p>
+				<view class="input-box"><span>租户名称：</span><input placeholder="租户名称" v-model.lazy="skey_zhna" class="uni-input" name="num"></view>
+				<view class="btn" @click="serchBtn">查询</view>
+<!--				<view class="input-box">-->
+<!--					<span>范围：</span>-->
+<!--					<u-input v-model="data1" placeholder=""  disabled :border="border" height="60" @click="openTime('start')" /> &#45;&#45;-->
+<!--					<u-input v-model="data2" placeholder="" disabled :border="border" height="60" @click="openTime('end')" />-->
+<!--				</view>-->
 			</view >
-			<u-radio-group class="tab" v-model="value" size="45" active-color="">
+			<u-radio-group class="tab" v-model="value" size="45">
 				<u-radio
 						v-for="(item, index) in listType" :key="index"
 						shape="circle"
@@ -24,21 +22,21 @@
 						label-size="30"
 						@change="radioChange(item,index)"
 				>
-					<span :class="{active:active===index}">{{item.name}}</span>
+					<span :class="{active:currType===index}">{{item.name}}</span>
 				</u-radio>
 			</u-radio-group>
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">活动主题：{{item.name}}</p>
+				<p class="title">活动主题：{{item.zhhd_title}}</p>
 				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.name}}</p>
-				<p><span>租户名称：</span>{{item.phone}}</p>
-				<p><span>开始时间：</span>{{item.time}}</p>
+				<p><span>活动状态：</span>{{item.zhhd_zt===1?'未收费':'通过审核'}}</p>
+				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
+				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
 				<span class="more-btn" @click="openDetail(item,index)">查看详情</span>
 			</view>
 		</view>
-<!--		<uni-pagination  show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -53,11 +51,12 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getzhhdList,getzhhdfList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				skey_zhna:'',
 				show: false,
 				showTime: false,
 				startTime: false,
@@ -95,7 +94,8 @@
 						name: '非租户活动',
 					},
 				],
-				currTypeName:'',
+				currType:0,
+				currTypeName:'租户活动',
 				active:0,
 				index:0,
 				dataList:[],
@@ -106,19 +106,18 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getzhhdList()
 		},
 		methods: {
-			openTime(e){
-				if(e==='start'){
-					this.startTime = true
-				}else{
-					this.startTime = false
+			serchBtn(){
+				if(this.currType===0){
+					this.getzhhdList()
+				}else {
+					this.getzhhdfList()
 				}
-				this.showTime = true
 			},
 			openDetail(item){
-				this.$Router.push({name:'活动详情'})
+				this.$Router.push({name:'活动详情',params:{item:item,id:item.zhhd_dh}})
 			},
 			confirm(e) {
 				console.log(e[0].label)
@@ -136,41 +135,52 @@
 			chagePage(e){
 				console.log(e);
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
+			//租户
+			async getzhhdList(){
+				let params = {}
+				if(this.skey_zhna){
+					params.skey_zhna = this.skey_zhna
+				}
+				let res = await getzhhdList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 				}else {
 
 				}
 			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
+			//非租户
+			async getzhhdfList(){
+				let params = {}
+				if(this.skey_zhna){
+					params.skey_zhna = this.skey_zhna
+				}
+				let res = await getzhhdfList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 				}else {
 
 				}
 			},
-			radioGroupChange(e) {
-				// this.currType = e
-				if(e==='启用用户'){
-					this.getWater()
-				}else {
-					this.electList()
-				}
-			},
+
+
+			// radioGroupChange(e) {
+			// 	if(e==='租户活动'){
+			// 		this.getzhhdList()
+			// 	}else {
+			// 		this.getzhhdfList()
+			// 	}
+			// },
 			radioChange(e,index) {
-				console.log(e);
 				this.currType = index
-				if(index===0){
-					this.getWater()
+				this.currTypeName = e.name
+				if(this.currType===0){
+					console.log(111);
+					this.getzhhdList()
 				}else {
-					this.electList()
+					console.log(22);
+					this.getzhhdfList()
 				}
 			},
 			openBox(){
@@ -309,6 +319,7 @@
 					font-size:32rpx;
 					font-weight:500;
 					color:rgba(89,89,89,1);
+					width: 480rpx;
 				}
 				span{
 					color: #999999;

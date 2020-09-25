@@ -5,35 +5,38 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>活动审核</p>
-				<view class="input-box"><span>主题：</span><input placeholder="主题关键字" v-model="skey_title" class="uni-input" name="num"></view>
-				<view class="btn" @click="getHdsp">查询</view>
+				<p class="name"><em></em>归档记录</p>
+				<view class="input-box"><span>租户名称：</span><input placeholder="租户名称或手机号" v-model="skey_zhna" class="uni-input" name="num"></view>
+				<view class="btn" @click="getlyList">查询</view>
 			</view >
-			<view class="tab">
-				<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"
-					  :key="index" @click="tabType(index)">{{item.name}}</view>
-			</view>
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">活动主题：{{item.zhhd_title}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.wdsp_zt}}</p>
-				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
-				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
-				<view class="btn-group">
-					<span class="btn">通过</span>
-					<span class="btn" style="color: #C06E6E">驳回</span>
-				</view>
-
+				<p class="title">标题：{{item.ly_title?item.ly_title:'无'}}</p>
+				<p>租户：{{item.zhi_name?item.zhi_name:'无'}}</p>
+				<p>留言日期：{{item.ly_dt}}</p>
+				<p>回复内容：{{item.ly_hfnoty?item.ly_hfnoty:'无'}}</p>
+				<p v-if="item.ly_hfuna">回复人：{{item.ly_hfuna}}</p>
+				<p  v-if="item.ly_hfdt">回复日期：{{item.ly_hfdt}}</p>
+				<span class="btn" @click="openHf(item)">回复</span>
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
-		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
+		<u-popup v-model="showReply" mode="bottom" border-radius="20" height="552rpx" closeable>
+			<view class="tip-box">
+<!--				<view class="tip-content">标题</view>-->
+				<view class="desc">回复内容：
+					<u-input type="textarea" v-model="reason" border class="text"/>
+				</view>
+				<view class="btn" @click="addLyhf">确定</view>
+			</view>
+		</u-popup>
 	</view >
 </template>
 
@@ -43,98 +46,64 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getHdsp} from "@/utils/api/index"
+	import {getlyList,addLyhf} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
-				skey_title:'',
-				show: false,
-				showTime: false,
-				startTime: false,
-				data1: '',
-				data2: '',
-				type:'select',
-				border: true,
-				arrState: [
-					{
-						value: '1',
-						label: '未审'
-					},
-					{
-						value: '2',
-						label: '不通过'
-					},
-					{
-						value: '3',
-						label: '通过'
-					},
-				],
-				typeList:[
-					{
-						name: '活动审核',
-					},
-					{
-						name: '装修过程',
-					},
-				],
-				currTypeName:'',
-				keyName:'',
-				active:0,
-				index:0,
+				skey_zhna:'',
+				currType:0,
+				showReply:false,
+				reason:'',
+				hf_id:'',
 				dataList:[],
 				currIndex:0,
-				value: '租户活动',
+				value: '启用用户',
 				current: 0,
 				total:0
 			}
 		},
 		onLoad() {
-			this.getHdsp()
-
+			this.getlyList()
 		},
 		methods: {
-			tabType(index){
-				this.currIndex = index
-			},
-			openTime(e){
-				if(e==='start'){
-					this.startTime = true
-				}else{
-					this.startTime = false
+			openHf(item){
+				this.showReply=true
+				this.hf_id = item.ly_id
+				if(item.ly_hfnoty){
+					this.reason =item.ly_hfnoty
+				}else {
+					this.reason = ''
 				}
-				this.showTime = true
 			},
-			confirm(e) {
-				console.log(e[0].label);
-				this.currTypeName=e[0].label
-			},
-			confirmTime(e){
-				console.log(e);
-				if(this.startTime){
-					this.data1 = e.year + '-'+e.month+'-'+e.day
-				}else{
-					this.data2 = e.year + '-'+e.month+'-'+e.day
+			async addLyhf(){
+				let params = {
+					id:this.hf_id,
+					ly_hfnoty:this.reason,
 				}
+				let res = await addLyhf(params)
+				if(res.code === 0){
+					this.getlyList()
+					this.showReply=false
+					uni.showToast({
+						title: '回复成功',
+						icon: 'none',
+						mask: false
+					})
 
+				}
 			},
 			chagePage(e){
-				console.log(e);
+				this.getlyList({page:e.current})
 			},
-			async getHdsp(params){
-				let res = await getHdsp(params)
-				if(res.code === 0){
-					this.dataList = res.data
-					this.total = res.data.count
-				}else {
-
+			async getlyList(params){
+				if(this.skey_zhna){
+					params.skey_zhna=this.skey_zhna
 				}
-			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+				let res = await getlyList(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
@@ -143,7 +112,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getHdsp()
+					this.getlyList()
 				}else {
 					this.electList()
 				}
@@ -152,7 +121,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getHdsp()
+					this.getlyList()
 				}else {
 					this.electList()
 				}
@@ -251,7 +220,7 @@
 				font-weight:400;
 				color:rgba(255,255,255,1);
 				background:rgba(4,17,73,1);
-				margin-top: 24rpx;
+				margin-top: 36rpx;
 			}
 		}
 		.tab {
@@ -259,30 +228,15 @@
 			position: absolute;
 			z-index: 9;
 			background: #ffffff;
-			top: 476rpx;
+			top: 375rpx;
 			width: 100%;
 			padding: 0 38rpx;
-			font-size:32rpx;
-			font-family:PingFangSC-Regular,PingFang SC;
-			font-weight:400;
-			color:rgba(131,131,131,1);
-			display: flex;
-			.item{
-				margin-right: 30rpx;
-				height:58rpx;
-				line-height:58rpx;
-				text-align: center;
-				background:rgba(238,238,242,1);
-				border-radius:29rpx;
-				padding:0 24rpx;
-			}
 			.active{
-				color:rgba(249,249,249,1);
-				background:rgba(1,122,255,1);
+				color: #077AFF;
 			}
 		}
 		.items{
-			padding: 530rpx 0 50rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -292,14 +246,14 @@
 			font-size:28rpx;
 			font-family:PingFangSC-Regular,PingFang SC;
 			font-weight:400;
-			color:#333333;
+			color:rgba(122,122,122,1);
 			.item{
 				width:690rpx;
 				background:rgba(255,255,255,1);
 				border-radius:10rpx;
 				/*background: #00D29C;*/
 				margin-top: 20rpx;
-				padding: 24rpx 30rpx;
+				padding: 24rpx 48rpx;
 				box-sizing: border-box;
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
@@ -309,29 +263,55 @@
 					font-weight:500;
 					color:rgba(89,89,89,1);
 				}
-				span{
-					color: #999999;
-				}
-				.btn-group{
-					display: flex;
-					flex-direction: column;
+				.btn{
 					position: absolute;
-					font-size:28rpx;
 					top: 20rpx;
 					right: 20rpx;
-					.btn{
-						width:206rpx;
-						height:76rpx;
-						line-height: 76rpx;
-						text-align: center;
-						background:rgba(245,245,245,1);
-						border-radius:38rpx;
-						color:rgba(120,192,110,1);
-						margin-top: 36rpx;
-					}
+					width:206rpx;
+					height:76rpx;
+					line-height: 76rpx;
+					background:rgba(245,245,245,1);
+					border-radius:38rpx;
+					text-align: center;
+					color: #78C06E;
+					font-size:28rpx;
 				}
 			}
 
+		}
+	}
+	.tip-box{
+		padding:10rpx 60rpx;
+		font-size:28rpx;
+		.tip-content{
+			font-size: 36rpx;
+			padding-top: 30rpx;
+			font-weight:600;
+			color:rgba(51,51,51,1);
+		}
+		.desc{
+			margin: 40rpx 0 30rpx;
+			.text{
+				height:166rpx;
+				background:rgba(250,250,250,1);
+				border-radius:8rpx;
+				border:2rpx solid rgba(237,237,237,1);
+				margin-top: 20rpx;
+			}
+		}
+		.btn{
+			width:214rpx;
+			height:86rpx;
+			line-height:86rpx;
+			text-align: center;
+			background:rgba(1,122,255,1);
+			border-radius:14rpx;
+			font-size:30rpx;
+			font-weight:500;
+			color:rgba(255,255,255,1);
+			position: absolute;
+			right: 58rpx;
+			bottom: 40rpx;
 		}
 	}
 </style>

@@ -14,8 +14,8 @@ const router = new Router({
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {
 	const token = uni.getStorageSync('token')
-	console.log(to);
-	console.log(from);
+	// console.log(to);
+	// console.log(from);
 	if (!token && to.path === '/pages/login/login') {
 		// console.log(111);
 		// 未登陆且要跳转的页面是登录页

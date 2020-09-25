@@ -275,7 +275,35 @@ export function editJfsp(params) {
 }
 
 
-
-
-
+//租户活动管理
+export function getzhhdList(params) {
+    return fly.request({
+        url: 'zufu/zhhdlist',
+        method: 'get',
+        body: params
+    })
+}
+//非租户活动管理
+export function getzhhdfList(params) {
+    return fly.request({
+        url: 'zufu/zhhdflist',
+        method: 'get',
+        body: params
+    })
+}
+export function openActiveDetail(params) {
+    return fly.request({
+        url: 'zufu/zhhdopen',
+        method: 'get',
+        body: params
+    })
+}
+//活动审批
+export function getHdsp(params) {
+    return fly.request({
+        url: 'zufu/zhhdsp',
+        method: 'get',
+        body: params
+    })
+}
 

@@ -3,17 +3,17 @@
 		<u-tabs :list="listType" :is-scroll="true" :current="current" @change="change"></u-tabs>
 		<view class="content">
 			<template v-if="current===0">
-				<p class="title">活动主题：</p>
+				<p class="title">活动主题：{{dataDetail.zhhd_title}}</p>
 				<p >活动分类：{{dataDetail.activeType}}</p>
-				<p >开始日期：{{dataDetail.time}}</p>
-				<p >结束日期：</p>
+				<p >开始日期：{{dataDetail.sfx_sdt}}</p>
+				<p >结束日期：{{dataDetail.sfx_edt}}</p>
 				<p >所属楼宇：</p>
 				<p >房号：</p>
-				<p >租户名称：{{dataDetail.name}}</p>
+				<p >租户名称：{{dataDetail.zhi_name}}</p>
 				<p >租户电话：{{dataDetail.phone}}</p>
 				<p >负责人：</p>
 				<p >活动费用：{{dataDetail.price}}</p>
-				<p >描述：</p>
+				<p >描述：{{dataDetail.sfx_cwna}}</p>
 			</template>
 			<template v-if="current===1">
 				<view class="items">
@@ -61,11 +61,12 @@
 
 <script>
 	import leftMenu from "@/components/left-menu/left-menu.vue"
-	import {getDetail} from "@/utils/api/comment"
+	import {openActiveDetail} from "@/utils/api/index"
 	export default {
 		components: {leftMenu},
 		data() {
 			return {
+				itemInfor:{},
 				dataDetail:{},
 				listType:[
 					{
@@ -98,19 +99,18 @@
 			}
 		},
 		onLoad() {
-			this.getDetail()
+			this.itemInfor = this.$Route.query.item
+			console.log(this.itemInfor);
+			this.getDetail({id:this.$Route.query.id})
 		},
 		methods: {
 			change(index) {
 				this.current = index;
 			},
 			async getDetail(params){
-				let res = await getDetail(params)
-				if(res.code === 200){
-					this.dataDetail = res.data
-					console.log(res);
-				}else {
-
+				let res = await openActiveDetail(params)
+				if(res.code === 0){
+					this.dataDetail = res.data.cw_mx[0]
 				}
 			},
 			openBox(){

@@ -63,6 +63,10 @@ const home = [
 		name: '收费审核',
 	},
 	{
+		path: '/pages/tenant/file',
+		name: '归档记录',
+	},
+	{
 		path: '/pages/tenant/leaving',
 		name: '租户留言',
 	},

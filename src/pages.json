@@ -46,6 +46,9 @@
 			}
 		},
 		{
+			"path": "pages/tenant/file"
+		},
+		{
 			"path": "pages/tenant/tenant"
 		},
 		{
