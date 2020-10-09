@@ -21,7 +21,7 @@
 				<p>回复内容：{{item.ly_hfnoty?item.ly_hfnoty:'无'}}</p>
 				<p v-if="item.ly_hfuna">回复人：{{item.ly_hfuna}}</p>
 				<p  v-if="item.ly_hfdt">回复日期：{{item.ly_hfdt}}</p>
-				<span class="btn" @click="openHf(item)">回复</span>
+				<!--<span class="btn" @click="openHf(item)">回复</span>-->
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>

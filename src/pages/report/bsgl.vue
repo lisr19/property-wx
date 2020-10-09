@@ -88,6 +88,7 @@
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				enable: true,
 				uploadData:{
 					lm_ftitle:'',
 					dh_number:'',
@@ -177,6 +178,12 @@
 			this.getRslist()
 		},
 		onReady() {
+		},
+		onShow() {
+			this.enable= true
+		},
+		onHide() {
+			this.enable= false
 		},
 		methods: {
 			beforeUpload(index, list) {

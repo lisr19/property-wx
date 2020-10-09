@@ -67,6 +67,10 @@ const home = [
 		name: '归档记录',
 	},
 	{
+		path: '/pages/tenant/return',
+		name: '活动回访',
+	},
+	{
 		path: '/pages/tenant/leaving',
 		name: '租户留言',
 	},

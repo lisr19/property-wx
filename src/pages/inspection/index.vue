@@ -54,7 +54,7 @@
 	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getXunjian} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
@@ -64,7 +64,7 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getXunjian()
 		},
 		methods: {
 			scanCode(){
@@ -91,12 +91,11 @@
 				this.currStep =s
 				console.log(this.currStep);
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
-					console.log(res);
+			async getXunjian(params){
+				let res = await getXunjian(params)
+				if(res.code === 0){
+					this.dataList = res.data.data
+					this.total = res.data.count
 				}else {
 
 				}

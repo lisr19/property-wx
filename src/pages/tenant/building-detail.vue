@@ -3,25 +3,27 @@
 		<u-tabs :list="listType" :is-scroll="true" :current="current" @change="change"></u-tabs>
 		<view class="content">
 			<template v-if="current===0">
-				<p class="title">房号：</p>
-				<p >所属楼宇：{{dataDetail.activeType}}</p>
-				<p >建面：{{dataDetail.activeType}}</p>
-				<p >租户名称：{{dataDetail.name}}</p>
-				<p >租户电话：{{dataDetail.phone}}</p>
-				<p >合同期限：{{dataDetail.time}}</p>
-				<p >管理费：</p>
-				<p >管理费周转金：</p>
-				<p >水电费周转金：</p>
-				<p >清洁费：{{dataDetail.price}}</p>
-				<p >清洁费期限：{{dataDetail.time}}</p>
-				<p >车位：{{dataDetail.time}}</p>
+				<p class="title">房号：{{dataDetail.fcfx_ph}}</p>
+				<p >所属楼宇：{{dataDetail.fc_name}}</p>
+				<p >建面（m³）：{{dataDetail.fcfx_jzmj}}</p>
+				<p >租户名称：{{dataDetail.zhi_name}}</p>
+				<p >租户电话：{{dataDetail.zhi_tel}}</p>
+				<p >合同期限：{{dataDetail.zhi_sdt}}至{{dataDetail.zhi_edt}}</p>
+				<p >管理费：{{dataDetail.zhi_glfzzj}}</p>
+				<p >管理费周转金：{{dataDetail.zhi_glfzzj}}</p>
+				<p >水电费周转金：{{dataDetail.zhi_sdfzzj}}</p>
+				<p >清洁费：{{dataDetail.zhi_qjf}}</p>
+				<p >清洁费期限：{{dataDetail.zhi_qjfsdt}}至{{dataDetail.zhi_qjfedt}}</p>
+				<p >车位：{{dataDetail.zhi_chw}}</p>
 				<p >自用：0个</p>
-				<p >收楼时间：{{dataDetail.time}}</p>
-				<p >电表底数：</p>
-				<p >设备情况：</p>
-				<p >描述：</p>
-				<view>证件图片：
-					<image  src="" class="" />
+				<p >负责人：{{dataDetail.zhi_fzr}}</p>
+				<p >收楼时间：{{dataDetail.zhi_sldt}}  {{dataDetail.zhi_sltm}}</p>
+				<p >水表底数：{{dataDetail.zhi_sbds}}</p>
+				<p >电表底数：{{dataDetail.zhi_dbds}}</p>
+				<p >设备情况：{{dataDetail.zhi_sbms}}</p>
+				<p >描述：{{dataDetail.zhi_ms}}</p>
+				<view >证件图片：
+					<image v-if="dataDetail.zhi_picml"  :src="dataDetail.zhi_picml" class="" />
 				</view>
 			</template>
 			<template v-if="current===1">
@@ -81,7 +83,8 @@
 			}
 		},
 		onLoad() {
-			this.getDetail()
+			this.dataDetail = this.$Route.query.itemDetail
+			console.log(this.dataDetail);
 		},
 		methods: {
 			change(index) {

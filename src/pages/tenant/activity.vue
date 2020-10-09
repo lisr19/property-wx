@@ -31,9 +31,11 @@
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
 				<p><span>活动分类：</span>{{item.name}}</p>
 				<p><span>活动状态：</span>{{item.zhhd_zt===1?'未收费':'通过审核'}}</p>
+				<p><span>活动状态：</span>{{item.zhhd_spzt}}</p>
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
 				<span class="more-btn" @click="openDetail(item,index)">查看详情</span>
+				<!--<span class="gd-btn" @click="gdItem(item,index)">归档</span>-->
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
@@ -42,6 +44,8 @@
 		</uni-drawer>
 		<u-select v-model="show" mode="single-column" :list="arrState"  @confirm="confirm"></u-select>
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
+
+		<u-modal v-model="showTip" show-cancel-button :content="tipContent" @confirm="delBs"></u-modal>
 	</view >
 </template>
 
@@ -56,6 +60,8 @@
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				showTip:false,
+				tipContent:'确定归档此记录吗？',
 				skey_zhna:'',
 				show: false,
 				showTime: false,
@@ -102,7 +108,8 @@
 				currIndex:0,
 				value: '租户活动',
 				current: 0,
-				total:0
+				total:0,
+				currdh:'',
 			}
 		},
 		onLoad() {
@@ -119,6 +126,32 @@
 			openDetail(item){
 				this.$Router.push({name:'活动详情',params:{item:item,id:item.zhhd_dh}})
 			},
+			gdItem(item){
+				this.showTip =true
+				this.currdh = item.zhhd_dh
+			},
+			async delBs(){
+				let params ={
+					id:this.currdh,
+					del:4
+				}
+				let res = await getzhhdList(params)
+				if(res.code === 0){
+					this.getzhhdList()
+					uni.showToast({
+						title: '归档成功',
+						icon: 'none',
+						mask: false
+					})
+				}else {
+					uni.showToast({
+						title: '归档失败',
+						icon: 'none',
+						mask: false
+					})
+				}
+				this.showTip =false
+			},
 			confirm(e) {
 				console.log(e[0].label)
 				this.currTypeName=e[0].label
@@ -134,13 +167,10 @@
 			},
 			chagePage(e){
 				console.log(e);
+				this.getzhhdList({page:e.current})
 			},
 			//租户
-			async getzhhdList(){
-				let params = {}
-				if(this.skey_zhna){
-					params.skey_zhna = this.skey_zhna
-				}
+			async getzhhdList(params){
 				let res = await getzhhdList(params)
 				if(res.code === 0){
 					this.dataList = res.data.data
@@ -176,7 +206,6 @@
 				this.currType = index
 				this.currTypeName = e.name
 				if(this.currType===0){
-					console.log(111);
 					this.getzhhdList()
 				}else {
 					console.log(22);
@@ -293,7 +322,7 @@
 			}
 		}
 		.items{
-			padding: 450rpx 0 50rpx;
+			padding: 450rpx 0 120rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -328,6 +357,11 @@
 					position: absolute;
 					right: 30rpx;
 					top:16rpx;
+				}
+				.gd-btn{
+					position: absolute;
+					right: 30rpx;
+					top:76rpx;
 				}
 			}
 

@@ -76,7 +76,8 @@
 		},
 		methods: {
 			openDetail(item){
-				this.$Router.push({name:'收楼详情'})
+				console.log(item);
+				this.$Router.push({name:'收楼详情',params:{itemDetail:item}})
 			},
 			chagePage(e){
 				console.log(e);
@@ -153,8 +154,8 @@
 			box-shadow:0rpx 4rpx 12rpx 0rpx rgba(0,0,0,0.09);
 			border-radius:10rpx;
 			width:90%;
-			position: absolute;
-			top: 60rpx;
+			position: fixed;
+			top: 140rpx;
 			left:5%;
 			z-index: 10;
 			font-weight:500;
@@ -222,7 +223,7 @@
 			}
 		}
 		.items{
-			padding: 370rpx 0 100rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

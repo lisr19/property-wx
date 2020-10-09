@@ -306,4 +306,28 @@ export function getHdsp(params) {
         body: params
     })
 }
+//当天班次-列表
+export function getXunjian(params) {
+	return fly.request({
+		url: 'xunjian/xjpb',
+		method: 'get',
+		body: params
+	})
+}
 
+//添加巡检记录
+export function addXunjian(params) {
+	return fly.request({
+		url: 'xunjian/addxjjl',
+		method: 'post',
+		body: params
+	})
+}
+//扫码签到
+export function saomaQd(params) {
+	return fly.request({
+		url: 'xunjian/xjqd',
+		method: 'post',
+		body: params
+	})
+}

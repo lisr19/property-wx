@@ -78,6 +78,9 @@
 		{
 			"path": "pages/tenant/charge"
 		},
+        {
+          "path": "pages/tenant/return"
+        },
 		{
 			"path": "pages/tenant/leaving"
 		},
