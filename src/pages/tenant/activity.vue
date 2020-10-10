@@ -3,7 +3,7 @@
 		<view  class="head-bar">
 			<view  class="bg"></view >
 		</view >
-		<u-sticky>
+		<u-sticky :enable="enable">
 			<view  class="card">
 				<p class="name"><em></em>{{currTypeName}}管理</p>
 				<view class="input-box"><span>租户名称：</span><input placeholder="租户名称" v-model.lazy="skey_zhna" class="uni-input" name="num"></view>
@@ -29,13 +29,25 @@
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.zhhd_zt===1?'未收费':'通过审核'}}</p>
-				<p><span>活动状态：</span>{{item.zhhd_spzt}}</p>
+				<template>
+					<p v-if="item.zhhd_sort===1"><span>活动分类：</span>收楼</p>
+					<p v-if="item.zhhd_sort===2"><span>活动分类：</span>装修</p>
+					<p v-if="item.zhhd_sort===3"><span>活动分类：</span>退楼</p>
+					<p v-if="item.zhhd_sort===4"><span>活动分类：</span>其他</p>
+					<p v-if="item.zhhd_sort===5"><span>活动分类：</span>清洁</p>
+				</template>
+				<p v-if="item.zhhd_zt===1"><span>活动状态：</span>未收费</p>
+				<template v-if="item.zhhd_zt!==1">
+					<p v-if="item.zhhd_spzt===1"><span>活动状态：</span>未审</p>
+					<p v-if="item.zhhd_spzt===2"><span>活动状态：</span>审核中</p>
+					<p v-if="item.zhhd_spzt===3"><span>活动状态：</span>不通过</p>
+					<p v-if="item.zhhd_spzt===4"><span>活动状态：</span>通过审核</p>
+				</template>
+
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
 				<span class="more-btn" @click="openDetail(item,index)">查看详情</span>
-				<!--<span class="gd-btn" @click="gdItem(item,index)">归档</span>-->
+				<!--<span v-if="item.zhhd_hfdtin===0" class="gd-btn" @click="gdItem(item,index)">归档</span>-->
 			</view>
 		</view>
 		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
@@ -52,12 +64,11 @@
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {getzhhdList,getzhhdfList} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {uniDrawer,uniIcons,leftMenu,uniPagination},
 		data() {
 			return {
 				showTip:false,
@@ -110,10 +121,17 @@
 				current: 0,
 				total:0,
 				currdh:'',
+				enable:true,
 			}
 		},
 		onLoad() {
 			this.getzhhdList()
+		},
+		onShow() {
+			this.enable= true
+		},
+		onHide() {
+			this.enable= false
 		},
 		methods: {
 			serchBtn(){
@@ -311,10 +329,10 @@
 		}
 		.tab {
 			height: 80rpx;
-			position: absolute;
+			position: fixed;
 			z-index: 9;
 			background: #ffffff;
-			top: 375rpx;
+			top: 460rpx;
 			width: 100%;
 			padding: 0 38rpx;
 			.active{
@@ -322,7 +340,7 @@
 			}
 		}
 		.items{
-			padding: 450rpx 0 120rpx;
+			padding: 435rpx 0 120rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

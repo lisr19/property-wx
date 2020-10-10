@@ -3,7 +3,7 @@
 		<image class="logo" src="/static/logo.png"></image>
 		<p class="title">物业管理系统</p>
 		<template>
-			<view class="card">
+			<view class="card-login">
 				<p>
 					<image  src="/static/logo.png"></image>
 					<input  v-model="username"  placeholder='账号'  maxlength="16">
@@ -178,7 +178,7 @@
 			font-size: 30rpx;
 			font-weight: 600;
 		}
-		.card{
+		.card-login{
 			width:612rpx;
 			height:684rpx;
 			background:rgba(255,255,255,1);

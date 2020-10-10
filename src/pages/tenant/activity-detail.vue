@@ -3,17 +3,23 @@
 		<u-tabs :list="listType" :is-scroll="true" :current="current" @change="change"></u-tabs>
 		<view class="content">
 			<template v-if="current===0">
-				<!--<p class="title">活动主题：{{dataDetail.zhhd_title}}</p>-->
-				<p >活动分类：{{dataDetail.activeType}}</p>
-				<p >开始日期：{{dataDetail.sfx_sdt}}</p>
-				<p >结束日期：{{dataDetail.sfx_edt}}</p>
-				<p >所属楼宇：</p>
-				<p >房号：</p>
-				<p >租户名称：{{dataDetail.zhi_name}}</p>
-				<p >租户电话：{{dataDetail.phone}}</p>
-				<p >负责人：</p>
-				<p >活动费用：{{dataDetail.price}}</p>
-				<p >描述：{{dataDetail.sfx_cwna}}</p>
+				<p class="title">活动主题：{{itemInfor.zhhd_title}}</p>
+				<template>
+					<p v-if="itemInfor.zhhd_sort===1"><span>活动分类：</span>收楼</p>
+					<p v-if="itemInfor.zhhd_sort===2"><span>活动分类：</span>装修</p>
+					<p v-if="itemInfor.zhhd_sort===3"><span>活动分类：</span>退楼</p>
+					<p v-if="itemInfor.zhhd_sort===4"><span>活动分类：</span>其他</p>
+					<p v-if="itemInfor.zhhd_sort===5"><span>活动分类：</span>清洁</p>
+				</template>
+				<p >开始日期：{{itemInfor.zhhd_sdt}}</p>
+				<p >结束日期：{{itemInfor.zhhd_edt}}</p>
+				<p >所属楼宇：{{itemInfor.fc_name}}</p>
+				<!--<p >房号：{{}}</p>-->
+				<p >租户名称：{{itemInfor.zhhd_uname}}</p>
+				<p >租户电话：{{itemInfor.zhhd_utel}}</p>
+				<p >负责人：{{itemInfor.zhhd_fzr}}</p>
+				<p >活动费用：{{itemInfor.zhhd_jr}}</p>
+				<p >描述：{{itemInfor.zhhd_ms}}</p>
 			</template>
 			<template v-if="current===1">
 				<view class="items">
@@ -81,8 +87,18 @@
 			</template>
 			<template v-if="current===6">
 				<view class="items">
-					<view class="item" v-for="(item,index) in data_listhf">
-
+					<view class="item"  v-for="(item,index) in data_listhf">
+						<p >回访日期：{{item.zhhd_hfdt}}</p>
+						<p >回访人：{{item.ld_una}}</p>
+						<template>
+							<p v-if="item.zhhd_hfpj===1">回访评价：非常不满意</p>
+							<p v-if="item.zhhd_hfpj===2">回访评价：不满意</p>
+							<p v-if="item.zhhd_hfpj===3">回访评价：一般</p>
+							<p v-if="item.zhhd_hfpj===4">回访评价：满意</p>
+							<p v-if="item.zhhd_hfpj===5">回访评价：非常满意</p>
+							<p v-if="item.zhhd_hfpj===6">回访评价：不评价</p>
+						</template>
+						<p >回访描述：{{item.zhhd_hfms}}</p>
 					</view>
 				</view>
 				<view class="null-btn" v-if="data_listhf.length===0">暂无数据</view>
@@ -97,10 +113,8 @@
 <script>
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import {openActiveDetail} from "@/utils/api/index"
-	import Image from "@dcloudio/uni-h5/src/core/view/components/image/index";
 	export default {
 		components: {
-			Image,
 			leftMenu},
 		data() {
 			return {

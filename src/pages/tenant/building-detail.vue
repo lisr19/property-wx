@@ -84,7 +84,6 @@
 		},
 		onLoad() {
 			this.dataDetail = this.$Route.query.itemDetail
-			console.log(this.dataDetail);
 		},
 		methods: {
 			change(index) {

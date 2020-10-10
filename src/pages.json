@@ -1,161 +1,166 @@
 {
-	"easycom": {
-		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-	},
-	"pages": [
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "物业管理系统",
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
-			"path": "pages/login/login",
-			"style": {
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
-			"path": "pages/menu/menu",
-			"style": {
-				"navigationBarTitleText": "房产管理",
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
-			"path": "pages/house/water-price",
-			"style": {
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
-			"path": "pages/house/building",
-			"style": {
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
-			"path": "pages/tenant/file"
-		},
-		{
-			"path": "pages/tenant/tenant"
-		},
-		{
-			"path": "pages/tenant/parking"
-		},
-		{
-			"path": "pages/tenant/activity"
-		},
-		{
-			"path": "pages/tenant/activity-detail",
-			"style": {
-				"navigationBarTitleText": "活动详情"
-			}
-		},
-		{
-			"path": "pages/tenant/building"
-		},
-		{
-			"path": "pages/tenant/building-detail",
-			"style": {
-				"navigationBarTitleText": "租户信息详情"
-			}
-		},
-		{
-			"path": "pages/tenant/examine"
-		},
-		{
-			"path": "pages/tenant/charge"
-		},
+    "easycom" : {
+        "^u-(.*)" : "uview-ui/components/u-$1/u-$1.vue"
+    },
+    "pages" : [
         {
-          "path": "pages/tenant/return"
+            "path" : "pages/index/index",
+            "style" : {
+                "navigationBarTitleText" : "物业管理系统",
+                "app-plus" : {
+                    "titleNView" : false
+                }
+            }
         },
-		{
-			"path": "pages/tenant/leaving"
-		},
-		{
-			"path": "pages/finance/charging-manage"
-		},
-		{
-			"path": "pages/finance/pay-count"
-		},
-		{
-			"path": "pages/finance/break-money"
-		},
-		{
-			"path": "pages/finance/approval"
-		},
-		{
-			"path": "pages/finance/approval-detail"
-		},
-		{
-			"path": "pages/finance/bond"
-		},
-		{
-			"path": "pages/finance/incidental"
-		},
-		{
-			"path": "pages/inspection/index"
-		},
-		{
-			"path": "pages/equipment/plan"
-		},
-		{
-			"path": "pages/index/detail"
-		},
-		{
-			"path": "pages/warehouse/goods"
-		},
-		{
-			"path": "pages/warehouse/ck-look"
-		},
-		{
-			"path": "pages/expatriate/fwjl"
-		},
-		{
-			"path": "pages/report/bsgl"
-		},
-		{
-			"path": "pages/report/bsbl"
-		},
-		{
-			"path": "pages/report/bsba"
-		},
-		{
-			"path": "pages/equipment/byys"
-		},
-		{
-			"path": "pages/archives/da-look"
-		},
-		{
-			"path": "pages/archives/remind"
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "物业管理系统",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	"condition" : { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
-			{
-				"name": "", //模式名称
-				"path": "", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
-			}
-		]
-	}
+        {
+            "path" : "pages/login/login",
+            "style" : {
+                "app-plus" : {
+                    "titleNView" : false
+                }
+            }
+        },
+        {
+            "path" : "pages/menu/menu",
+            "style" : {
+                "navigationBarTitleText" : "房产管理",
+                "app-plus" : {
+                    "titleNView" : false
+                }
+            }
+        },
+        {
+            "path" : "pages/house/water-price",
+            "style" : {
+                "app-plus" : {
+                    "titleNView" : false
+                }
+            }
+        },
+        {
+            "path" : "pages/house/building",
+            "style" : {
+                "app-plus" : {
+                    "titleNView" : false
+                }
+            }
+        },
+        {
+            "path" : "pages/tenant/file"
+        },
+        {
+            "path" : "pages/tenant/tenant"
+        },
+        {
+            "path" : "pages/tenant/parking"
+        },
+        {
+            "path" : "pages/tenant/activity"
+        },
+        {
+            "path" : "pages/tenant/activity-detail",
+            "style" : {
+                "navigationBarTitleText" : "活动详情"
+            }
+        },
+        {
+            "path" : "pages/tenant/building"
+        },
+        {
+            "path" : "pages/tenant/building-detail",
+            "style" : {
+                "navigationBarTitleText" : "租户信息详情"
+            }
+        },
+        {
+            "path" : "pages/tenant/examine"
+        },
+        {
+            "path" : "pages/tenant/charge"
+        },
+        {
+            "path" : "pages/tenant/return"
+        },
+        {
+            "path" : "pages/tenant/leaving"
+        },
+        {
+            "path" : "pages/finance/charging-manage"
+        },
+        {
+            "path" : "pages/finance/pay-count"
+        },
+        {
+            "path" : "pages/finance/break-money"
+        },
+        {
+            "path" : "pages/finance/approval"
+        },
+        {
+            "path" : "pages/finance/approval-detail"
+        },
+        {
+            "path" : "pages/finance/bond"
+        },
+        {
+            "path" : "pages/finance/incidental"
+        },
+        {
+            "path" : "pages/inspection/index"
+        },
+        {
+            "path" : "pages/equipment/plan"
+        },
+        {
+            "path" : "pages/index/detail"
+        },
+        {
+            "path" : "pages/warehouse/goods"
+        },
+        {
+            "path" : "pages/warehouse/ck-look"
+        },
+        {
+            "path" : "pages/expatriate/fwjl"
+        },
+        {
+            "path" : "pages/report/bsgl"
+        },
+        {
+            "path" : "pages/report/bsbl"
+        },
+        {
+            "path" : "pages/report/bsba"
+        },
+        {
+            "path" : "pages/equipment/byys"
+        },
+        {
+            "path" : "pages/archives/da-look"
+        },
+        {
+            "path" : "pages/archives/remind"
+        },
+        {
+            "path" : "App",
+            "style" : {}
+        }
+    ],
+    "globalStyle" : {
+        "navigationBarTextStyle" : "black",
+        "navigationBarTitleText" : "物业管理系统",
+        "navigationBarBackgroundColor" : "#F8F8F8",
+        "backgroundColor" : "#F8F8F8"
+    },
+    "condition" : {
+        //模式配置，仅开发期间生效
+        "current" : 0, //当前激活的模式(list 的索引项)
+        "list" : [
+            {
+                "name" : "", //模式名称
+                "path" : "", //启动页面，必选
+                "query" : "" //启动参数，在页面的onLoad函数里面得到
+            }
+        ]
+    }
 }
