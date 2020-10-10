@@ -72,6 +72,15 @@
 				"navigationBarTitleText": "租户信息详情"
 			}
 		},
+        {
+          "path": "pages/tenant/decoration-inspection"
+        },
+        {
+          "path": "pages/tenant/decoration-process-audit"
+        },
+        {
+          "path": "pages/tenant/decoration-process-management"
+        },
 		{
 			"path": "pages/tenant/examine"
 		},

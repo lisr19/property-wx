@@ -59,6 +59,18 @@ const home = [
 		name: '活动审核',
 	},
 	{
+		path: '/pages/tenant/decoration-inspection',
+		name: '装修巡检',
+	},
+	{
+		path: '/pages/tenant/decoration-process-management',
+		name: '装修过程管理',
+	},
+	{
+		path: '/pages/tenant/decoration-process-audit',
+		name: '装修过程审核',
+	},
+	{
 		path: '/pages/tenant/charge',
 		name: '收费审核',
 	},
