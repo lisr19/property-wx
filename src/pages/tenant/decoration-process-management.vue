@@ -9,10 +9,6 @@
 				<view class="input-box"><span>主题：</span><input placeholder="主题关键字" v-model="skey_title" class="uni-input" name="num"></view>
 				<view class="btn" @click="getHdsp">查询</view>
 			</view >
-			<view class="tab">
-				<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"
-					  :key="index" @click="tabType(index)">{{item.name}}</view>
-			</view>
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
@@ -21,10 +17,11 @@
 				<p><span>活动状态：</span>{{item.wdsp_zt}}</p>
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
-				<view class="btn-group">
-					<span class="btn" @click="showConfirmC(item,1)">通过</span>
-					<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">不通过</span>
-				</view>
+				<span class="more-btn">查看详情</span>
+				<!--<view class="btn-group">-->
+					<!--<span class="btn" @click="showConfirmC(item,1)">通过</span>-->
+					<!--<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">不通过</span>-->
+				<!--</view>-->
 
 			</view>
 		</view>
@@ -49,12 +46,11 @@
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {getHdsp} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {uniDrawer,uniIcons,leftMenu,uniPagination},
 		data() {
 			return {
 				reason:'',
@@ -295,7 +291,7 @@
 			}
 		}
 		.items{
-			padding: 430rpx 0 50rpx;
+			padding: 350rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -321,6 +317,11 @@
 					font-size:32rpx;
 					font-weight:500;
 					color:rgba(89,89,89,1);
+				}
+				.more-btn{
+					position: absolute;
+					right: 20rpx;
+					top: 20rpx;
 				}
 				span{
 					color: #999999;

@@ -30,15 +30,11 @@
 </template>
 
 <script>
-	import uniList from "@/components/uni-list/uni-list.vue"
-	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	export default {
 		name: "UniFav",
 		components: {
 			uniIcons,
-			uniList,
-			uniListItem
 		},
 		props: {
 		},

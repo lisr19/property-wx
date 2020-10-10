@@ -9,22 +9,18 @@
 				<view class="input-box"><span>主题：</span><input placeholder="主题关键字" v-model="skey_title" class="uni-input" name="num"></view>
 				<view class="btn" @click="getHdsp">查询</view>
 			</view >
-			<view class="tab">
-				<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"
-					  :key="index" @click="tabType(index)">{{item.name}}</view>
-			</view>
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.wdsp_zt}}</p>
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
+				<p><span>活动负责人：</span>{{item.name}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
-				<view class="btn-group">
-					<span class="btn" @click="showConfirmC(item,1)">通过</span>
-					<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">不通过</span>
-				</view>
+				<p><span>结束时间：</span>{{item.zhhd_sdt}}</p>
+				<!--<view class="btn-group">-->
+					<!--<span class="btn" @click="showConfirmC(item,1)">通过</span>-->
+					<!--<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">不通过</span>-->
+				<!--</view>-->
 
 			</view>
 		</view>
@@ -49,12 +45,11 @@
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {getHdsp} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {uniDrawer,uniIcons,leftMenu,uniPagination},
 		data() {
 			return {
 				reason:'',
@@ -82,21 +77,12 @@
 						label: '通过'
 					},
 				],
-				typeList:[
-					{
-						name: '活动审核',
-					},
-					{
-						name: '装修过程',
-					},
-				],
 				currTypeName:'',
 				keyName:'',
 				active:0,
 				index:0,
 				dataList:[],
 				currIndex:0,
-				value: '租户活动',
 				current: 0,
 				total:0
 			}
@@ -267,35 +253,8 @@
 				margin-top: 24rpx;
 			}
 		}
-		.tab {
-			height: 80rpx;
-			position: absolute;
-			z-index: 9;
-			background: #ffffff;
-			top: 366rpx;
-			width: 100%;
-			padding: 0 38rpx;
-			font-size:32rpx;
-			font-family:PingFangSC-Regular,PingFang SC;
-			font-weight:400;
-			color:rgba(131,131,131,1);
-			display: flex;
-			.item{
-				margin-right: 30rpx;
-				height:58rpx;
-				line-height:58rpx;
-				text-align: center;
-				background:rgba(238,238,242,1);
-				border-radius:29rpx;
-				padding:0 24rpx;
-			}
-			.active{
-				color:rgba(249,249,249,1);
-				background:rgba(1,122,255,1);
-			}
-		}
 		.items{
-			padding: 430rpx 0 50rpx;
+			padding: 350rpx 0 120rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

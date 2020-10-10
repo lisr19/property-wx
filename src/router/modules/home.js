@@ -19,18 +19,6 @@ const home = [
 		name: '分类',
 	},
 	{
-		path: '/pages/house/water-price',
-		name: '水电价格',
-	},
-	{
-		path: '/pages/house/building',
-		name: '楼宇设置',
-	},
-	{
-		path: '/pages/house/add-build',
-		name: '添加楼宇',
-	},
-	{
 		path: '/pages/tenant/tenant',
 		name: '租户信息',
 	},

@@ -42,13 +42,11 @@
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {getlyList,addLyhf} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {uniDrawer,leftMenu,uniPagination},
 		data() {
 			return {
 				skey_zhna:'',

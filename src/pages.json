@@ -30,22 +30,6 @@
 			}
 		},
 		{
-			"path": "pages/house/water-price",
-			"style": {
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
-			"path": "pages/house/building",
-			"style": {
-				"app-plus": {
-					"titleNView":false
-				}
-			}
-		},
-		{
 			"path": "pages/tenant/file"
 		},
 		{

@@ -97,13 +97,11 @@
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import {getDesktop} from "@/utils/api/comment"
 	export default {
-		components: {uniDrawer,uniIcons,uniCalendar,uniBadge,leftMenu},
+		components: {uniDrawer,uniCalendar,leftMenu},
 		data() {
 			return {
 				showDetail:false,
