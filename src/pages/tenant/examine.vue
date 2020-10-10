@@ -57,6 +57,8 @@
 		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
 		data() {
 			return {
+				reason:'',
+				tipsContent:'',
 				showC:false,
 				skey_title:'',
 				show: false,

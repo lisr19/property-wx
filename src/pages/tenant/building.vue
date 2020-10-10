@@ -154,8 +154,8 @@
 			box-shadow:0rpx 4rpx 12rpx 0rpx rgba(0,0,0,0.09);
 			border-radius:10rpx;
 			width:90%;
-			position: fixed;
-			top: 140rpx;
+			position: absolute;
+			top: 60rpx;
 			left:5%;
 			z-index: 10;
 			font-weight:500;

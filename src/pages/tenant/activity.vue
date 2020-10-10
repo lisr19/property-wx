@@ -8,13 +8,8 @@
 				<p class="name"><em></em>{{currTypeName}}管理</p>
 				<view class="input-box"><span>租户名称：</span><input placeholder="租户名称" v-model.lazy="skey_zhna" class="uni-input" name="num"></view>
 				<view class="btn" @click="serchBtn">查询</view>
-<!--				<view class="input-box">-->
-<!--					<span>范围：</span>-->
-<!--					<u-input v-model="data1" placeholder=""  disabled :border="border" height="60" @click="openTime('start')" /> &#45;&#45;-->
-<!--					<u-input v-model="data2" placeholder="" disabled :border="border" height="60" @click="openTime('end')" />-->
-<!--				</view>-->
 			</view >
-			<u-radio-group class="tab" v-model="value" size="45">
+			<u-radio-group class="tab2" v-model="value" size="45">
 				<u-radio
 						v-for="(item, index) in listType" :key="index"
 						shape="circle"
@@ -327,12 +322,12 @@
 				margin-top: 24rpx;
 			}
 		}
-		.tab {
+		.tab2 {
 			height: 80rpx;
 			position: fixed;
 			z-index: 9;
 			background: #ffffff;
-			top: 460rpx;
+			top: 430rpx;
 			width: 100%;
 			padding: 0 38rpx;
 			.active{
