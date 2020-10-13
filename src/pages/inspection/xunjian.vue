@@ -5,17 +5,35 @@
 		</view >
 		<u-sticky>
 			<view  class="card">
-				<p class="name"><em></em>巡检任务</p>
-				<view class="desc" v-for="(item,index) in dataList" :key="index">
-					<p class="time">班次名称：{{item.xjpb_bcname}}</p>
-					<p>签到点：{{item.qdd_idstr}}</p>
-					<p >开始时间：{{item.xjpb_sdtime}}</p>
-					<p >结束时间：{{item.xjpb_edtime}}</p>
-					<span class="tip-btn" @click="starXunjian(item)">开始巡检</span>
+				<p class="name"><em></em>当前巡检任务</p>
+				<view class="desc">
+					<p class="time">班次名称：{{itemData.xjpb_bcname}}</p>
+					<p >开始时间：{{itemData.xjpb_sdtime}}</p>
+					<p >结束时间：{{itemData.xjpb_edtime}}</p>
 				</view>
-				<view class="null-btn" style="font-size: 30rpx;text-align: center;margin-top: 30rpx" v-if="dataList.length===0">暂无数据</view>
 			</view >
 		</u-sticky>
+		<view class="content">
+			<template v-if="currStep===0">
+				<p v-if="address">{{address}}</p>
+				<image class="img0" src="/static/dingwei.png"></image>
+				<p class="">开始巡检后到指定巡检定点扫描二维码完成打卡</p>
+				<view class="btn" @click="chageStep(1)">开始巡检</view>
+			</template>
+			<template v-if="currStep===1">
+				<p class="tip">请到达指定巡检定点扫描二维码完成巡检</p>
+				<view class="xj-box">
+					<view class="item" v-for="(item,index) in qdList" :key=index @tap="scanCode(item,index)">
+						<u-icon class="img"  name="scan" size="100"  :class="{'active':item.code===1}"></u-icon>
+						<p>{{item.name}}</p>
+					</view>
+				</view>
+				<view class="btn" style="background: #C3C3C3;color: #ffffff;border:none" @click="chageStep(2)">巡检中</view>
+			</template>
+			<template v-if="currStep===2">
+				<view class="btn" style="background: #0a4882;color: #ffffff" @click="chageStep(0)">巡检完成</view>
+			</template>
+		</view>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -26,21 +44,73 @@
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
-	import {getXunjian,addXunjian} from "@/utils/api/index"
+	import {addXunjian,saomaQd} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,leftMenu},
 		data() {
 			return {
 				currStep:0,
 				dataList:[],
+				qdList:[
+					{name:'签到点1',code:1},
+					{name:'签到点2',code:0},
+					{name:'签到点3',code:0}
+				],
+				itemData:{},
+				longitude:'',
+				latitude:'',
+				address:'',
+
 			}
 		},
 		onLoad() {
-			this.getXunjian()
+			this.itemData = this.$Route.query.itemData
+			this.getLocation()
 		},
 		methods: {
-			starXunjian(item){
-				this.$Router.push({name:'开始巡检',params:{itemData:item}})
+			getLocation(){
+				uni.getLocation({
+					type: 'wgs84',
+					success:  (res) =>{
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						this.latitude = res.latitude; //纬度
+						this.longitude = res.longitude; //经度
+						if(res.errMsg==='getLocation:ok'){
+							uni.showToast({
+								title: '获取当前位置成功',
+								icon: 'none',
+							});
+						}
+					}
+				});
+				// uni.chooseLocation({
+				// 	success: (res) =>{
+				// 		console.log('位置名称：' + res.name);
+				// 		console.log('详细地址：' + res.address);
+				// 		console.log('纬度：' + res.latitude);
+				// 		console.log('经度：' + res.longitude);
+				// 		this.address = res.address; //详细地址
+				// 		this.latitude = res.latitude; //纬度
+				// 		this.longitude = res.longitude; //经度
+				// 	}
+				// });
+			},
+
+			async saomaQd(params){
+				console.log(params);
+				let res = await saomaQd(params)
+				if(res.code === 0){
+					uni.showToast({
+						title: '签到成功',
+						icon: 'success',
+					});
+				}else {
+					uni.showToast({
+						title: '签到失败',
+						icon: 'none',
+					});
+				}
 			},
 			scanCode(){
 				uni.scanCode({
@@ -48,11 +118,12 @@
 					success:  (res) =>{
 						console.log('条码类型：' + res.scanType);
 						console.log('条码内容：' + res.result);
-						if(res.result.includes('成功')){
+						if(res.result){
 							uni.showToast({
 								title: '签到成功',
 								icon: 'success',
 							});
+							this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:this.itemData.fc_id,xjd_id:res.result})
 						}else {
 							uni.showToast({
 								title: '扫码失败',
@@ -64,21 +135,15 @@
 			},
 			chageStep(s){
 				this.currStep =s
-
 				console.log(this.currStep);
-			},
-			async getXunjian(params){
-				let res = await getXunjian(params)
-				if(res.code === 0){
-					this.dataList = res.data
-				}else {
-
+				if(s===1){
+					this.addXunjian({xjpb_id:this.itemData.xjpb_id,longit:this.longitude,lati:this.latitude})
 				}
 			},
 			async addXunjian(params){
 				let res = await addXunjian(params)
 				if(res.code === 0){
-
+					console.log('添加巡检记录成功');
 				}else {
 
 				}
@@ -132,7 +197,6 @@
 			color:rgba(51,51,51,1);
 			padding: 30rpx;
 			box-sizing: border-box;
-			min-height: 500rpx;
 			.name{
 				font-size:36rpx;
 				font-family:PingFangSC-Semibold,PingFang SC;
@@ -160,18 +224,6 @@
 				box-sizing: border-box;
 				line-height: 2;
 				font-size: 24rpx;
-				position: relative;
-				margin: 20rpx 0;
-			}
-			.tip-btn{
-				position: absolute;
-				right: 20rpx;
-				top: 50rpx;
-				padding: 10rpx 20rpx;
-				text-align: center;
-				border-radius: 30rpx;
-				background: #007aff;
-				color: #ffffff;
 			}
 			.hist-btn{
 				position: absolute;
@@ -241,6 +293,9 @@
 						display: flex;
 						align-items: center;
 						justify-content: center;
+					}
+					.active{
+						color: #A8FFAF;
 					}
 				}
 			}

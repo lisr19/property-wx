@@ -24,10 +24,10 @@
 				<p class="title">房号：{{item.fcfx_ph}}</p>
 				<p class=""><span >缴费项：</span>{{item.bz_title}}</p>
 				<p v-if="item.sfx_dtstr"><span >缴费日期：</span>{{item.sfx_dtstr}}</p>
-				<p><span >缴费金额：</span><span style="color: #A40B0B">{{parseFloat(item.bz_yjjr).toFixed(2)}}</span></p>
+				<p><span >缴费金额：</span><span style="color: #A40B0B">{{item.bz_yjjr.toFixed(2)}}</span></p>
 				<p v-if="item.sfx_djh"><span >退款单号：</span><span >{{item.sfx_djh}}</span></p>
 				<p v-if="item.sfx_tkuna"><span >退款人：</span><span >{{item.sfx_tkuna}}</span></p>
-				<p v-if="item.sfx_tkjr"><span >退款金额：</span><span >{{parseFloat(item.sfx_tkjr).toFixed(2)}}</span></p>
+				<p v-if="item.sfx_tkjr"><span >退款金额：</span><span >{{item.sfx_tkjr.toFixed(2)}}</span></p>
 				<p v-if="item.sfx_tkdt"><span >退款日期：</span><span>{{item.sfx_tkdt}}</span></p>
 				<template>
 					<span class="state"  style="color: #FF9900" v-if="item.bz_ybl===0">未缴</span>

@@ -83,6 +83,7 @@
 				<p>{{itemData.tz_title}}</p>
 				<p v-html="itemData.tz_noty"></p>
 				<p>发布人：{{itemData.ld_una}}</p>
+
 				<p>发布时间：{{itemData.tz_dt}}</p>
 			</view>
 		</u-popup>

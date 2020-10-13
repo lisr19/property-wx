@@ -19,92 +19,96 @@ const home = [
 		name: '分类',
 	},
 	{
-		path: '/pages/tenant/tenant',
+		path: '/page2/pages/tenant/tenant',
 		name: '租户信息',
 	},
 	{
-		path: '/pages/tenant/parking',
+		path: '/page2/pages/tenant/parking',
 		name: '车位信息',
 	},
 	{
-		path: '/pages/tenant/activity',
+		path: '/page2/pages/tenant/activity',
 		name: '活动管理',
 	},
 	{
-		path: '/pages/tenant/building',
+		path: '/page2/pages/tenant/building',
 		name: '收楼管理',
 	},
 	{
-		path: '/pages/tenant/activity-detail',
+		path: '/page2/pages/tenant/activity-detail',
 		name: '活动详情',
 	},
 	{
-		path: '/pages/tenant/building-detail',
+		path: '/page2/pages/tenant/building-detail',
 		name: '收楼详情',
 	},
 	{
-		path: '/pages/tenant/examine',
+		path: '/page2/pages/tenant/examine',
 		name: '活动审核',
 	},
 	{
-		path: '/pages/tenant/decoration-inspection',
+		path: '/page2/pages/tenant/decoration-inspection',
 		name: '装修巡检',
 	},
 	{
-		path: '/pages/tenant/decoration-process-management',
+		path: '/page2/pages/tenant/decoration-process-management',
 		name: '装修过程管理',
 	},
 	{
-		path: '/pages/tenant/decoration-process-audit',
+		path: '/page2/pages/tenant/decoration-process-audit',
 		name: '装修过程审核',
 	},
 	{
-		path: '/pages/tenant/charge',
+		path: '/page2/pages/tenant/charge',
 		name: '收费审核',
 	},
 	{
-		path: '/pages/tenant/file',
+		path: '/page2/pages/tenant/file',
 		name: '归档记录',
 	},
 	{
-		path: '/pages/tenant/return',
+		path: '/page2/pages/tenant/return',
 		name: '活动回访',
 	},
 	{
-		path: '/pages/tenant/leaving',
+		path: '/page2/pages/tenant/leaving',
 		name: '租户留言',
 	},
 	{
-		path: '/pages/finance/charging-manage',
+		path: '/page2/pages/finance/charging-manage',
 		name: '计费管理',
 	},
 	{
-		path: '/pages/finance/approval',
+		path: '/page2/pages/finance/approval',
 		name: '计费审批',
 	},
 	{
-		path: '/pages/finance/approval-detail',
+		path: '/page2/pages/finance/approval-detail',
 		name: '计费详情',
 	},
 	{
-		path: '/pages/finance/bond',
+		path: '/page2/pages/finance/bond',
 		name: '保证金管理',
 	},
 	{
-		path: '/pages/finance/break-money',
+		path: '/page2/pages/finance/break-money',
 		name: '违约金管理',
 	},
 	{
-		path: '/pages/finance/incidental',
+		path: '/page2/pages/finance/incidental',
 		name: '杂费管理',
 	},
 	{
-		path: '/pages/finance/pay-count',
+		path: '/page2/pages/finance/pay-count',
 		name: '缴费汇总',
 	},
 	{
 		path: '/pages/inspection/index',
 		name: '巡检',
+	},
+	{
+		path: '/pages/inspection/xunjian',
+		name: '开始巡检',
 	},
 	{
 		path: '/pages/equipment/plan',
@@ -115,11 +119,11 @@ const home = [
 		name: '详情',
 	},
 	{
-		path: '/pages/warehouse/goods',
+		path: '/page2/pages/warehouse/goods',
 		name: '物品管理',
 	},
 	{
-		path: '/pages/warehouse/ck-look',
+		path: '/page2/pages/warehouse/ck-look',
 		name: '库存查询',
 	},
 	{
@@ -127,15 +131,15 @@ const home = [
 		name: '服务记录',
 	},
 	{
-		path: '/pages/report/bsgl',
+		path: '/page2/pages/report/bsgl',
 		name: '报事管理',
 	},
 	{
-		path: '/pages/report/bsbl',
+		path: '/page2/pages/report/bsbl',
 		name: '报事办理',
 	},
 	{
-		path: '/pages/report/bsba',
+		path: '/page2/pages/report/bsba',
 		name: '报事备案',
 	},
 	{

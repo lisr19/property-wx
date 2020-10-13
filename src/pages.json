@@ -29,75 +29,9 @@
 				}
 			}
 		},
-		{
-			"path": "pages/tenant/file"
-		},
-		{
-			"path": "pages/tenant/tenant"
-		},
-		{
-			"path": "pages/tenant/parking"
-		},
-		{
-			"path": "pages/tenant/activity"
-		},
-		{
-			"path": "pages/tenant/activity-detail",
-			"style": {
-				"navigationBarTitleText": "活动详情"
-			}
-		},
-		{
-			"path": "pages/tenant/building"
-		},
-		{
-			"path": "pages/tenant/building-detail",
-			"style": {
-				"navigationBarTitleText": "租户信息详情"
-			}
-		},
         {
-          "path": "pages/tenant/decoration-inspection"
+          "path": "pages/inspection/xunjian"
         },
-        {
-          "path": "pages/tenant/decoration-process-audit"
-        },
-        {
-          "path": "pages/tenant/decoration-process-management"
-        },
-		{
-			"path": "pages/tenant/examine"
-		},
-		{
-			"path": "pages/tenant/charge"
-		},
-        {
-          "path": "pages/tenant/return"
-        },
-		{
-			"path": "pages/tenant/leaving"
-		},
-		{
-			"path": "pages/finance/charging-manage"
-		},
-		{
-			"path": "pages/finance/pay-count"
-		},
-		{
-			"path": "pages/finance/break-money"
-		},
-		{
-			"path": "pages/finance/approval"
-		},
-		{
-			"path": "pages/finance/approval-detail"
-		},
-		{
-			"path": "pages/finance/bond"
-		},
-		{
-			"path": "pages/finance/incidental"
-		},
 		{
 			"path": "pages/inspection/index"
 		},
@@ -108,22 +42,7 @@
 			"path": "pages/index/detail"
 		},
 		{
-			"path": "pages/warehouse/goods"
-		},
-		{
-			"path": "pages/warehouse/ck-look"
-		},
-		{
 			"path": "pages/expatriate/fwjl"
-		},
-		{
-			"path": "pages/report/bsgl"
-		},
-		{
-			"path": "pages/report/bsbl"
-		},
-		{
-			"path": "pages/report/bsba"
 		},
 		{
 			"path": "pages/equipment/byys"
@@ -135,6 +54,95 @@
 			"path": "pages/archives/remind"
 		}
 	],
+    "subPackages": [{
+      "root": "page2",
+      "pages": [
+        {
+          "path": "pages/report/bsgl"
+        },
+        {
+          "path": "pages/report/bsbl"
+        },
+        {
+          "path": "pages/report/bsba"
+        },
+        {
+          "path": "pages/warehouse/goods"
+        },
+        {
+          "path": "pages/warehouse/ck-look"
+        },
+        {
+          "path": "pages/tenant/file"
+        },
+        {
+          "path": "pages/tenant/tenant"
+        },
+        {
+          "path": "pages/tenant/parking"
+        },
+        {
+          "path": "pages/tenant/activity"
+        },
+        {
+          "path": "pages/tenant/activity-detail",
+          "style": {
+            "navigationBarTitleText": "活动详情"
+          }
+        },
+        {
+          "path": "pages/tenant/building"
+        },
+        {
+          "path": "pages/tenant/building-detail",
+          "style": {
+            "navigationBarTitleText": "租户信息详情"
+          }
+        },
+        {
+          "path": "pages/tenant/decoration-inspection"
+        },
+        {
+          "path": "pages/tenant/decoration-process-audit"
+        },
+        {
+          "path": "pages/tenant/decoration-process-management"
+        },
+        {
+          "path": "pages/tenant/examine"
+        },
+        {
+          "path": "pages/tenant/charge"
+        },
+        {
+          "path": "pages/tenant/return"
+        },
+        {
+          "path": "pages/tenant/leaving"
+        },
+        {
+          "path": "pages/finance/charging-manage"
+        },
+        {
+          "path": "pages/finance/pay-count"
+        },
+        {
+          "path": "pages/finance/break-money"
+        },
+        {
+          "path": "pages/finance/approval"
+        },
+        {
+          "path": "pages/finance/approval-detail"
+        },
+        {
+          "path": "pages/finance/bond"
+        },
+        {
+          "path": "pages/finance/incidental"
+        }
+      ]
+    }],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "物业管理系统",

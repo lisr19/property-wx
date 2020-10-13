@@ -20,7 +20,7 @@
 				<p><span>所属月份：</span>{{item.jh_zq}}</p>
 				<p><span>开始日期：</span>{{item.jh_sdt}}</p>
 				<p><span>结束日期：</span>{{item.jh_edt}}</p>
-				<p class="price"><span >应缴总金额：</span>{{parseFloat(item.jh_yjzjr).toFixed(2)}}</p>
+				<p class="price"><span >应缴总金额：</span>{{item.jh_yjzjr.toFixed(2)}}</p>
 				<p class="price"><span >应缴总户数：</span>{{item.jh_yjzhs}}</p>
 				<span @click="openDeatil(item)" class="tip" v-if="item.jh_ztspsm">已计费<u-icon name="arrow-right" style="margin-left: 10rpx" color="#D6D6D6" size="28"></u-icon></span>
 				<span @click="openDeatil(item)" class="tip" style="color: #FCA302" v-else>待计费<u-icon name="arrow-right" style="margin-left: 10rpx" color="#D6D6D6" size="28"></u-icon></span>
