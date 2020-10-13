@@ -6,13 +6,16 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>巡检任务</p>
-				<view class="desc" v-for="(item,index) in dataList" :key="index">
-					<p class="time">班次名称：{{item.xjpb_bcname}}</p>
-					<p>签到点：{{item.qdd_idstr}}</p>
-					<p >开始时间：{{item.xjpb_sdtime}}</p>
-					<p >结束时间：{{item.xjpb_edtime}}</p>
-					<span class="tip-btn" @click="starXunjian(item)">开始巡检</span>
+				<view class="items-box" :style="{height:listHeight+'px'}">
+					<view class="desc" v-for="(item,index) in dataList" :key="index">
+						<p class="time">班次名称：{{item.xjpb_bcname}}</p>
+						<p>签到点：{{item.qdd_idstr}}</p>
+						<p >开始时间：{{item.xjpb_sdtime}}</p>
+						<p >结束时间：{{item.xjpb_edtime}}</p>
+						<span class="tip-btn" @click="starXunjian(item)">开始巡检</span>
+					</view>
 				</view>
+
 				<view class="null-btn" style="font-size: 30rpx;text-align: center;margin-top: 30rpx" v-if="dataList.length===0">暂无数据</view>
 			</view >
 		</u-sticky>
@@ -33,9 +36,15 @@
 			return {
 				currStep:0,
 				dataList:[],
+				listHeight:500,
 			}
 		},
 		onLoad() {
+			uni.getSystemInfo({
+				success: (res)=> {
+					this.listHeight = res.windowHeight - 130
+				}
+			});
 			this.getXunjian()
 		},
 		methods: {
@@ -181,6 +190,9 @@
 				font-family:PingFangSC-Regular,PingFang SC;
 				font-weight:400;
 				color:rgba(51,51,51,1);
+			}
+			.items-box{
+				overflow: auto;
 			}
 		}
 		.content{

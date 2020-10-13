@@ -331,3 +331,11 @@ export function saomaQd(params) {
 		body: params
 	})
 }
+//扫码记录
+export function getQdList(params) {
+	return fly.request({
+		url: 'xunjian/getxjqd',
+		method: 'get',
+		body: params
+	})
+}

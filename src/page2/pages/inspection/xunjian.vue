@@ -24,14 +24,14 @@
 				<p class="tip">请到达指定巡检定点扫描二维码完成巡检</p>
 				<view class="xj-box">
 					<view class="item" v-for="(item,index) in qdList" :key=index @tap="scanCode(item,index)">
-						<u-icon class="img"  name="scan" size="100"  :class="{'active':item.code===1}"></u-icon>
-						<p>{{item.name}}</p>
+						<u-icon class="img"  name="scan" size="100"  :class="{'active':item.status===1}"></u-icon>
+						<p class="name">{{item.name}}</p>
 					</view>
 				</view>
-				<view class="btn" style="background: #C3C3C3;color: #ffffff;border:none" @click="chageStep(2)">巡检中</view>
-			</template>
-			<template v-if="currStep===2">
-				<view class="btn" style="background: #0a4882;color: #ffffff" @click="chageStep(0)">巡检完成</view>
+				<view v-if="qdList.length===0">该班次没有设置签到点</view>
+				<view class="btn" style="background: #C3C3C3;color: #ffffff;border:none" v-if="!isComplete" @click="chageStep(2)">巡检中</view>
+				<view class="btn" style="background: #0a4882;color: #ffffff;border:none" v-else-if="qdList.length===0" @click="goBack">返回</view>
+				<view class="btn" style="background: #0a4882;color: #ffffff" v-else @click="goBack">巡检完成</view>
 			</template>
 		</view>
 		<uni-drawer :visible="false" ref="leftBox">
@@ -44,28 +44,28 @@
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
-	import {addXunjian,saomaQd} from "@/utils/api/index"
+	import {addXunjian,saomaQd,getQdList} from "@/utils/api/index"
 	export default {
 		components: {uniDrawer,uniIcons,leftMenu},
 		data() {
 			return {
 				currStep:0,
 				dataList:[],
-				qdList:[
-					{name:'签到点1',code:1},
-					{name:'签到点2',code:0},
-					{name:'签到点3',code:0}
-				],
+				qdList:[],
 				itemData:{},
 				longitude:'',
 				latitude:'',
 				address:'',
+				isComplete:false,
 
 			}
 		},
 		onLoad() {
 			this.itemData = this.$Route.query.itemData
 			this.getLocation()
+			setTimeout(()=>{
+				this.getQdList({xjpb_id:this.itemData.xjpb_id})
+			})
 		},
 		methods: {
 			getLocation(){
@@ -96,49 +96,66 @@
 				// 	}
 				// });
 			},
+			async getQdList(params){
+				let res = await getQdList(params)
+				if(res.code === 0){
+					this.qdList= res.data
+					let result= this.qdList.every((i)=>{
+						return i.status ===1
+					})
+					this.isComplete = result
+				}
+			},
 
 			async saomaQd(params){
 				console.log(params);
 				let res = await saomaQd(params)
+				console.log(res);
 				if(res.code === 0){
 					uni.showToast({
 						title: '签到成功',
 						icon: 'success',
 					});
+					this.getQdList({xjpb_id:this.itemData.xjpb_id})
 				}else {
 					uni.showToast({
-						title: '签到失败',
+						title:res.msg,
 						icon: 'none',
 					});
 				}
 			},
-			scanCode(){
-				uni.scanCode({
-					onlyFromCamera: true,
-					success:  (res) =>{
-						console.log('条码类型：' + res.scanType);
-						console.log('条码内容：' + res.result);
-						if(res.result){
-							uni.showToast({
-								title: '签到成功',
-								icon: 'success',
-							});
-							this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:this.itemData.fc_id,xjd_id:res.result})
-						}else {
-							uni.showToast({
-								title: '扫码失败',
-								icon: 'none',
-							});
-						}
-					}
-				});
+			scanCode(item){
+				this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:item.fc_id,xjd_id:item.xj_id})
+				// uni.scanCode({
+				// 	onlyFromCamera: true,
+				// 	success:  (res) =>{
+				// 		console.log('条码类型：' + res.scanType);
+				// 		console.log('条码内容：' + res.result);
+				// 		if(res.result){
+				// 			this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:this.itemData.fc_id,xjd_id:res.result})
+				// 		}else {
+				// 			uni.showToast({
+				// 				title: '扫码失败',
+				// 				icon: 'none',
+				// 			});
+				// 		}
+				// 	}
+				// });
 			},
 			chageStep(s){
-				this.currStep =s
-				console.log(this.currStep);
 				if(s===1){
+					this.currStep =1
 					this.addXunjian({xjpb_id:this.itemData.xjpb_id,longit:this.longitude,lati:this.latitude})
+				}else if(s===2){
+					uni.showToast({
+						title: '请完成所有签到后结束巡检',
+						icon: 'none',
+					})
 				}
+			},
+			goBack(){
+				// uni.navigateBack()
+				this.$Router.back()
 			},
 			async addXunjian(params){
 				let res = await addXunjian(params)
@@ -287,6 +304,19 @@
 					flex-direction: column;
 					align-items: center;
 					justify-content: center;
+					margin-bottom: 20rpx;
+					.name{
+						text-overflow: -o-ellipsis-lastline;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-line-clamp: 2;
+						line-clamp: 2;
+						-webkit-box-orient: vertical;
+						width: 150rpx;
+						text-align: center;
+						height: 70rpx;
+					}
 					.img{
 						width: 100rpx;
 						height: 100rpx;
