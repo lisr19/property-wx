@@ -103,11 +103,11 @@ const home = [
 		name: '缴费汇总',
 	},
 	{
-		path: '/pages/inspection/index',
+		path: '/page2/pages/inspection/index',
 		name: '巡检',
 	},
 	{
-		path: '/pages/inspection/xunjian',
+		path: '/page2/pages/inspection/xunjian',
 		name: '开始巡检',
 	},
 	{

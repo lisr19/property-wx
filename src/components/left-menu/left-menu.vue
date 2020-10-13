@@ -1,6 +1,6 @@
 <template>
 	<div class="nav-box">
-		<div class="head-box">
+		<div class="head-box" >
 			<view class="iconfont icontouxiang head-img" @click="openMenu"></view>
 <!--			<image class="head-img" src="/static/logo.png"></image>-->
 <!--			<svg class="icon head-img" aria-hidden="true" @click="openMenu">-->
@@ -162,6 +162,7 @@
 			flex-direction: column;
 			justify-content: center;
 			border-bottom: 1rpx solid #D9D9D9;
+			margin-top: 50rpx;
 			.head-img{
 				width:156rpx;
 				height:156rpx;

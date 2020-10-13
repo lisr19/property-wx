@@ -1,53 +1,56 @@
 <template>
 	<view class="content">
-		<view class="head-bar">
-			<view class="bg"></view>
-			<p class="title">
-				<view class="iconfont iconcaidan" @click="openBox"></view>
-				物业管理系统</p>
-			<view class="tab-bar">
-				<ul class="nav">
-					<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
-						<p>{{item.name}}</p>
-<!--						<uni-badge class="tip" :text="tzNum" type="error" size="small"></uni-badge>-->
-					</li>
-				</ul>
+		<view class="status_bar" :style="{height:height+'px'}"></view>
+		<view class="head-bar" :style="{top:height+'px'}">
+			<view class="haed-wrap">
+				<view class="bg"></view>
+				<p class="title" @click="openBox">
+					<view class="iconfont iconcaidan" ></view>
+					<span style="z-index: 99;position: absolute;margin-left: 80rpx">物业管理系统</span>
+				</p>
+				<view class="tab-bar">
+					<ul class="nav">
+						<li :class="{active:currIndex===index}" :key="index" v-for="(item,index) in typeList" @click="tagType(index)">
+							<p>{{item.name}}</p>
+							<!--						<uni-badge class="tip" :text="tzNum" type="error" size="small"></uni-badge>-->
+						</li>
+					</ul>
+				</view>
+				<template v-if="currIndex===0">
+					<view class="card null-card" v-if="list_tz.length===0"  :style="{top:height+100+'px'}">
+						<image class="menu" src="/static/null-icon.png"></image>
+						<p class="null-tip">暂无通知</p>
+					</view>
+					<view class="card" v-else  :class="{showall:isShowAll===true}"  :style="{top:height+100+'px'}">
+						<p class="msg" v-for="(item,index) in showTZ" v-if="isShowAll===false" @click="showItem(item)">
+							<span class="msg-tip">{{item.tz_dtmd}}：</span>
+							<span>{{item.tz_title}}</span>
+						</p>
+						<p class="msg" v-for="(item,index) in list_tz" v-if="isShowAll===true" @click="showItem(item)">
+							<span class="msg-tip">{{item.tz_dtmd}}：</span>
+							<span>{{item.tz_title}}</span>
+						</p>
+						<u-icon class="tip" name="arrow-down"  size="24" @click="showAll"></u-icon>
+					</view>
+				</template>
+				<template v-else>
+					<view class="card null-card" v-if="list_sw.length===0"  :style="{top:height+100+'px'}">
+						<image class="menu" src="/static/null-icon.png"></image>
+						<p class="null-tip">暂无提醒</p>
+					</view>
+					<view class="card" v-else :class="{showall:isShowAll2===true}"  :style="{top:height+100+'px'}">
+						<view class="work" v-for="(item,index) in showSW" v-if="isShowAll2===false" @click="showItem2(item)">
+							<p class="name">标题：{{item.sw_title}}</p>
+							<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
+						</view>
+						<view class="work"  v-for="(item,index) in list_sw" v-if="isShowAll2===true" @click="showItem2(item)">
+							<p class="name">标题：{{item.sw_title}}</p>
+							<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
+						</view>
+						<u-icon class="tip" name="arrow-down"  size="26" @click="showAll2"></u-icon>
+					</view>
+				</template>
 			</view>
-			<template v-if="currIndex===0">
-				<view class="card null-card" v-if="list_tz.length===0">
-					<image class="menu" src="/static/null-icon.png"></image>
-					<p class="null-tip">暂无通知</p>
-				</view>
-				<view class="card" v-else  :class="{showall:isShowAll===true}">
-					<p class="msg" v-for="(item,index) in showTZ" v-if="isShowAll===false" @click="showItem(item)">
-						<span class="msg-tip">{{item.tz_dtmd}}：</span>
-						<span>{{item.tz_title}}</span>
-					</p>
-					<p class="msg" v-for="(item,index) in list_tz" v-if="isShowAll===true" @click="showItem(item)">
-						<span class="msg-tip">{{item.tz_dtmd}}：</span>
-						<span>{{item.tz_title}}</span>
-					</p>
-					<u-icon class="tip" name="arrow-down"  size="24" @click="showAll"></u-icon>
-				</view>
-			</template>
-			<template v-else>
-				<view class="card null-card" v-if="list_sw.length===0">
-<!--					<span class="iconfont iconxiangzi2x"  @click="openBox"></span>-->
-					<image class="menu" src="/static/null-icon.png"></image>
-					<p class="null-tip">暂无提醒</p>
-				</view>
-				<view class="card" v-else :class="{showall:isShowAll2===true}">
-					<view class="work" v-for="(item,index) in showSW" v-if="isShowAll2===false" @click="showItem2(item)">
-						<p class="name">标题：{{item.sw_title}}</p>
-						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
-					</view>
-					<view class="work"  v-for="(item,index) in list_sw" v-if="isShowAll2===true" @click="showItem2(item)">
-						<p class="name">标题：{{item.sw_title}}</p>
-						<p><span>类别：活动 </span><span>日期：{{item.sw_dt}}</span></p>
-					</view>
-					<u-icon class="tip" name="arrow-down"  size="26" @click="showAll2"></u-icon>
-				</view>
-			</template>
 		</view>
 		<view class="card2">
 			<view class="item" @click="openDetail">
@@ -83,7 +86,6 @@
 				<p>{{itemData.tz_title}}</p>
 				<p v-html="itemData.tz_noty"></p>
 				<p>发布人：{{itemData.ld_una}}</p>
-
 				<p>发布时间：{{itemData.tz_dt}}</p>
 			</view>
 		</u-popup>
@@ -105,6 +107,7 @@
 		components: {uniDrawer,uniCalendar,leftMenu},
 		data() {
 			return {
+				height:null,//获取的状态栏高度
 				showDetail:false,
 				showDetail2:false,
 				isShowAll:false,
@@ -133,6 +136,15 @@
 				showTZ:[],
 				showSW:[],
 			}
+		},
+		onLoad(){
+			// 获取手机状态栏高度
+			uni.getSystemInfo({
+				success:(data)=>{
+					// 将其赋值给this
+					this.height=data.statusBarHeight;
+				}
+			})
 		},
 		onShow() {
 			if(!uni.getStorageSync('token')){
@@ -245,21 +257,13 @@
 			font-weight:500;
 			color:rgba(255,255,255,1);
 			height:384rpx;
-			background:rgba(6,25,104,1);
+			background: url(../../static/bg2.png) no-repeat;
+			background-size: cover;
+			-webkit-background-size: cover;
+			-o-background-size: cover;
 			position: fixed;
-			top: 0;
 			width: 100%;
 			z-index: 9;
-			.bg{
-				top: -180rpx;
-				border-radius: 50%;
-				width: 750rpx;
-				background: -webkit-linear-gradient(327deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.2) 100%);
-				background: linear-gradient(123deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.15) 100%);
-				position: absolute;
-				left: -170rpx;
-				height: 680rpx;
-			}
 			.title{
 				text-align:left;
 				display: flex;
@@ -275,7 +279,7 @@
 			}
 			.tab-bar{
 				border-bottom: solid 2rpx rgba(255,255,255,0.21);
-				margin-top: 4rpx;
+				margin-top: 10rpx;
 				ul{
 					display: flex;
 					padding: 0 80rpx;
@@ -306,7 +310,7 @@
 			.card{
 				width:90%;
 				position: absolute;
-				top: 200rpx;
+				/*top: 200rpx;*/
 				left:5%;
 				z-index: 10;
 				font-family:PingFangSC-Medium,PingFang SC;
@@ -401,6 +405,9 @@
 				align-items: center;
 				justify-content: center;
 			}
+		}
+		.haed-wrap{
+			position: relative;
 		}
 		.nav-box{
 			height: 100%;

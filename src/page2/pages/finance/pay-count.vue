@@ -27,7 +27,7 @@
 				<p class="price2"><span >已缴总金额：</span>{{item.okzjr}}</p>
 				<view class="btn-group">
 					<view class="btn" @click="send(item)"  v-if="item.okzjr<item.szjr">
-						<span class="iconfont iconbianzu32x"></span>
+						<span class="iconfont iconlingdang"></span>
 						催缴
 					</view>
 					<view class="btn" v-if="item.okzjr<item.szjr" @click="showDetai(item,index)"><span class="iconfont iconchakan2x"></span>未缴</view>

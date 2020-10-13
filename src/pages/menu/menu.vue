@@ -1,10 +1,11 @@
 <template>
 	<view  class="content">
-		<view  class="head-bar">
+		<view class="status_bar" :style="{height:height+'px'}"></view>
+		<view  class="head-bar" :style="{top:height+'px'}">
 			<view  class="bg"></view >
-			<p class="title">
-				<span class="iconfont iconcaidan" @click="openBox"></span>物业管理系统</p>
-			<view  class="card" >
+			<p class="title" @click="openBox">
+				<span class="iconfont iconcaidan"></span><span style="z-index: 99;position: absolute;margin-left: 80rpx">物业管理系统</span></p>
+			<view  class="card" :style="{top:height+62+'px'}" >
 				<p class="name"><em></em>{{typeName}}</p>
 				<ul class="type-items" :style="{height:listHeight+'px'}">
 					<li class="item" v-for="(item,index) in typeList" :key="index" @click="openDetail(item)">{{item.name}}</li>
@@ -29,7 +30,17 @@
 				typeName:'',
 				typeList:[],
 				listHeight:500,
+				height:0,
 			}
+		},
+		onLoad(){
+			// 获取手机状态栏高度
+			uni.getSystemInfo({
+				success:(data)=>{
+					// 将其赋值给this
+					this.height=data.statusBarHeight;
+				}
+			})
 		},
 		onShow() {
 			uni.getSystemInfo({

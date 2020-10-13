@@ -5,11 +5,11 @@
 		<template>
 			<view class="card-login">
 				<p>
-					<image  src="/static/logo.png"></image>
+					<span class="iconfont iconzhanghao2x"></span>
 					<input  v-model="username"  placeholder='账号'  maxlength="16">
 				</p>
 				<p>
-					<image  src="/static/logo.png"></image>
+					<span class="iconfont iconmima2x"></span>
 					<input  v-model="password"  type="password" placeholder='密码' >
 				</p>
 				<p>
@@ -189,6 +189,11 @@
 			display: flex;
 			align-items: center;
 			flex-direction: column;
+			.iconfont{
+				font-size: 42rpx;
+				margin-right: 20rpx;
+
+			}
 			p{
 				display: flex;
 				align-items: center;
