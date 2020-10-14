@@ -32,7 +32,8 @@
 			<view class="tip-box">
 <!--				<view class="tip-content">标题</view>-->
 				<view class="desc">回复内容：
-					<u-input type="textarea" v-model="reason" border class="text"/>
+					<input class="uni-input text" cursor-spacing="150" v-model="reason" />
+					<!--<u-input type="textarea" v-model="reason" border class="text"/>-->
 				</view>
 				<view class="btn" @click="addLyhf">确定</view>
 			</view>

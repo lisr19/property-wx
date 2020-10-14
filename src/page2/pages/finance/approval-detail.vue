@@ -6,9 +6,8 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>查看收费计划</p>
-
 				<view class="input-box">
-					<span>租户：</span><u-input height="60"   placeholder=""  :border="border"  />
+					<span>租户名称：</span><u-input height="60"    :border="border"  />
 				</view>
 				<view class="btn">查询</view>
 			</view >
@@ -22,7 +21,7 @@
 					<p class="title">租户：{{item.zhi_name}}</p>
 					<p>标题：{{item.bz_title}}</p>
 					<p><span>所属月份：</span>{{item.jh_zq}}</p>
-					<p class="price"><span >金额：</span>{{parseFloat(item.fcfx_jzmj).toFixed(2)}}</p>
+					<p class="price"><span >金额：</span>{{item.fcfx_jzmj.toFixed(2)}}</p>
 				</view>
 				<view class="btn-group">
 					<span class="btn" @click="passBtn(item)">通过</span>

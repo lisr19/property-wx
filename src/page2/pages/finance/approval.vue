@@ -22,8 +22,8 @@
 				<p><span>结束日期：</span>{{item.jh_edt}}</p>
 				<p class="price"><span >应缴总金额：</span>{{item.jh_yjzjr.toFixed(2)}}</p>
 				<p class="price"><span >应缴总户数：</span>{{item.jh_yjzhs}}</p>
-				<span @click="openDeatil(item)" class="tip" v-if="item.jh_ztspsm">已计费<u-icon name="arrow-right" style="margin-left: 10rpx" color="#D6D6D6" size="28"></u-icon></span>
-				<span @click="openDeatil(item)" class="tip" style="color: #FCA302" v-else>待计费<u-icon name="arrow-right" style="margin-left: 10rpx" color="#D6D6D6" size="28"></u-icon></span>
+				<span @click="openDeatil(item)" class="tip" v-if="item.jh_ztspsm">已计费<u-icon name="arrow-right" style="margin-left: 10rpx;display: inline-block" color="#D6D6D6" size="28"></u-icon></span>
+				<span @click="openDeatil(item)" class="tip" style="color: #FCA302" v-else>待计费<u-icon name="arrow-right" style="margin-left: 10rpx;display: inline-block" color="#D6D6D6" size="28"></u-icon></span>
 <!--				<view class="btn-group">-->
 <!--					<span class="btn">通过</span>-->
 <!--					<span class="btn" style="color: #C06E6E">驳回</span>-->
@@ -251,7 +251,7 @@
 			}
 		}
 		.items{
-			padding: 360rpx 0 50rpx;
+			padding: 360rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -275,7 +275,7 @@
 				position: relative;
 				.tip{
 					position: absolute;
-					right: 20rpx;
+					right: 30rpx;
 					top: 5%;
 				}
 				.title{

@@ -28,11 +28,12 @@
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
-		<u-popup v-model="showReply" mode="bottom" border-radius="20" height="552rpx" closeable>
+		<u-popup v-model="showReply" mode="bottom" border-radius="20" height="552rpx" closeable safe-area-inset-bottom="true">
 			<view class="tip-box">
 <!--				<view class="tip-content">标题</view>-->
 				<view class="desc">回复内容：
-					<u-input type="textarea" v-model="reason" border class="text"/>
+					<input class="uni-input text" cursor-spacing="150" v-model="reason" />
+					<!--<u-input type="textarea" v-model="reason" border class="text"/>-->
 				</view>
 				<view class="btn" @click="addLyhf">确定</view>
 			</view>

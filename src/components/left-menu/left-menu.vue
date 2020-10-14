@@ -137,7 +137,7 @@
 	};
 </script>
 <style scoped>
-	
+
 	/deep/ .u-cell__value{
 		text-align: left;
 		padding: 8rpx 0;

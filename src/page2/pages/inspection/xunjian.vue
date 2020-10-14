@@ -82,7 +82,10 @@
 								icon: 'none',
 							});
 						}
-					}
+					}, fail(err) {
+						console.log('错误');
+						console.log(err);
+					},
 				});
 				// uni.chooseLocation({
 				// 	success: (res) =>{
@@ -125,22 +128,22 @@
 				}
 			},
 			scanCode(item){
-				this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:item.fc_id,xjd_id:item.xj_id})
-				// uni.scanCode({
-				// 	onlyFromCamera: true,
-				// 	success:  (res) =>{
-				// 		console.log('条码类型：' + res.scanType);
-				// 		console.log('条码内容：' + res.result);
-				// 		if(res.result){
-				// 			this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:this.itemData.fc_id,xjd_id:res.result})
-				// 		}else {
-				// 			uni.showToast({
-				// 				title: '扫码失败',
-				// 				icon: 'none',
-				// 			});
-				// 		}
-				// 	}
-				// });
+				// this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:item.fc_id,xjd_id:item.xj_id})
+				uni.scanCode({
+					onlyFromCamera: true,
+					success:  (res) =>{
+						console.log('条码类型：' + res.scanType);
+						console.log('条码内容：' + res.result);
+						if(res.result){
+							this.saomaQd({xjpb_id:this.itemData.xjpb_id,fc_id:item.fc_id,xjd_id:item.xj_id})
+						}else {
+							uni.showToast({
+								title: '扫码失败',
+								icon: 'none',
+							});
+						}
+					}
+				});
 			},
 			chageStep(s){
 				if(s===1){

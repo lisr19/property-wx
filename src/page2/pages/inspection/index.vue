@@ -14,9 +14,10 @@
 						<p >结束时间：{{item.xjpb_edtime}}</p>
 						<span class="tip-btn" @click="starXunjian(item)">开始巡检</span>
 					</view>
+					<view class="null-btn" style="font-size: 30rpx;text-align: center;margin-top: 30rpx" v-if="dataList.length===0">暂无数据</view>
 				</view>
 
-				<view class="null-btn" style="font-size: 30rpx;text-align: center;margin-top: 30rpx" v-if="dataList.length===0">暂无数据</view>
+
 			</view >
 		</u-sticky>
 		<uni-drawer :visible="false" ref="leftBox">
@@ -50,31 +51,6 @@
 		methods: {
 			starXunjian(item){
 				this.$Router.push({name:'开始巡检',params:{itemData:item}})
-			},
-			scanCode(){
-				uni.scanCode({
-					onlyFromCamera: true,
-					success:  (res) =>{
-						console.log('条码类型：' + res.scanType);
-						console.log('条码内容：' + res.result);
-						if(res.result.includes('成功')){
-							uni.showToast({
-								title: '签到成功',
-								icon: 'success',
-							});
-						}else {
-							uni.showToast({
-								title: '扫码失败',
-								icon: 'none',
-							});
-						}
-					}
-				});
-			},
-			chageStep(s){
-				this.currStep =s
-
-				console.log(this.currStep);
 			},
 			async getXunjian(params){
 				let res = await getXunjian(params)

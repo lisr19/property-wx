@@ -36,7 +36,7 @@
 				<p><span>截止日期：</span>{{item.wyj_qxdt}}</p>
 				<p><span>欠费月份：</span>{{item.wyj_mm}}</p>
 				<p><span>欠费天数：</span>120</p>
-				<p class="price2">欠费总额：{{parseFloat(item.wyj_zjr).toFixed(2)}}</p>
+				<p class="price2">欠费总额：{{item.wyj_zjr.toFixed(2)}}</p>
 				<view class="btn-group">
 					<view class="btn"  @click="delBtn(item,index)">
 						<span class="iconfont iconbianzu62x"></span>删除

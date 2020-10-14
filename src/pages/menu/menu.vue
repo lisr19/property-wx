@@ -149,7 +149,12 @@
 				console.log(item.name);
 				if(item.name==='工作台主页'){
 					this.$Router.push({name: '首页'})
-				}else {
+				}else if(item.name==='活动审核'||item.name==='装修巡检'||item.name==='装修过程管理'||item.name==='装修过程审核'||item.name==='收费审核'){
+					uni.showToast({
+						title: '功能建设中',
+						icon: 'none',
+					})
+				} else {
 					this.$Router.push({name: item.name})
 				}
 				this.closeMenu()
