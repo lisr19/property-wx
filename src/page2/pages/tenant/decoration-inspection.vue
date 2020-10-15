@@ -7,14 +7,17 @@
 			<view  class="card">
 				<p class="name"><em></em>装修巡检</p>
 				<view class="input-box"><span>主题：</span><input placeholder="主题关键字" v-model="skey_title" class="uni-input" name="num"></view>
-				<view class="btn" @click="getHdsp">查询</view>
+				<view class="btn" @click="getZxxj">查询</view>
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
-				<p><span>活动负责人：</span>{{item.name}}</p>
+				<p><span>活动负责人：</span>{{item.zhhd_fzr}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
 				<p><span>结束时间：</span>{{item.zhhd_sdt}}</p>
 				<!--<view class="btn-group">-->
@@ -44,12 +47,11 @@
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getHdsp} from "@/utils/api/index"
+	import {getZxxj} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,leftMenu,uniPagination},
+		components: {uniDrawer,leftMenu,uniPagination},
 		data() {
 			return {
 				reason:'',
@@ -88,7 +90,7 @@
 			}
 		},
 		onLoad() {
-			this.getHdsp()
+			this.getZxxj()
 
 		},
 		methods: {
@@ -130,8 +132,8 @@
 			chagePage(e){
 				console.log(e);
 			},
-			async getHdsp(params){
-				let res = await getHdsp(params)
+			async getZxxj(params){
+				let res = await getZxxj(params)
 				if(res.code === 0){
 					this.dataList = res.data
 					this.total = res.data.count
@@ -142,7 +144,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getHdsp()
+					this.getZxxj()
 				}else {
 					this.electList()
 				}
@@ -151,7 +153,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getHdsp()
+					this.getZxxj()
 				}else {
 					this.electList()
 				}

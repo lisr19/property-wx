@@ -7,24 +7,25 @@
 			<view  class="card">
 				<p class="name"><em></em>装修过程审核</p>
 				<view class="input-box"><span>主题：</span><input placeholder="主题关键字" v-model="skey_title" class="uni-input" name="num"></view>
-				<view class="btn" @click="getHdsp">查询</view>
+				<view class="btn" @click="getZxgcsh">查询</view>
 			</view >
-			<!--<view class="tab">-->
-				<!--<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"-->
-					  <!--:key="index" @click="tabType(index)">{{item.name}}</view>-->
-			<!--</view>-->
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.wdsp_zt}}</p>
+				<template>
+					<p v-if="item.zhhd_spzt===1"><span>状态：</span>未审</p>
+					<p v-if="item.zhhd_spzt===2"><span>状态：</span>审核中</p>
+					<p v-if="item.zhhd_spzt===3"><span>状态：</span>不通过</p>
+					<p v-if="item.zhhd_spzt===4"><span>状态：</span>通过审核</p>
+				</template>
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
-				<view class="btn-group">
-					<span class="btn" @click="showConfirmC(item,1)">通过</span>
-					<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">不通过</span>
-				</view>
+				<!--<span class="more-btn">查看详情</span>-->
+				<!--<view class="btn-group">-->
+				<!--<span class="btn" @click="showConfirmC(item,1)">通过</span>-->
+				<!--<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">不通过</span>-->
+				<!--</view>-->
 
 			</view>
 		</view>
@@ -48,12 +49,11 @@
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getHdsp} from "@/utils/api/index"
+	import {getZxgcsh} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,leftMenu,uniPagination},
+		components: {uniDrawer,leftMenu,uniPagination},
 		data() {
 			return {
 				reason:'',
@@ -101,7 +101,7 @@
 			}
 		},
 		onLoad() {
-			this.getHdsp()
+			this.getZxgcsh()
 
 		},
 		methods: {
@@ -143,8 +143,8 @@
 			chagePage(e){
 				console.log(e);
 			},
-			async getHdsp(params){
-				let res = await getHdsp(params)
+			async getZxgcsh(params){
+				let res = await getZxgcsh(params)
 				if(res.code === 0){
 					this.dataList = res.data
 					this.total = res.data.count
@@ -155,7 +155,7 @@
 			radioGroupChange(e) {
 				// this.currType = e
 				if(e==='启用用户'){
-					this.getHdsp()
+					this.getZxgcsh()
 				}else {
 					this.electList()
 				}
@@ -164,7 +164,7 @@
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getHdsp()
+					this.getZxgcsh()
 				}else {
 					this.electList()
 				}
@@ -320,6 +320,11 @@
 					font-size:32rpx;
 					font-weight:500;
 					color:rgba(89,89,89,1);
+				}
+				.more-btn{
+					position: absolute;
+					right: 20rpx;
+					top: 20rpx;
 				}
 				span{
 					color: #999999;

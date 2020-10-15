@@ -9,16 +9,26 @@
 				<view class="input-box"><span>主题：</span><input placeholder="主题关键字" v-model="skey_title" class="uni-input" name="num"></view>
 				<view class="btn" @click="getHdsp">查询</view>
 			</view >
-			<view class="tab">
-				<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"
-					  :key="index" @click="tabType(index)">{{item.name}}</view>
-			</view>
+			<!--<view class="tab">-->
+				<!--<view class="item" :class="{active:currIndex===index}" v-for="(item,index) in typeList"-->
+					  <!--:key="index" @click="tabType(index)">{{item.name}}</view>-->
+			<!--</view>-->
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
 				<p class="title">活动主题：{{item.zhhd_title}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.wdsp_zt}}</p>
+				<template>
+					<p v-if="item.zhhd_sort===1"><span>活动分类：</span>收楼</p>
+					<p v-if="item.zhhd_sort===2"><span>活动分类：</span>装修</p>
+					<p v-if="item.zhhd_sort===3"><span>活动分类：</span>退楼</p>
+					<p v-if="item.zhhd_sort===4"><span>活动分类：</span>其他</p>
+					<p v-if="item.zhhd_sort===5"><span>活动分类：</span>清洁</p>
+				</template>
+				<p><span>所属楼宇：</span>{{item.zhhd_fcna}}</p>
+				<!--<p><span>活动状态：</span>{{item.wdsp_zt}}</p>-->
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
 				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
 				<view class="btn-group">
@@ -48,13 +58,11 @@
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
 	import {getHdsp} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {uniDrawer,leftMenu,uniPagination},
 		data() {
 			return {
 				reason:'',
@@ -107,12 +115,16 @@
 		},
 		methods: {
 			showConfirmC(item,type){
-				if(type===1){
-					this.tipsContent = '确认通过此条记录吗？'
-				}else {
-					this.tipsContent = '确认驳回此条记录吗？'
-				}
-				this.showC = true
+				uni.showToast({
+					title: '功能建设中',
+					icon: 'none',
+				})
+				// if(type===1){
+				// 	this.tipsContent = '确认通过此条记录吗？'
+				// }else {
+				// 	this.tipsContent = '确认驳回此条记录吗？'
+				// }
+				// this.showC = true
 			},
 			confirmC(){
 
@@ -295,7 +307,7 @@
 			}
 		}
 		.items{
-			padding: 430rpx 0 50rpx;
+			padding: 350rpx 0 100rpx;
 			width: 100%;
 			display: flex;
 			align-items: center;

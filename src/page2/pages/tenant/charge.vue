@@ -20,20 +20,32 @@
 			</view >
 		</u-sticky>
 		<view class="items">
+			<view class="null" v-if="dataList.length===0">
+				暂无数据
+			</view>
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">活动主题：{{item.name}}</p>
-				<p><span>活动分类：</span>{{item.name}}</p>
-				<p><span>活动状态：</span>{{item.name}}</p>
-				<p><span>活动金额：</span>{{item.price}}</p>
-				<p><span>开始时间：</span>{{item.time}}</p>
+				<view style="flex: 1">
+					<p class="title">活动主题：{{item.zhhd_title}}</p>
+					<template>
+						<p v-if="item.zhhd_sort===1"><span>活动分类：</span>收楼</p>
+						<p v-if="item.zhhd_sort===2"><span>活动分类：</span>装修</p>
+						<p v-if="item.zhhd_sort===3"><span>活动分类：</span>退楼</p>
+						<p v-if="item.zhhd_sort===4"><span>活动分类：</span>其他</p>
+						<p v-if="item.zhhd_sort===5"><span>活动分类：</span>清洁</p>
+					</template>
+					<p><span>活动金额：</span>{{item.zhhd_jr}}</p>
+					<p><span>所属楼宇：</span>{{item.fc_name}}</p>
+					<!--<p><span>活动状态：</span>{{item.wdsp_zt}}</p>-->
+					<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
+					<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
+				</view>
 				<view class="btn-group">
 					<span class="btn" @click="showConfirmC(item,1)">通过</span>
 					<span class="btn"  @click="showConfirmC(item,2)" style="color: #C06E6E">驳回</span>
 				</view>
-
 			</view>
 		</view>
-<!--	<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>-->
+		<uni-pagination class="page-fix" show-icon="true" :total="total" pageSize="10" @change="chagePage"></uni-pagination>
 		<uni-drawer :visible="false" ref="leftBox">
 			<leftMenu @closeMenu="closeMenu"></leftMenu>
 		</uni-drawer>
@@ -54,13 +66,11 @@
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import uniBadge from "@/components/uni-badge/uni-badge.vue"
 	import leftMenu from "@/components/left-menu/left-menu.vue"
 	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
-	import {getWater,electList} from "@/utils/api/comment"
+	import {getspList,getspList2} from "@/utils/api/index"
 	export default {
-		components: {uniDrawer,uniIcons,uniBadge,leftMenu,uniPagination},
+		components: {uniDrawer,leftMenu,uniPagination},
 		data() {
 			return {
 				tipsContent:'',
@@ -107,16 +117,20 @@
 			}
 		},
 		onLoad() {
-			this.getWater()
+			this.getspList()
 		},
 		methods: {
 			showConfirmC(item,type){
-				if(type===1){
-					this.tipsContent = '确认通过此条记录吗？'
-				}else {
-					this.tipsContent = '确认驳回此条记录吗？'
-				}
-				this.showC = true
+				uni.showToast({
+					title: '功能建设中',
+					icon: 'none',
+				})
+				// if(type===1){
+				// 	this.tipsContent = '确认通过此条记录吗？'
+				// }else {
+				// 	this.tipsContent = '确认驳回此条记录吗？'
+				// }
+				// this.showC = true
 			},
 			confirmC(){
 
@@ -145,41 +159,41 @@
 			chagePage(e){
 				console.log(e);
 			},
-			async getWater(params){
-				let res = await getWater(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+			async getspList(params){
+				let res = await getspList(params)
+				if(res.code === 0){
+					this.dataList = res.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
 				}
 			},
-			async electList(params){
-				let res = await electList(params)
-				if(res.code === 200){
-					this.dataList = res.data.rows
-					this.total = res.data.total
+			async getspList2(params){
+				let res = await getspList2(params)
+				if(res.code === 0){
+					this.dataList = res.data
+					this.total = res.data.count
 					console.log(res);
 				}else {
 
 				}
 			},
-			radioGroupChange(e) {
-				// this.currType = e
-				if(e==='启用用户'){
-					this.getWater()
-				}else {
-					this.electList()
-				}
-			},
+			// radioGroupChange(e) {
+			// 	// this.currType = e
+			// 	if(e==='启用用户'){
+			// 		this.getspList()
+			// 	}else {
+			// 		this.getspList2()
+			// 	}
+			// },
 			radioChange(e,index) {
 				console.log(e);
 				this.currType = index
 				if(index===0){
-					this.getWater()
+					this.getspList()
 				}else {
-					this.electList()
+					this.getspList2()
 				}
 			},
 			openBox(){
@@ -312,6 +326,7 @@
 				line-height: 1.8;
 				box-shadow:0 6rpx 8rpx 2rpx rgba(0,0,0,0.09);
 				position: relative;
+				display: flex;
 				.title{
 					font-size:32rpx;
 					font-weight:500;
@@ -323,10 +338,8 @@
 				.btn-group{
 					display: flex;
 					flex-direction: column;
-					position: absolute;
+					justify-content: center;
 					font-size:28rpx;
-					top: 20rpx;
-					right: 20rpx;
 					.btn{
 						width:206rpx;
 						height:76rpx;

@@ -339,3 +339,46 @@ export function getQdList(params) {
 		body: params
 	})
 }
+//收费审核（未收款）
+export function getspList(params) {
+	return fly.request({
+		url: 'zufu/zhhdyfksp',
+		method: 'get',
+		body: params
+	})
+}
+//收费审核（以收款）
+export function getspList2(params) {
+	return fly.request({
+		url: 'zufu/zhhdyfksp1',
+		method: 'get',
+		body: params
+	})
+}
+
+//装修巡检
+export function getZxxj(params) {
+	return fly.request({
+		url: 'zufu/zhhdzxxj',
+		method: 'get',
+		body: params
+	})
+}
+
+//装修过程管理
+export function getZxgcgl(params) {
+	return fly.request({
+		url: 'zufu/zhhdgc',
+		method: 'get',
+		body: params
+	})
+}
+
+//装修过程审核
+export function getZxgcsh(params) {
+	return fly.request({
+		url: 'zufu/zhhdgc',
+		method: 'get',
+		body: params
+	})
+}
