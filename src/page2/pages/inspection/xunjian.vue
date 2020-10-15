@@ -148,7 +148,7 @@
 			chageStep(s){
 				if(s===1){
 					this.currStep =1
-					this.addXunjian({xjpb_id:this.itemData.xjpb_id,longit:this.longitude,lati:this.latitude})
+					// this.addXunjian({xjpb_id:this.itemData.xjpb_id,longit:this.longitude,lati:this.latitude})
 				}else if(s===2){
 					uni.showToast({
 						title: '请完成所有签到后结束巡检',

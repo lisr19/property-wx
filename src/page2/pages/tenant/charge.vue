@@ -6,8 +6,8 @@
 		<u-sticky>
 			<view  class="card">
 				<p class="name"><em></em>收费审核</p>
-				<u-radio-group class="tab" v-model="value" size="45" active-color="">
-					<u-radio style="margin-right: 15px"
+				<u-radio-group class="tab" v-model="value" size="45">
+					<u-radio class="u_rad" style="margin-right: 15px;"
 							v-for="(item, index) in listType" :key="index"
 							shape="circle"
 							:name="item.name"
@@ -299,8 +299,16 @@
 			background: #ffffff;
 			top: 375rpx;
 			width: 100%;
+			/* #ifndef H5 */
+			display: inline-block;
+			/* #endif*/
 			.active{
 				color: #077AFF;
+			}
+			.u_rad{
+				/* #ifndef H5 */
+				display: block;
+				/* #endif*/
 			}
 		}
 		.items{

@@ -377,7 +377,7 @@ export function getZxgcgl(params) {
 //装修过程审核
 export function getZxgcsh(params) {
 	return fly.request({
-		url: 'zufu/zhhdgc',
+		url: 'zufu/zhhdgcsp',
 		method: 'get',
 		body: params
 	})

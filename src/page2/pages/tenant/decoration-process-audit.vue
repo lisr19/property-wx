@@ -12,15 +12,19 @@
 		</u-sticky>
 		<view class="items">
 			<view class="item" v-for="(item,index) in dataList" :key="index">
-				<p class="title">活动主题：{{item.zhhd_title}}</p>
-				<template>
-					<p v-if="item.zhhd_spzt===1"><span>状态：</span>未审</p>
-					<p v-if="item.zhhd_spzt===2"><span>状态：</span>审核中</p>
-					<p v-if="item.zhhd_spzt===3"><span>状态：</span>不通过</p>
-					<p v-if="item.zhhd_spzt===4"><span>状态：</span>通过审核</p>
-				</template>
 				<p><span>租户名称：</span>{{item.zhhd_uname}}</p>
-				<p><span>开始时间：</span>{{item.zhhd_sdt}}</p>
+				<p><span>所属楼宇：</span>{{item.fc_name}}</p>
+				<p><span>房号/车位：</span>{{item.zhhd_fh}}</p>
+				<template>
+					<p v-if="item.hdgc_jd===1"><span>过程进度：</span>：进场</p>
+					<p v-if="item.hdgc_jd===2"><span>过程进度：</span>：施工</p>
+					<p v-if="item.hdgc_jd===3"><span>过程进度：</span>：整改</p>
+					<p v-if="item.hdgc_jd===4"><span>过程进度：</span>：整改验收</p>
+					<p v-if="item.hdgc_jd===5"><span>过程进度：</span>：验收</p>
+
+					<p v-if="item.hdgc_jd===6"><span>过程进度：</span>：完工</p>
+				</template>
+				<p><span>描述：</span>{{item.hdgc_ms}}</p>
 				<!--<span class="more-btn">查看详情</span>-->
 				<!--<view class="btn-group">-->
 				<!--<span class="btn" @click="showConfirmC(item,1)">通过</span>-->
@@ -37,6 +41,7 @@
 		<u-picker mode="time" v-model="showTime" @confirm="confirmTime" ></u-picker>
 		<u-popup v-model="showC" mode="bottom" border-radius="20" height="552rpx" closeable>
 			<view class="tip-box">
+
 				<view class="tip-content">{{tipsContent}}</view>
 				<view class="desc">说明：
 					<u-input type="textarea" v-model="reason" border class="text"/>
